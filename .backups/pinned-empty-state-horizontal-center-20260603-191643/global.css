@@ -742,7 +742,6 @@ body {
 }
 
 .events-grid.is-empty-state {
-    display: flex;
     flex: 1 1 auto;
     min-height: 100%;
     width: 100%;

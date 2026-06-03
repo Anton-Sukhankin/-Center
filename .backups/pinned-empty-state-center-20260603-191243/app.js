@@ -577,10 +577,7 @@
         }
 
         // Render active priority tab
-        const isPinnedEmptyState = filterState.activeTab === 'pinned' && displayEvents.length === 0;
-        priorityContainer.classList.toggle('is-empty-state', isPinnedEmptyState);
-
-        if (isPinnedEmptyState) {
+        if (filterState.activeTab === 'pinned' && displayEvents.length === 0) {
             priorityContainer.innerHTML = `
                 <div class="pinned-empty-state">
                     <div class="empty-icon-circle">

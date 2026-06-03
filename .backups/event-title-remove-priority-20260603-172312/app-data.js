@@ -357,12 +357,8 @@
         return words.slice(0, 4).join(' ');
     }
 
-    function stripPriorityFromTitle(title) {
-        return String(title || '').replace(/^\s*(Высокий|Низкий|Критический)\s+приоритет\s*:\s*/i, '');
-    }
-
     function buildListTitle(event, index) {
-        const baseTitle = stripPriorityFromTitle(event.title).trim();
+        const baseTitle = String(event.title || '').trim();
         const objectName = event.objectName || event.queue || '';
         const queueName = event.queue || '';
         const variant = index % 3;

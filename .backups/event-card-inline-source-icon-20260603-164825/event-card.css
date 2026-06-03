@@ -416,24 +416,6 @@ body.is-filtered .selection-toggle-btn {
     opacity: 0.8;
 }
 
-.event-source-inline-icon {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #E5E7EB;
-    color: #111827;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 20px;
-}
-
-.event-source-inline-icon svg {
-    width: 12px;
-    height: 12px;
-    stroke: currentColor;
-}
-
 .event-source-text,
 .event-timestamp-text {
     white-space: nowrap;

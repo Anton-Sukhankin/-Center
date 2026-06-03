@@ -417,15 +417,15 @@ body.is-filtered .selection-toggle-btn {
 }
 
 .event-source-inline-icon {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #E5E7EB;
-    color: #111827;
+    background: #EAF4FF;
+    color: #1D4ED8;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 20px;
+    flex: 0 0 16px;
 }
 
 .event-source-inline-icon svg {

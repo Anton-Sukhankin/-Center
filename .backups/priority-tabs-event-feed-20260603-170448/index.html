@@ -95,21 +95,39 @@
 
                     <!-- Контейнер для результатов ленты (управляется через JS) -->
                     <div id="event-feed-sections">
-                        <div class="priority-tabs" role="tablist" aria-label="Приоритет событий">
-                            <button class="priority-tab active" id="priority-tab-high" type="button" role="tab"
-                                aria-selected="true" onclick="setEventPriorityView('high')">
-                                <span>Высокий приоритет</span>
-                                <span class="priority-tab-badge primary" id="top-events-count">0</span>
+                        <!-- Топ-события — Accordion (раскрыт по умолчанию) -->
+                        <div class="accordion-section" id="top-events-section">
+                            <button class="accordion-header" id="top-events-toggle" aria-expanded="true">
+                                <div class="accordion-header-left">
+                                    <h3 class="accordion-title">Высокий приоритет</h3>
+                                    <span class="accordion-badge primary" id="top-events-count">0</span>
+                                </div>
+                                <i data-lucide="chevron-down" class="accordion-chevron open" id="top-chevron"></i>
                             </button>
-                            <button class="priority-tab" id="priority-tab-low" type="button" role="tab"
-                                aria-selected="false" onclick="setEventPriorityView('low')">
-                                <span>Низкий приоритет</span>
-                                <span class="priority-tab-badge secondary" id="other-events-count">0</span>
-                            </button>
+                            <div class="accordion-body open" id="top-events-body">
+                                <div class="accordion-body-inner">
+                                    <div class="events-grid" id="top-events-container">
+                                        <!-- Top event cards rendered via JS -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="priority-tab-panel" id="priority-events-panel" role="tabpanel">
-                            <div class="events-grid" id="priority-events-container">
-                                <!-- Event cards rendered via JS -->
+
+                        <!-- Остальные события — Accordion (свёрнут по умолчанию) -->
+                        <div class="accordion-section" id="other-events-section">
+                            <button class="accordion-header" id="other-events-toggle" aria-expanded="false">
+                                <div class="accordion-header-left">
+                                    <h3 class="accordion-title secondary">Низкий приоритет</h3>
+                                    <span class="accordion-badge secondary" id="other-events-count">0</span>
+                                </div>
+                                <i data-lucide="chevron-down" class="accordion-chevron" id="other-chevron"></i>
+                            </button>
+                            <div class="accordion-body" id="other-events-body">
+                                <div class="accordion-body-inner">
+                                    <div class="events-grid" id="other-events-container">
+                                        <!-- Other event cards rendered via JS -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

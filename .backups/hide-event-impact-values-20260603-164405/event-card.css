@@ -416,24 +416,6 @@ body.is-filtered .selection-toggle-btn {
     opacity: 0.8;
 }
 
-.event-source-inline-icon {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #E5E7EB;
-    color: #111827;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 20px;
-}
-
-.event-source-inline-icon svg {
-    width: 12px;
-    height: 12px;
-    stroke: currentColor;
-}
-
 .event-source-text,
 .event-timestamp-text {
     white-space: nowrap;
@@ -647,7 +629,7 @@ body.is-filtered .selection-toggle-btn {
 .event-card-metric-block {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 12px;
     padding: 12px 22px;
     height: var(--event-card-metric-height);
@@ -669,7 +651,6 @@ body.is-filtered .selection-toggle-btn {
     align-items: center;
     gap: 8px;
     min-width: 0;
-    flex: 1 1 auto;
 }
 
 .event-card-metric-main span {
@@ -686,7 +667,6 @@ body.is-filtered .selection-toggle-btn {
 }
 
 .event-card-metric-impact {
-    display: none;
     flex-shrink: 0;
     color: #374151;
     font-weight: 600;

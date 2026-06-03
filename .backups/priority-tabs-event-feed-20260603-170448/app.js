@@ -239,7 +239,6 @@
         sources: [],
         priority: 'all',
         priorityOnly: false,
-        priorityView: 'high',
         metric: '',
         metrics: [],
         pinnedCount: 0
@@ -422,12 +421,6 @@
     // Call once to attach listeners
     attachFilterListeners();
 
-    window.setEventPriorityView = function(priorityView) {
-        if (priorityView !== 'high' && priorityView !== 'low') return;
-        filterState.priorityView = priorityView;
-        renderEventFeed();
-    };
-
     function renderEventFeed() {
         // Expose to window for toolbar
         window.renderEventFeed = renderEventFeed;
@@ -540,25 +533,41 @@
             return;
         }
 
-        // Restore priority tab structure if missing (e.g. after empty state)
-        if (!document.getElementById('priority-events-container')) {
+        // Restore accordion structure if missing (e.g. after empty state)
+        if (!document.getElementById('top-events-container')) {
             resultsContainer.innerHTML = `
-                <div class="priority-tabs" role="tablist" aria-label="Приоритет событий">
-                    <button class="priority-tab" id="priority-tab-high" type="button" role="tab"
-                            aria-selected="false" onclick="setEventPriorityView('high')">
-                        <span>Высокий приоритет</span>
-                        <span class="priority-tab-badge primary" id="top-events-count">0</span>
+                <div class="accordion-section" id="top-events-section">
+                    <button class="accordion-header" id="top-events-toggle" aria-expanded="true">
+                        <div class="accordion-header-left" style="display:flex; align-items:center; gap:12px;">
+                            <h3 class="accordion-title">Высокий приоритет</h3>
+                            <span class="accordion-badge primary" id="top-events-count">0</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="accordion-chevron open" id="top-chevron" style="color:#6B7280;"></i>
                     </button>
-                    <button class="priority-tab" id="priority-tab-low" type="button" role="tab"
-                            aria-selected="false" onclick="setEventPriorityView('low')">
-                        <span>Низкий приоритет</span>
-                        <span class="priority-tab-badge secondary" id="other-events-count">0</span>
-                    </button>
+                    <div class="accordion-body open" id="top-events-body">
+                        <div class="accordion-body-inner">
+                            <div class="events-grid" id="top-events-container"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="priority-tab-panel" id="priority-events-panel" role="tabpanel">
-                    <div class="events-grid" id="priority-events-container"></div>
+                <div class="accordion-section" id="other-events-section">
+                    <button class="accordion-header" id="other-events-toggle" aria-expanded="false">
+                        <div class="accordion-header-left" style="display:flex; align-items:center; gap:12px;">
+                            <h3 class="accordion-title">Низкий приоритет</h3>
+                            <span class="accordion-badge secondary" id="other-events-count">0</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="accordion-chevron" id="other-chevron" style="color:#6B7280;"></i>
+                    </button>
+                    <div class="accordion-body" id="other-events-body">
+                        <div class="accordion-body-inner">
+                            <div class="events-grid" id="other-events-container"></div>
+                        </div>
+                    </div>
                 </div>
             `;
+            // Re-init accordions
+            updateTopAccordion = initAccordion('top-events-toggle', 'top-events-body', 'top-chevron', true);
+            updateOtherAccordion = initAccordion('other-events-toggle', 'other-events-body', 'other-chevron', true);
         }
 
         // NEW: Cards truly disappear from the DOM when excluded
@@ -575,25 +584,9 @@
             document.body.classList.remove('is-filtered');
         }
 
-        const activePriorityView = filterState.priorityView === 'low' ? 'low' : 'high';
-        const activePriorityEvents = activePriorityView === 'high' ? highPriorityEvents : lowPriorityEvents;
-
-        // Update counts and tab state
-        const topEventsCount = document.getElementById('top-events-count');
-        const otherEventsCount = document.getElementById('other-events-count');
-        if (topEventsCount) topEventsCount.textContent = highPriorityEvents.length;
-        if (otherEventsCount) otherEventsCount.textContent = lowPriorityEvents.length;
-
-        const highTab = document.getElementById('priority-tab-high');
-        const lowTab = document.getElementById('priority-tab-low');
-        if (highTab) {
-            highTab.classList.toggle('active', activePriorityView === 'high');
-            highTab.setAttribute('aria-selected', activePriorityView === 'high' ? 'true' : 'false');
-        }
-        if (lowTab) {
-            lowTab.classList.toggle('active', activePriorityView === 'low');
-            lowTab.setAttribute('aria-selected', activePriorityView === 'low' ? 'true' : 'false');
-        }
+        // Update counts
+        document.getElementById('top-events-count').textContent = highPriorityEvents.length;
+        document.getElementById('other-events-count').textContent = lowPriorityEvents.length;
 
         // Sync Toolbar Mode
         if (window.setToolbarMode) {
@@ -605,16 +598,21 @@
             window.toolbarState.excludedCount = mockEvents.filter(e => e.excluded).length;
         }
 
-        // Render active priority tab
-        const priorityContainer = document.getElementById('priority-events-container');
-        if (priorityContainer) {
-            priorityContainer.innerHTML = activePriorityEvents.length > 0
-                ? activePriorityEvents.map(evt => renderEventCard(evt)).join('')
-                : `<div class="priority-empty-state">В выбранном приоритете нет событий.</div>`;
-        }
+        // Render sections
+        const topContainer = document.getElementById('top-events-container');
+        topContainer.innerHTML = highPriorityEvents.map(evt => renderEventCard(evt)).join('');
+
+        const otherContainer = document.getElementById('other-events-container');
+        otherContainer.innerHTML = lowPriorityEvents.map(evt => renderEventCard(evt)).join('');
 
         lucide.createIcons();
         attachEventCardListeners();
+
+        // Recalculate accordion heights
+        requestAnimationFrame(() => {
+            if (typeof updateTopAccordion === 'function') updateTopAccordion();
+            if (typeof updateOtherAccordion === 'function') updateOtherAccordion();
+        });
 
         // Update Floating Action Bar
         if (window.updateFloatingBar) window.updateFloatingBar();
@@ -753,6 +751,67 @@
             };
         }
     }
+
+    // ======================================
+    // ACCORDION CONTROLLER (both sections)
+    // ======================================
+    function initAccordion(toggleId, bodyId, chevronId, startOpen) {
+        const toggle = document.getElementById(toggleId);
+        const body = document.getElementById(bodyId);
+        const chevron = document.getElementById(chevronId);
+        if (!toggle || !body || !chevron) return;
+
+        let isOpen = startOpen;
+
+        // Set initial state
+        function applyState(animate) {
+            if (isOpen) {
+                chevron.classList.add('open');
+                body.classList.add('open');
+                toggle.setAttribute('aria-expanded', 'true');
+                // Need to measure the real scroll height after content renders
+                requestAnimationFrame(() => {
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                });
+            } else {
+                chevron.classList.remove('open');
+                body.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                if (animate) {
+                    // First set explicit max-height, then collapse
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                    requestAnimationFrame(() => {
+                        body.style.maxHeight = '0px';
+                    });
+                } else {
+                    body.style.maxHeight = '0px';
+                }
+            }
+        }
+
+        applyState(false);
+
+        toggle.addEventListener('click', () => {
+            isOpen = !isOpen;
+            applyState(true);
+        });
+
+        // Return an updater so we can recalculate after content changes
+        return function updateHeight() {
+            if (isOpen) {
+                // Reset to auto to measure, then set explicit value
+                body.style.maxHeight = 'none';
+                requestAnimationFrame(() => {
+                    const h = body.scrollHeight;
+                    body.style.maxHeight = h + 'px';
+                });
+            }
+        };
+    }
+
+    // Initialize both accordions (Moving up to ensure availability for renderEventFeed)
+    var updateTopAccordion = initAccordion('top-events-toggle', 'top-events-body', 'top-chevron', true);
+    var updateOtherAccordion = initAccordion('other-events-toggle', 'other-events-body', 'other-chevron', true);
 
     // ======================================
     // Task 5: EVENT DRAWER (Detail View)

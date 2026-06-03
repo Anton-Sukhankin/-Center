@@ -22,7 +22,6 @@ src/data/
 | Левое дерево навигации | `src/components/navigation-tree-item/`, `src/app/app.js` | `src/components/navigation-tree-item/README.md`, `src/app/README.md` | `src/data/project-structure.js` | Выбор бизнес-юнита, проекта или очереди меняет контекст интерфейса. |
 | Шапка проекта | `src/app/app.js` | `src/app/README.md` | `window.activeContext`, `projectStructureData` | Пользователь видит выбранный контекст и атрибуты проекта. |
 | Тулбар событий | `src/components/event-toolbar/` | `src/components/event-toolbar/README.md` | `window.filterState`, `window.toolbarState` | Переключение вкладок, поиск, открытие фильтра, запуск аналитики. |
-| Табы приоритета событий | `src/app/app.js` | `src/app/README.md` | `window.filterState.priorityView`, текущая выборка событий | Пользователь переключает отображение между событиями высокого и низкого приоритета. |
 | Карточка события | `src/components/event-card/`, `src/app/app.js` | `src/components/event-card/README.md` | `appData.getEventListViewModel()` | Пользователь читает событие, закрепляет, открывает детали, исключает при активных фильтрах. |
 | Детальная карточка события | `src/app/app.js` | `src/app/README.md`, `src/components/event-card/README.md` | `appData.getEventDetailViewModel()` | Пользователь раскрывает событие и видит расширенный состав данных. |
 | Фильтр событий | `src/features/filters/` | `src/features/filters/README.md` | `appData.getEventSources()`, `appData.getMetricSelectorTree()`, `window.filterState` | Пользователь настраивает выдачу событий внутри активного контекста. |

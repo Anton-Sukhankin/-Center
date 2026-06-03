@@ -639,19 +639,13 @@ body {
     gap: 10px;
 }
 
-#event-feed-sections {
-    padding: 16px;
-    background: #fff;
-    box-sizing: border-box;
-}
-
 .priority-tabs {
     display: flex;
     align-items: center;
     gap: 34px;
-    padding: 0;
+    padding: 0 4px;
     border-bottom: none;
-    margin: 0 0 14px;
+    margin: 2px 0 14px;
 }
 
 .priority-tab {

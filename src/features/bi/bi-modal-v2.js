@@ -69,8 +69,10 @@ function openBIModalV2(node, sideBySide = false) {
     // Toggle side-by-side mode (no backdrop, shifted positioning)
     if (sideBySide) {
         overlay.classList.add('side-by-side');
+        overlay.classList.toggle('event-drawer-side-by-side', !!document.querySelector('#event-drawer.open'));
     } else {
         overlay.classList.remove('side-by-side');
+        overlay.classList.remove('event-drawer-side-by-side');
     }
     
     overlay.classList.add('active');
@@ -86,6 +88,7 @@ function closeBIModal() {
         overlay.style.display = 'none';
         overlay.classList.remove('active');
         overlay.classList.remove('side-by-side');
+        overlay.classList.remove('event-drawer-side-by-side');
     }
     if (container) container.innerHTML = '';
 }

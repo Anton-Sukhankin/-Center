@@ -41,13 +41,9 @@
     background: transparent !important;
     backdrop-filter: none !important;
     pointer-events: none !important; /* Allow interaction with drawer behind */
-    padding-right: 540px !important; /* Offset for the metric drawer width (540px) */
+    padding-right: 540px !important; /* Offset for the drawer width (540px) */
     justify-content: center !important;
     z-index: 4500 !important; /* Above content but below drawers (typically 5000+) */
-}
-
-.bi-modal-v2-overlay.side-by-side.event-drawer-side-by-side {
-    padding-right: 690px !important; /* Offset for the event drawer width (690px) */
 }
 
 .bi-modal-v2-overlay.active {

@@ -1236,8 +1236,8 @@ body {
 .right-drawer {
     position: fixed;
     top: 0;
-    right: -690px;
-    width: 690px;
+    right: -540px;
+    width: 540px;
     height: 100vh;
     background: #F5F7F9;
     z-index: 1001;

@@ -1334,7 +1334,7 @@ body {
 .event-detail-priority-tag {
     position: absolute;
     top: auto;
-    bottom: -11px;
+    bottom: -15px;
     right: 52px;
     z-index: 2;
     display: inline-flex;
@@ -1345,7 +1345,6 @@ body {
     border-radius: 8px;
     font-size: 0.82rem;
     font-weight: 600;
-    border: 1px solid currentColor;
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(8px);
 }

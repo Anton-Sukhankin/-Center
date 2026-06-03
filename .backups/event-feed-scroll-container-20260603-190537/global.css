@@ -466,11 +466,10 @@ body {
 .main-content {
     flex-grow: 1;
     padding: 0px;
-    overflow: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0px;
-    min-height: 0;
 }
 
 .sticky-header-wrapper {
@@ -647,13 +646,9 @@ body {
 }
 
 #event-feed-sections {
-    flex: 1 1 auto;
-    min-height: 0;
     padding: 16px;
     background: #fff;
     box-sizing: border-box;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 .priority-tabs-bar {

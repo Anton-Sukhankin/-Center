@@ -217,20 +217,15 @@
     const collapseBtn = document.querySelector('.left-panel-collapse-btn');
     const leftPanel = document.getElementById('left-sidebar');
     if (collapseBtn && leftPanel) {
-        const setCollapseButtonIcon = (isCollapsed) => {
-            const iconName = isCollapsed ? 'chevron-right' : 'chevron-left';
-            collapseBtn.innerHTML = `<i data-lucide="${iconName}"></i>`;
-            collapseBtn.setAttribute('aria-label', isCollapsed ? 'Развернуть левую панель' : 'Свернуть левую панель');
-            if (window.lucide && typeof window.lucide.createIcons === 'function') {
-                window.lucide.createIcons();
-            }
-        };
-
-        setCollapseButtonIcon(leftPanel.classList.contains('collapsed'));
-
         collapseBtn.addEventListener('click', () => {
             leftPanel.classList.toggle('collapsed');
-            setCollapseButtonIcon(leftPanel.classList.contains('collapsed'));
+            const icon = collapseBtn.querySelector('i');
+            if (leftPanel.classList.contains('collapsed')) {
+                icon.setAttribute('data-lucide', 'chevron-right');
+            } else {
+                icon.setAttribute('data-lucide', 'chevron-left');
+            }
+            lucide.createIcons();
         });
     }
 
@@ -529,8 +524,42 @@
 
         // Handle Empty State / Content rendering
         const resultsContainer = document.getElementById('event-feed-sections');
-        const priorityContainer = document.getElementById('priority-events-container');
-        if (!resultsContainer || !priorityContainer) return;
+        if (!resultsContainer) return;
+
+        if (filterState.activeTab === 'pinned' && displayEvents.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="pinned-empty-state">
+                    <div class="empty-icon-circle">
+                        <i data-lucide="pin"></i>
+                    </div>
+                    <div class="empty-title">Нет закреплённых событий</div>
+                    <div class="empty-subtitle">Вы можете закрепить важные события через меню карточки, чтобы они всегда были под рукой.</div>
+                </div>
+            `;
+            lucide.createIcons();
+            return;
+        }
+
+        // Restore priority tab structure if missing (e.g. after empty state)
+        if (!document.getElementById('priority-events-container')) {
+            resultsContainer.innerHTML = `
+                <div class="priority-tabs" role="tablist" aria-label="Приоритет событий">
+                    <button class="priority-tab" id="priority-tab-high" type="button" role="tab"
+                            aria-selected="false" onclick="setEventPriorityView('high')">
+                        <span>Высокий приоритет</span>
+                        <span class="priority-tab-badge primary" id="top-events-count">0</span>
+                    </button>
+                    <button class="priority-tab" id="priority-tab-low" type="button" role="tab"
+                            aria-selected="false" onclick="setEventPriorityView('low')">
+                        <span>Низкий приоритет</span>
+                        <span class="priority-tab-badge secondary" id="other-events-count">0</span>
+                    </button>
+                </div>
+                <div class="priority-tab-panel" id="priority-events-panel" role="tabpanel">
+                    <div class="events-grid" id="priority-events-container"></div>
+                </div>
+            `;
+        }
 
         // NEW: Cards truly disappear from the DOM when excluded
         const visibleEvents = displayEvents.filter(evt => !evt.excluded); 
@@ -577,17 +606,8 @@
         }
 
         // Render active priority tab
-        if (filterState.activeTab === 'pinned' && displayEvents.length === 0) {
-            priorityContainer.innerHTML = `
-                <div class="pinned-empty-state">
-                    <div class="empty-icon-circle">
-                        <i data-lucide="pin"></i>
-                    </div>
-                    <div class="empty-title">Нет закреплённых событий</div>
-                    <div class="empty-subtitle">Вы можете закрепить важные события через меню карточки, чтобы они всегда были под рукой.</div>
-                </div>
-            `;
-        } else {
+        const priorityContainer = document.getElementById('priority-events-container');
+        if (priorityContainer) {
             priorityContainer.innerHTML = activePriorityEvents.length > 0
                 ? activePriorityEvents.map(evt => renderEventCard(evt)).join('')
                 : `<div class="priority-empty-state">В выбранном приоритете нет событий.</div>`;

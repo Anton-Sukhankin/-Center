@@ -1,0 +1,277 @@
+/**
+ * MetricStructureDrawer Styles — Pixel-Perfect Tree with Dashed Branches
+ * UPDATED: Opens from RIGHT side, z-index managed for side-by-side modals.
+ */
+
+.metric-drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(2px);
+    z-index: 4000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.metric-drawer-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.metric-drawer {
+    position: fixed;
+    top: 0;
+    right: -540px; /* Opens from RIGHT now */
+    width: 540px;
+    height: 100%;
+    background: white;
+    z-index: 4010; /* Higher than overlay and potential chart modal */
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 1px solid #D2D3D7; /* Border on left since it's on the right side */
+}
+
+.metric-drawer.active {
+    right: 0;
+}
+
+/* Header */
+.md-header {
+    padding: 16px 24px 16px 16px;
+    height: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #DDDEE1;
+    background: white;
+}
+
+.md-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.md-header-icon {
+    width: 44px;
+    height: 44px;
+    background: #F4F4F9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6C717C;
+}
+
+.md-title-box h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #343A4A;
+    line-height: 24px;
+}
+
+.md-subtitle {
+    font-size: 12px;
+    color: #6C717C;
+}
+
+.md-subtitle span {
+    color: #343A4A;
+}
+
+.md-close {
+    background: none;
+    border: none;
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.md-close:hover {
+    background: #F3F4F6;
+    color: #343A4A;
+}
+
+/* Content Area */
+.md-content {
+    flex: 1;
+    overflow-y: auto;
+    background: white;
+    padding: 12px 16px;
+}
+
+/* Tree Structure Logic */
+.md-tree-root, .md-tree-children {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.md-tree-children {
+    margin-left: 10px;
+}
+
+.md-tree-item {
+    position: relative;
+    padding-left: 20px;
+    border-left: 1px dashed #D2D3D7;
+}
+
+.md-tree-item[data-level="0"] {
+    border-left: none;
+    padding-left: 0;
+}
+
+.md-tree-item:last-child {
+    border-left: none;
+}
+
+.md-tree-item:last-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    border-left: 1px dashed #D2D3D7;
+}
+
+/* Horizontal Line */
+.md-tree-item:not([data-level="0"])::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 12px;
+    border-top: 1px dashed #D2D3D7;
+}
+
+/* Row Styling */
+.md-node-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 2;
+    background: white;
+}
+
+.md-node-row:hover {
+    background: #F4F4F9;
+}
+
+.md-node-row.active-selection {
+    background: #EAEFF5;
+    font-weight: 500;
+}
+
+.md-node-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #343A4A;
+    font-size: 14px;
+}
+
+.md-node-prefix {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6C717C;
+    background: white;
+}
+
+.md-node-row.active-selection .md-node-prefix {
+    background: #EAEFF5;
+}
+
+.md-folder-icon, .md-file-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.md-node-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 320px;
+}
+
+.md-node-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.md-trend {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border: 1px solid #D2D3D7;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 4px;
+    transition: all 0.2s;
+}
+
+.md-trend:hover {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    transform: translateY(-1px);
+}
+
+.md-trend.up { color: #51AD77; }
+.md-trend.down { color: #F04B69; }
+
+.md-trend i { width: 14px; height: 14px; }
+
+/* Removed .md-notif as per request */
+
+.md-footer-divider {
+    height: 16px;
+    background: white;
+    border-top: 1px solid #DDDEE1;
+}
+
+/* 
+ * Side Chart Modal logic 
+ * These classes affect the general Chart Modal when opened from the Tree
+ */
+
+.modal-overlay.side-left {
+    justify-content: center;
+    left: 0;
+    right: 540px; 
+    width: auto;
+    pointer-events: none;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    transition: opacity 0.1s ease;
+    z-index: 4010; /* Match or exceed drawer layer */
+}
+
+.modal-overlay.side-left .modal-content {
+    pointer-events: auto; 
+    box-shadow: 20px 0 50px rgba(0,0,0,0.15);
+    max-width: 1000px;
+    transform: none !important; /* No scaling/sliding artifact */
+    transition: none !important;
+}

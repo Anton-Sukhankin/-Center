@@ -1,0 +1,182 @@
+﻿/* Event List & Card Styles */
+:root {
+    --card-bg: #FFFFFF;
+    --card-border: #E9ECEF;
+    --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --metric-bg: #F1F5F9;
+    --impact-neg: #DC3545;
+    --impact-pos: #28A745;
+    --transition-speed: 0.3s;
+}
+
+/* Базовый вид карточки события находится в src/components/event-card/event-card.css. */
+
+/* Сетка карточек: Максимум 3 в ряд */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+}
+
+/* Ограничение: не более 3-х колонок для десктопа */
+@media (min-width: 1200px) {
+    .events-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Механика исключения */
+.event-card.is-excluded,
+.event-card.excluded {
+    opacity: 0.3;
+    filter: grayscale(1);
+    transform: scale(0.98); 
+    padding: 12px 20px;
+    margin-bottom: 0px;
+}
+
+.event-card.is-excluded .card-text,
+.event-card.excluded .card-text,
+.event-card.is-excluded .card-footer,
+.event-card.excluded .card-footer {
+    display: none;
+}
+
+.event-card.is-excluded .card-header .card-title {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Кнопка исключения (X) */
+.exclude-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F1F5F9;
+    border: none;
+    border-radius: 50%;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition-speed) ease;
+    z-index: 10;
+}
+
+.exclude-btn:hover {
+    background: var(--text-danger);
+    color: white;
+}
+
+/* Показываем крестик только в режиме SELECTION */
+body.selection-mode-active .exclude-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Если исключено - кнопка превращается в "возврат" */
+.event-card.is-excluded .exclude-btn {
+    opacity: 1;
+    pointer-events: auto;
+    background: var(--primary-blue);
+    color: white;
+    transform: rotate(45deg); /* Превращаем X в + или просто сигнализируем */
+}
+
+/* Содержимое карточки */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding-right: 30px; /* Место под крестик */
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main, #1E293B);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.card-meta {
+    font-size: 0.75rem;
+    color: var(--f-text-muted);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.source-badge {
+    background: #EBF5FF;
+    color: #007BFF;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 13px;
+    color: #64748B;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metric-badge {
+    background: var(--metric-bg);
+    color: #475569;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.impact-indicator {
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.impact-indicator.negative { color: var(--impact-neg); }
+.impact-indicator.positive { color: var(--impact-pos); }
+
+.card-timestamp {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* High Priority Glow */
+.event-card.priority-critical {
+    border-left: 4px solid #ef4444;
+}
+
+/* Skeleton Loading Effect (Placeholder) */
+.event-card.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}

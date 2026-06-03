@@ -1,0 +1,520 @@
+/* ============================================================
+   FINANCIAL ANALYSIS SIDEBAR — Stage 4 High-Fidelity Refinement
+   ============================================================ */
+
+:root {
+    --fa-bg-main: #F9FAFB;
+    --fa-card-bg: #FFFFFF;
+    --fa-border: #f1f5f9;
+    --fa-border-hover: #e2e8f0;
+    --fa-text-main: #0f172a;
+    --fa-text-muted: #64748b;
+    --fa-primary: #3b82f6;
+    --fa-primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    --fa-success: #10b981;
+    --fa-success-bg: #f0fdf4;
+    --fa-danger: #ef4444;
+    --fa-danger-bg: #fef2f2;
+    --fa-warning: #f59e0b;
+    --fa-warning-bg: #fffbeb;
+    --fa-glass-bg: rgba(255, 255, 255, 0.7);
+    --fa-shadow-soft: none;
+    --fa-shadow-elevated: none;
+}
+
+/* --- Container & Header --- */
+.metrics-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100%;
+}
+
+.fa-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+    margin-bottom: 8px;
+}
+
+.fa-section-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fa-section-more {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--fa-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.fa-section-more:hover {
+    opacity: 1;
+}
+
+/* --- Construction Indicators (Accordion & Figma Style) --- */
+.metrics-static-block {
+    margin-bottom: 8px;
+}
+
+.fa-accordion-container {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.fa-accordion-header {
+    width: 100%;
+    padding: 16px 16px 0px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F3F4F6;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.fa-accordion-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6B7280;
+    margin: 0;
+}
+
+.fa-accordion-chevron {
+    color: #6B7280;
+    transition: transform 0.3s ease;
+}
+
+.fa-accordion-container.open .fa-accordion-chevron {
+    transform: rotate(180deg);
+}
+
+.fa-accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #F3F4F6;
+}
+
+.fa-accordion-container.open .fa-accordion-body {
+    max-height: 800px; /* Large enough for content */
+}
+
+.fa-accordion-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Metric Card Style */
+.fa-metric-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    box-shadow: none;
+    border: 1px solid #f1f5f9;
+}
+
+/* Chart Visuals */
+.fa-metric-chart {
+    width: 80px;
+    height: 88px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Layout Parts */
+.fa-metric-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fa-metric-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.fa-metric-header i {
+    width: 18px;
+    height: 18px;
+    color: #9CA3AF;
+}
+
+.fa-metric-main {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    align-items: center;
+    gap: 16px;
+}
+
+.fa-metric-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fa-metric-divider {
+    width: 1px;
+    height: 48px;
+    background: #E5E7EB;
+}
+
+.fa-metric-value {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1e293b;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fa-metric-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.fa-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.fa-dot.plan { background: #DBEAFE; }
+.fa-dot.forecast { background: #3B82F6; }
+.fa-dot.volume-plan { background: #F3E8FF; }
+.fa-dot.volume-opp { background: #A855F7; }
+
+/* Badge */
+.fa-badge-deviation {
+    background: #FB923C;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   P&L DRILL-DOWN — Stage 5 Figma Refinement
+   ============================================================ */
+
+/* ============================================================
+   P&L DRILL-DOWN — Stage 6 Design System Fixes
+   ============================================================ */
+
+.fa-pn-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Unit Wrapper (The Gray Container) */
+.fa-section-wrapper {
+    background: #F3F4F6;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Top Section Header Text */
+.fa-section-header-top {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6B7280;
+    margin-bottom: 2px;
+    margin-left: 4px;
+    font-family: inherit;
+}
+
+/* --- Header & Navigation --- */
+.fa-nav-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fa-back-square {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1F2937;
+    transition: all 0.2s;
+    border: none;
+    box-shadow: none;
+}
+
+.fa-back-square:hover {
+    background: #f8fafc;
+    transform: translateX(-2px);
+}
+
+.fa-nav-title-btn {
+    flex-grow: 1;
+    height: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    border: none;
+    box-shadow: none;
+}
+
+.fa-nav-title-btn i {
+    color: #3B82F6;
+}
+
+/* --- Main Active Card --- */
+.fa-main-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+    border: none;
+}
+
+.fa-main-card-top {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fa-main-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fa-main-card-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fa-char-btn {
+    width: 36px;
+    height: 36px;
+    background: #EBF4FF;
+    color: #3B82F6;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fa-char-btn:hover {
+    background: #3B82F6;
+    color: #ffffff;
+}
+
+.fa-main-val-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fa-trend-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fa-trend-icon.up { color: #10B981; }
+.fa-trend-icon.down { color: #EF4444; }
+
+.fa-main-val-text {
+    font-size: 24px;
+    font-weight: 500;
+    color: #1F2937;
+    letter-spacing: -0.02em;
+}
+
+/* Split Section */
+.fa-split-section {
+    display: flex;
+    border-top: 1px solid #E5E7EB;
+    padding: 24px 20px;
+    background: #ffffff;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.fa-split-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding-right: 20px;
+    border-right: 1px solid #E5E7EB;
+}
+
+.fa-split-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.fa-split-val {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.fa-split-right-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-left: 20px;
+}
+
+.fa-split-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fa-donut-mini {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.fa-split-divider {
+    width: 1px;
+    height: auto;
+    align-self: stretch;
+    background: #F1F5F9;
+    margin: 4px 0;
+}
+
+/* --- Child Cards --- */
+.fa-child-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fa-child-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+    border: 1px solid transparent;
+}
+
+.fa-child-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border-color: #007AFF;
+}
+
+.fa-folder-box {
+    width: 44px;
+    height: 44px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    flex-shrink: 0;
+}
+
+.fa-child-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.fa-child-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fa-child-val-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fa-child-val-text {
+    font-size: 19px;
+    font-weight: 500;
+    color: #1F2937;
+}
+
+/* --- Animations --- */
+@keyframes faCardIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fa-animate-card {
+    animation: faCardIn 0.35s forwards cubic-bezier(0, 0, 0.2, 1);
+}

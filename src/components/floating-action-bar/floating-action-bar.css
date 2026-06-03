@@ -1,0 +1,141 @@
+:root {
+    --fab-bg: #27292F; /* Deep graphite */
+    --fab-accent: #2563EB; /* Primary blue */
+    --fab-radius: 100px;
+    --fab-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 10px 20px rgba(0, 0, 0, 0.2);
+    --fab-transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-bar-container {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 2100;
+    opacity: 0;
+    transition: var(--fab-transition);
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.floating-bar-container.active {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.selection-action-bar {
+    display: flex;
+    align-items: center;
+    background: var(--fab-bg);
+    padding: 10px 10px 10px 32px;
+    border-radius: var(--fab-radius);
+    box-shadow: var(--fab-shadow);
+    gap: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+/* --- Left: Indication --- */
+.fab-indication {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.fab-badge-oval {
+    background: var(--fab-accent);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 32px;
+    text-align: center;
+}
+
+/* --- Action Buttons --- */
+.fab-btn-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.fbtn-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fbtn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+.fbtn-primary {
+    background: var(--fab-accent);
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fbtn-primary:hover {
+    background: #1d4ed8;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+}
+
+.fbtn-primary i, .fbtn-outline i {
+    width: 18px;
+    height: 18px;
+}
+
+/* --- Right: Exit --- */
+.fab-exit-wrap {
+    padding-left: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.fbtn-close {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    background: transparent;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fbtn-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+.fbtn-close i {
+    width: 20px;
+    height: 20px;
+}

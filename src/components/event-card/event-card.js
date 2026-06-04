@@ -34,10 +34,12 @@
 
                     <div class="event-card-meta-line">
                         <div class="event-card-attributes-row">
-                            <span class="event-source-inline-icon" aria-hidden="true">
-                                ${ui.icon(sourceIcon)}
+                            <span class="event-source-product-chip">
+                                <span class="event-source-chip-icon" aria-hidden="true">
+                                    ${ui.icon(sourceIcon)}
+                                </span>
+                                <span class="event-source-text">${ui.escapeHtml(event.sourceName || 'S.Center')}</span>
                             </span>
-                            <span class="event-source-text">${ui.escapeHtml(event.sourceName || 'S.Center')}</span>
                             <span class="event-attributes-dot">•</span>
                             <span class="event-timestamp-text">${ui.escapeHtml(event.dateText || '')}</span>
                         </div>

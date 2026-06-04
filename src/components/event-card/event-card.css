@@ -411,9 +411,49 @@ body.is-filtered .selection-toggle-btn {
     font-weight: 400;
 }
 
+.event-source-product-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 58%;
+    height: 22px;
+    padding: 2px 10px 2px 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #DBEAFE 0%, #EEF4FF 100%);
+    color: #2563EB;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.event-source-chip-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    border-radius: 50%;
+    background: #2563EB;
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-source-chip-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+}
+
 .event-attributes-dot {
-    font-size: 10px;
-    opacity: 0.8;
+    width: 4px;
+    height: 4px;
+    flex: 0 0 4px;
+    border-radius: 50%;
+    background: #6B7280;
+    font-size: 0;
+    opacity: 1;
 }
 
 .event-source-inline-icon {
@@ -539,6 +579,7 @@ body.is-filtered .selection-toggle-btn {
     --event-card-main-padding-top: 18px;
     --event-card-main-padding-bottom: 14px;
     --event-card-meta-height: 22px;
+    --event-card-meta-title-gap: 12px;
     --event-card-title-height: 2.64em;
     --event-card-title-bottom-gap: 10px;
     --event-card-desc-height: 5.8em;
@@ -546,6 +587,7 @@ body.is-filtered .selection-toggle-btn {
     height: calc(
         var(--event-card-main-padding-top) +
         var(--event-card-meta-height) +
+        var(--event-card-meta-title-gap) +
         var(--event-card-title-height) +
         var(--event-card-title-bottom-gap) +
         var(--event-card-desc-height) +
@@ -561,6 +603,7 @@ body.is-filtered .selection-toggle-btn {
     height: calc(
         var(--event-card-main-padding-top) +
         var(--event-card-meta-height) +
+        var(--event-card-meta-title-gap) +
         var(--event-card-title-height) +
         var(--event-card-title-bottom-gap) +
         var(--event-card-desc-height) +
@@ -596,7 +639,7 @@ body.is-filtered .selection-toggle-btn {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 0;
+    margin-bottom: var(--event-card-meta-title-gap);
     height: var(--event-card-meta-height);
     flex: 0 0 var(--event-card-meta-height);
 }
@@ -611,6 +654,18 @@ body.is-filtered .selection-toggle-btn {
 .event-card-meta-line .event-timestamp-text {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.event-card-meta-line .event-source-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-card-meta-line .event-timestamp-text {
+    color: #6B7280;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .event-card-title {
@@ -650,7 +705,7 @@ body.is-filtered .selection-toggle-btn {
     padding: 12px 22px;
     height: var(--event-card-metric-height);
     border-top: 1px solid #E5E7EB;
-    background: transparent;
+    background: #F8FAFC;
     color: #4B5563;
     font-size: 14px;
     font-weight: 500;
@@ -677,9 +732,10 @@ body.is-filtered .selection-toggle-btn {
 }
 
 .event-card-metric-main svg {
-    width: 15px;
-    height: 15px;
-    color: #6B7280;
+    width: 16px;
+    height: 16px;
+    color: #2563EB;
+    stroke: #2563EB;
     flex-shrink: 0;
 }
 

@@ -1764,14 +1764,7 @@ body {
     font-weight: 500;
     color: #343A4A;
     line-height: 20px;
-    margin-bottom: 2px;
-}
-
-.impact-card-description {
-    font-size: 12px;
-    font-weight: 400;
-    color: #8A91A3;
-    line-height: 16px;
+    margin-bottom: 4px;
 }
 
 .impact-card-trend {

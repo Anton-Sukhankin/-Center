@@ -828,7 +828,10 @@
                     </div>
                     <div class="impact-card-info">
                         <div class="impact-card-title">${evt.metricName || 'Чистая прибыль Самолет'}</div>
-                        <div class="impact-card-description">Влияние на метрику</div>
+                        <div class="impact-card-trend ${evt.impactType === 'negative' ? 'neg' : 'pos'}">
+                            <i data-lucide="${evt.impactType === 'negative' ? 'trending-down' : 'trending-up'}" style="width:18px; height:18px;"></i>
+                            <span>${evt.impact || '-15 000 000 ₽'}</span>
+                        </div>
                     </div>
                 </div>
                 

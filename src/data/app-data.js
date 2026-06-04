@@ -2,11 +2,11 @@
 // Файл подключается обычным <script> до src/app/app.js и сохраняет текущую глобальную модель проекта.
 (function (window) {
     const eventSources = [
-        { id: 'S.Pass', name: 'S.Pass', icon: 'circle-user' },
-        { id: 'S.Center', name: 'S.Center', icon: 'layers' },
-        { id: 'S.Control', name: 'S.Control', icon: 'clipboard-list' },
-        { id: 'MS Project', name: 'MS Project', icon: 'file-text' },
-        { id: 'S.Materis', name: 'S.Materis', icon: 'activity' }
+        { id: 'S.Pass', name: 'S.Pass', icon: 'circle-user', theme: { chipBg: '#DBEAFE', chipBgEnd: '#EEF4FF', iconBg: '#2563EB', iconColor: '#FFFFFF', textColor: '#2563EB' } },
+        { id: 'S.Center', name: 'S.Center', icon: 'layers', theme: { chipBg: '#E0E7FF', chipBgEnd: '#F1F5FF', iconBg: '#4F46E5', iconColor: '#FFFFFF', textColor: '#3730A3' } },
+        { id: 'S.Control', name: 'S.Control', icon: 'clipboard-list', theme: { chipBg: '#DCFCE7', chipBgEnd: '#F0FDF4', iconBg: '#16A34A', iconColor: '#FFFFFF', textColor: '#15803D' } },
+        { id: 'MS Project', name: 'MS Project', icon: 'file-text', theme: { chipBg: '#F3E8FF', chipBgEnd: '#FAF5FF', iconBg: '#7C3AED', iconColor: '#FFFFFF', textColor: '#6D28D9' } },
+        { id: 'S.Materis', name: 'S.Materis', icon: 'activity', theme: { chipBg: '#FFEDD5', chipBgEnd: '#FFF7ED', iconBg: '#EA580C', iconColor: '#FFFFFF', textColor: '#C2410C' } }
     ];
 
     const priorities = [
@@ -332,6 +332,7 @@
             sourceId,
             sourceName: source.name,
             sourceIcon: event.sourceIcon || source.icon,
+            sourceTheme: source.theme ? clone(source.theme) : null,
             metricName: event.metricName || (metric ? metric.name : ''),
             impactValue,
             impactUnit: event.impactUnit || parseImpactUnit(event.impact),
@@ -345,6 +346,7 @@
             queueId: context.queueId,
             queue: context.queue,
             objectName: event.objectName || `${context.projectName} / ${context.queue}`,
+            sourceTheme: event.sourceTheme || (source.theme ? clone(source.theme) : null),
             metricId,
             metricName: event.metricName || (metric ? metric.name : ''),
             metricValues

@@ -5,11 +5,28 @@
 (function (window) {
     const ui = window.SCenterUI;
 
+    function buildSourceThemeStyle(theme) {
+        const sourceTheme = theme || {};
+        const themeVars = [
+            ['--source-chip-bg', sourceTheme.chipBg],
+            ['--source-chip-bg-end', sourceTheme.chipBgEnd],
+            ['--source-icon-bg', sourceTheme.iconBg],
+            ['--source-icon-color', sourceTheme.iconColor],
+            ['--source-text-color', sourceTheme.textColor]
+        ];
+
+        return themeVars
+            .filter(([, value]) => Boolean(value))
+            .map(([name, value]) => `${name}: ${value}`)
+            .join('; ');
+    }
+
     function renderEventListCard(event) {
         const isPinned = event.pinned ? 'pinned' : '';
         const priorityClass = event.priority ? `priority-${ui.escapeAttr(event.priority)}` : '';
         const hasMetric = Boolean(event.metricName || event.impact);
         const sourceIcon = event.sourceIcon || 'activity';
+        const sourceThemeStyle = buildSourceThemeStyle(event.sourceTheme);
         const pinTitle = event.pinned ? 'Открепить' : 'Закрепить';
         const pinIcon = event.pinned ? 'pin-off' : 'pin';
         const titleText = event.listTitle || event.title || '';
@@ -34,7 +51,7 @@
 
                     <div class="event-card-meta-line">
                         <div class="event-card-attributes-row">
-                            <span class="event-source-product-chip">
+                            <span class="event-source-product-chip" style="${ui.escapeAttr(sourceThemeStyle)}">
                                 <span class="event-source-chip-icon" aria-hidden="true">
                                     ${ui.icon(sourceIcon)}
                                 </span>

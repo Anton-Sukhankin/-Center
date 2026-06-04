@@ -420,8 +420,8 @@ body.is-filtered .selection-toggle-btn {
     height: 22px;
     padding: 2px 10px 2px 2px;
     border-radius: 999px;
-    background: linear-gradient(90deg, #DBEAFE 0%, #EEF4FF 100%);
-    color: #2563EB;
+    background: linear-gradient(90deg, var(--source-chip-bg, #DBEAFE) 0%, var(--source-chip-bg-end, #EEF4FF) 100%);
+    color: var(--source-text-color, #2563EB);
     font-size: 13px;
     font-weight: 700;
     line-height: 1;
@@ -433,8 +433,8 @@ body.is-filtered .selection-toggle-btn {
     height: 18px;
     flex: 0 0 18px;
     border-radius: 50%;
-    background: #2563EB;
-    color: #FFFFFF;
+    background: var(--source-icon-bg, #2563EB);
+    color: var(--source-icon-color, #FFFFFF);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -597,6 +597,17 @@ body.is-filtered .selection-toggle-btn {
     gap: 0 !important;
     padding: 0 !important;
     overflow: visible;
+    isolation: isolate;
+}
+
+.event-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    border-radius: var(--ec-radius);
+    pointer-events: none;
+    z-index: 5;
 }
 
 .event-card.priority-high.has-metric-link {
@@ -632,6 +643,10 @@ body.is-filtered .selection-toggle-btn {
     flex: 0 0 auto;
     min-height: 0;
     padding: var(--event-card-main-padding-top) 22px var(--event-card-main-padding-bottom);
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    border-radius: calc(var(--ec-radius) - 1px) calc(var(--ec-radius) - 1px) 0 0;
 }
 
 .event-card-meta-line {
@@ -711,6 +726,22 @@ body.is-filtered .selection-toggle-btn {
     font-weight: 500;
     flex: 0 0 var(--event-card-metric-height);
     margin-top: 0;
+    position: relative;
+    z-index: 1;
+    border-radius: 0 0 calc(var(--ec-radius) - 1px) calc(var(--ec-radius) - 1px);
+    background-clip: padding-box;
+    overflow: hidden;
+}
+
+.event-card:hover {
+    border-color: var(--ec-blue) !important;
+    box-shadow: var(--ec-shadow-hover);
+    transform: translateY(-2px);
+    z-index: 2;
+}
+
+.event-card:hover::after {
+    border-color: var(--ec-blue);
 }
 
 .event-card-metric-block.is-empty {

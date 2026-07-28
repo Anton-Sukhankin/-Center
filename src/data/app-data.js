@@ -137,6 +137,48 @@
         return eventSources.find(source => source.id === id || source.name === id) || null;
     }
 
+    function buildSourceViewModel(source) {
+        return {
+            id: source.id,
+            name: source.name,
+            icon: source.icon,
+            theme: source.theme ? clone(source.theme) : null
+        };
+    }
+
+    function getUniqueSourceIds(sourceIds) {
+        const result = [];
+        (sourceIds || []).forEach(id => {
+            const source = findSourceById(id);
+            if (source && !result.includes(source.id)) result.push(source.id);
+        });
+        return result;
+    }
+
+    function resolveEventSourceIds(event, index, primarySourceId) {
+        const explicitSourceIds = getUniqueSourceIds(event.sourceIds);
+        if (explicitSourceIds.length > 0) {
+            return explicitSourceIds.slice(0, 5);
+        }
+
+        const sourceCycle = eventSources.map(source => source.id);
+        const normalizedPrimaryId = (findSourceById(primarySourceId) || eventSources[1]).id;
+        const shouldAggregate = index % 10 < 3;
+        if (!shouldAggregate) return [normalizedPrimaryId];
+
+        const targetCount = 2 + (stableHash(`${event.id || index}:sources`) % 4);
+        const resolvedIds = [normalizedPrimaryId];
+        let cursor = stableHash(`${event.id || index}:source-cycle`) % sourceCycle.length;
+
+        while (resolvedIds.length < targetCount && resolvedIds.length < sourceCycle.length) {
+            const nextId = sourceCycle[cursor % sourceCycle.length];
+            if (!resolvedIds.includes(nextId)) resolvedIds.push(nextId);
+            cursor += 1;
+        }
+
+        return resolvedIds;
+    }
+
     function addParentLinks(node, parentId) {
         const nextNode = { ...node, parentId: parentId || null };
         if (node.children) {
@@ -314,6 +356,12 @@
     function normalizeEvent(event, index = 0) {
         const sourceId = event.sourceId || event.sourceName || 'S.Center';
         const source = findSourceById(sourceId) || eventSources[1];
+        const eventSourceIds = resolveEventSourceIds(event, index, source.id);
+        const eventSourcesView = eventSourceIds
+            .map(id => findSourceById(id))
+            .filter(Boolean)
+            .map(buildSourceViewModel);
+        const primarySource = eventSourcesView[0] || buildSourceViewModel(source);
         const impactValue = event.impactValue !== undefined ? event.impactValue : parseImpactValue(event.impact);
         const context = resolveEventContext(event, index);
         const metricId = resolveMetricIdForEvent(event.metricId || 'OTHER_INCOME', `${event.id || index}:${context.queueId}`);
@@ -329,10 +377,14 @@
             queue: event.queue || '2 очередь',
             objectType: event.objectType || 'корпус',
             objectName: event.objectName || 'Nova / Корпус 1',
-            sourceId,
-            sourceName: source.name,
-            sourceIcon: event.sourceIcon || source.icon,
-            sourceTheme: source.theme ? clone(source.theme) : null,
+            sourceId: primarySource.id,
+            sourceName: primarySource.name,
+            sourceIcon: event.sourceIcon || primarySource.icon,
+            sourceTheme: primarySource.theme ? clone(primarySource.theme) : null,
+            sourceIds: eventSourceIds,
+            sources: clone(eventSourcesView),
+            sourceCount: eventSourcesView.length,
+            isSourceAggregator: eventSourcesView.length > 1,
             metricName: event.metricName || (metric ? metric.name : ''),
             impactValue,
             impactUnit: event.impactUnit || parseImpactUnit(event.impact),
@@ -346,46 +398,274 @@
             queueId: context.queueId,
             queue: context.queue,
             objectName: event.objectName || `${context.projectName} / ${context.queue}`,
-            sourceTheme: event.sourceTheme || (source.theme ? clone(source.theme) : null),
+            sourceId: primarySource.id,
+            sourceName: primarySource.name,
+            sourceIcon: event.sourceIcon || primarySource.icon,
+            sourceTheme: event.sourceTheme || (primarySource.theme ? clone(primarySource.theme) : null),
+            sourceIds: eventSourceIds,
+            sources: clone(eventSourcesView),
+            sourceCount: eventSourcesView.length,
+            isSourceAggregator: eventSourcesView.length > 1,
             metricId,
             metricName: event.metricName || (metric ? metric.name : ''),
             metricValues
         };
     }
 
-    function compactTitle(title) {
-        const words = String(title || '').split(/\s+/).filter(Boolean);
-        if (words.length <= 4) return String(title || '');
-        return words.slice(0, 4).join(' ');
-    }
-
     function stripPriorityFromTitle(title) {
         return String(title || '').replace(/^\s*(Высокий|Низкий|Критический)\s+приоритет\s*:\s*/i, '');
     }
 
-    function buildListTitle(event, index) {
-        const baseTitle = stripPriorityFromTitle(event.title).trim();
-        const objectName = event.objectName || event.queue || '';
-        const queueName = event.queue || '';
-        const variant = index % 3;
-        if (variant === 0) return compactTitle(baseTitle);
-        if (variant === 1) return baseTitle;
-        return objectName ? `${baseTitle}: ${objectName}, ${queueName}, требуется проверка` : `${baseTitle}: требуется проверка`;
+    const generatedTitleTemplates = {
+        REVENUE: [
+            'Изменение прогноза выручки по продажному контуру',
+            'Уточнение темпа поступлений по коммерческой модели',
+            'Сигнал по выполнению плана выручки'
+        ],
+        REV_APTS: [
+            'Снижение темпа бронирований квартир',
+            'Рост спроса на квартиры после обновления витрины',
+            'Отклонение продаж квартир от недельного плана'
+        ],
+        REV_PARKING: [
+            'Уточнение спроса на паркоместа',
+            'Сдвиг продаж паркинга относительно плана',
+            'Переоценка остатка паркомест в продаже'
+        ],
+        REV_OTHER: [
+            'Уточнение дополнительной коммерческой выручки',
+            'Изменение дохода от сервисных помещений',
+            'Сигнал по прочим поступлениям проекта'
+        ],
+        COGS_CONSTRUCTION: [
+            'Рост затрат на строительно-монтажные работы',
+            'Риск перерасхода по подрядному контуру',
+            'Отклонение стоимости работ от бюджета'
+        ],
+        COGS_LAND: [
+            'Индексация платежа по земельному контуру',
+            'Уточнение графика расчетов за участок',
+            'Отклонение земельных затрат от бюджета'
+        ],
+        ADMIN_EXP: [
+            'Рост управленческих расходов проекта',
+            'Уточнение затрат проектного офиса',
+            'Отклонение административного бюджета'
+        ],
+        COMM_EXP: [
+            'Увеличение маркетингового бюджета',
+            'Сигнал по расходам на продвижение',
+            'Корректировка коммерческих расходов'
+        ],
+        OTHER_EXP: [
+            'Прочий расход по операционному контуру',
+            'Уточнение внеплановых затрат проекта',
+            'Сигнал по дополнительным расходам'
+        ],
+        FIN_EXPENSES: [
+            'Корректировка финансовых расходов',
+            'Изменение стоимости проектного финансирования',
+            'Отклонение процентных начислений от плана'
+        ],
+        TAX_PROFIT: [
+            'Уточнен расчет налога на прибыль',
+            'Корректировка налогового прогноза',
+            'Отклонение налоговой нагрузки от бюджета'
+        ],
+        GANTT_DATES: [
+            'Сдвиг контрольной вехи графика',
+            'Риск переноса завершения этапа',
+            'Отклонение календарного плана работ'
+        ],
+        OTHER_INCOME: [
+            'Портфельная сверка операционных данных',
+            'Уточнение статуса управленческого сигнала',
+            'Актуализация проектной записи'
+        ],
+        DEFAULT: [
+            'Операционный сигнал для проверки',
+            'Уточнение данных по проектному контуру',
+            'Событийный риск для ежедневного разбора'
+        ]
+    };
+
+    const generatedTitleScopes = [
+        'по фасадному фронту',
+        'по монолитному циклу',
+        'по инженерному пакету',
+        'по отделочному контуру',
+        'по поставке материалов',
+        'по подрядному блоку',
+        'по финансовой модели',
+        'по разрешительной документации',
+        'по графику работ',
+        'по строительной готовности',
+        'по качеству работ',
+        'по ресурсному плану'
+    ];
+
+    const usedEventTitles = new Set();
+
+    function isGeneratedPlaceholderTitle(title, event) {
+        const value = String(title || '').trim();
+        const projectName = event && event.projectName ? String(event.projectName).trim() : '';
+        const queueName = event && event.queue ? String(event.queue).trim() : '';
+
+        if (!value) return true;
+        if (/событие\s+\d+/i.test(value)) return true;
+        if (/требуется\s+проверка/i.test(value)) return true;
+        if (/^\s*(Высокий|Низкий|Критический)\s+приоритет/i.test(value)) return true;
+        if (projectName && queueName && value.includes(projectName) && value.includes(queueName)) return true;
+
+        return false;
     }
 
-    function buildListPresentation(event, index) {
+    function buildGeneratedEventTitle(event, index) {
+        const metricId = event.metricId || 'DEFAULT';
+        const templates = generatedTitleTemplates[metricId] || generatedTitleTemplates.DEFAULT;
+        const template = templates[index % templates.length];
+        const scope = generatedTitleScopes[(index + templates.length) % generatedTitleScopes.length];
+        const workPackage = index + 1;
+
+        return `${template} ${scope}, пакет работ ${workPackage}`;
+    }
+
+    function ensureUniqueEventTitle(title, index) {
+        const baseTitle = String(title || '').trim() || buildGeneratedEventTitle({}, index);
+        if (!usedEventTitles.has(baseTitle)) {
+            usedEventTitles.add(baseTitle);
+            return baseTitle;
+        }
+
+        const uniqueTitle = `${baseTitle}, уточнение ${index + 1}`;
+        usedEventTitles.add(uniqueTitle);
+        return uniqueTitle;
+    }
+
+    function buildListTitle(event, index) {
+        const baseTitle = stripPriorityFromTitle(event.title).trim();
+        const semanticTitle = isGeneratedPlaceholderTitle(baseTitle, event)
+            ? buildGeneratedEventTitle(event, index)
+            : baseTitle;
+
+        return ensureUniqueEventTitle(semanticTitle, index);
+    }
+
+    function getSourceCountText(count) {
+        const value = Number(count) || 0;
+        const mod10 = value % 10;
+        const mod100 = value % 100;
+        const word = mod10 === 1 && mod100 !== 11
+            ? 'источник'
+            : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+                ? 'источника'
+                : 'источников';
+        return `${value} ${word}`;
+    }
+
+    function getEventSignal(event, index) {
+        const title = `${event.title || ''} ${event.text || ''}`.toLowerCase();
+        if (title.includes('срок') || title.includes('задерж') || title.includes('график') || title.includes('рнс') || title.includes('смр')) {
+            return {
+                focus: 'смещение календарного контура',
+                check: 'сверить критический путь, зависимые этапы и ближайший резерв графика',
+                action: 'зафиксировать ответственного за актуализацию графика и запросить подтверждение новой даты'
+            };
+        }
+        if (title.includes('затрат') || title.includes('бюджет') || title.includes('выруч') || title.includes('налог') || title.includes('финанс')) {
+            return {
+                focus: 'изменение финансового прогноза',
+                check: 'сопоставить факт, бюджет, прогноз и источник отклонения по выбранной метрике',
+                action: 'передать событие финансовому блоку и РП для проверки влияния на план месяца'
+            };
+        }
+        if (title.includes('безопас') || title.includes('тб') || title.includes('пожар') || title.includes('штраф') || title.includes('инспек')) {
+            return {
+                focus: 'контроль безопасности и исполнительской дисциплины',
+                check: 'проверить акт, фотофиксацию, подрядчика и срок устранения замечания',
+                action: 'создать задачу или запросить объяснение у ответственного подрядчика'
+            };
+        }
+        if (title.includes('постав') || title.includes('склад') || title.includes('материал') || title.includes('логист')) {
+            return {
+                focus: 'ресурсный риск на площадке',
+                check: 'сверить остатки, дату поставки, альтернативного поставщика и влияние на фронт работ',
+                action: 'согласовать временный сценарий обеспечения работ без остановки активной очереди'
+            };
+        }
+
+        const variants = [
+            {
+                focus: 'операционное изменение в проектном контуре',
+                check: 'сверить событие с текущим планом работ, ответственными и статусом выбранной очереди',
+                action: 'оставить событие в фокусе до подтверждения корректности данных'
+            },
+            {
+                focus: 'уточнение данных для управленческой картины',
+                check: 'проверить источник, дату фиксации и связь события с релевантной метрикой',
+                action: 'использовать карточку как вход в последующий AI-анализ выборки'
+            },
+            {
+                focus: 'сигнал для ежедневного разбора проекта',
+                check: 'сопоставить описание события с другими карточками этого контекста',
+                action: 'закрепить карточку, если она влияет на решение РП или требует повторного контроля'
+            }
+        ];
+        return variants[index % variants.length];
+    }
+
+    function buildEventNarrative(event, index) {
         const baseText = String(event.text || '').trim();
         const metricName = event.metricName || 'ключевой показатель проекта';
         const objectName = event.objectName || event.queue || 'выбранный контур проекта';
         const sourceName = event.sourceName || event.sourceId || 'S.Center';
+        const sourceCount = Number(event.sourceCount || (Array.isArray(event.sourceIds) ? event.sourceIds.length : 1)) || 1;
+        const sourceCountText = getSourceCountText(sourceCount);
+        const dateText = event.dateText || 'дата не указана';
+        const responseDays = 1 + (index % 5);
+        const confidence = 72 + (index % 19);
+        const relatedEventsCount = 2 + (index % 7);
+        const impactValueText = event.impact || 'не рассчитано';
+        const priorityName = event.priority === 'high' || event.priority === 'critical'
+            ? 'высокий приоритет'
+            : 'низкий приоритет';
+        const signal = getEventSignal(event, index);
+        const impactText = event.impact
+            ? `зафиксировано расчетное влияние ${event.impact} на "${metricName}"`
+            : `числовое влияние на "${metricName}" пока не выводится в компактной карточке`;
+
+        return {
+            listText: [
+                `**Сигнал:** ${signal.focus}. ${baseText}`,
+                `**Данные:** ${sourceCountText}; ${dateText}; ${objectName}.`,
+                `**Влияние:** ${metricName}; значение ${impactValueText}; уверенность ${confidence}%.`,
+                `**Действие:** проверить за ${responseDays} дн.; ${signal.action}.`
+            ].join('\n'),
+            detailText: [
+                `**1. Ключевой сигнал**\n• ${baseText}\n• AI-классификация: ${signal.focus}.\n• Приоритет разбора: ${priorityName}.`,
+                `**2. Данные и источник**\n• Основной источник: ${sourceName}.\n• Источников в событии: ${sourceCountText}.\n• Время фиксации: ${dateText}.\n• Контур: ${objectName}.`,
+                `**3. Расчетное влияние**\n• Метрика: ${metricName}.\n• Значение: ${impactValueText}.\n• Уверенность демо-аналитики: ${confidence}%.\n• Интерпретация: ${impactText}.`,
+                `**4. Связанный контекст**\n• Найдено связанных сигналов в текущей выборке: ${relatedEventsCount}.\n• Требуемая скорость реакции: до ${responseDays} дн.\n• Проверка: ${signal.check}.`,
+                `**5. Рекомендуемое действие**\n• ${signal.action}.\n• Если событие влияет на управленческое решение, закрепите карточку или создайте задачу из footer детальной карточки.`
+            ].join('\n\n')
+        };
+    }
+
+    function buildListPresentation(event, index) {
         const isLong = index % 2 === 0;
-        const mediumDetails = `Контекст зафиксирован для ${objectName}; источник ${sourceName} передал данные для проверки ответственной командой.`;
-        const longDetails = `${mediumDetails} Связанные параметры будут использованы при сверке влияния на ${metricName}, чтобы пользователь видел причину события без открытия детальной карточки.`;
+        const listTitle = buildListTitle(event, index);
+        const narrative = buildEventNarrative(event, index);
+        const expandedListText = isLong
+            ? `${narrative.listText}\n**AI-вывод:** событие нужно оставить в рабочей выборке до проверки ответственным.`
+            : narrative.listText;
 
         return {
             ...event,
-            listTitle: buildListTitle(event, index),
-            listText: `${baseText} ${isLong ? longDetails : mediumDetails}`,
+            title: listTitle,
+            listTitle,
+            text: narrative.detailText,
+            listText: expandedListText,
+            detailText: narrative.detailText,
             listDescriptionTargetLines: isLong ? 4 : 3
         };
     }

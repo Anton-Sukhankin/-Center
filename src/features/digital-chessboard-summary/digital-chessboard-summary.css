@@ -1,0 +1,229 @@
+#digital-chessboard-summary-view { display: flex; width: 100%; height: calc(100vh - 64px); min-height: 0; overflow: hidden; background: #f6f8fb; }
+#digital-chessboard-summary-view[hidden], #digital-chessboard-summary-root[hidden] { display: none !important; }
+#digital-chessboard-summary-root { --dcs-bg:#f6f8fb; --dcs-surface:#fff; --dcs-text:#151923; --dcs-muted:#667085; --dcs-border:#e4e8ef; --dcs-primary:#1677ff; width:100%; height:100%; min-width:0; min-height:0; color:var(--dcs-text); background:var(--dcs-bg); }
+#digital-chessboard-summary-root *, #digital-chessboard-summary-root *::before, #digital-chessboard-summary-root *::after { box-sizing:border-box; }
+#digital-chessboard-summary-root button, #digital-chessboard-summary-root input, #digital-chessboard-summary-root select { font:inherit; }
+#digital-chessboard-summary-root button, #digital-chessboard-summary-root select { cursor:pointer; }
+#digital-chessboard-summary-root button:focus-visible, #digital-chessboard-summary-root select:focus-visible, #digital-chessboard-summary-root [tabindex]:focus-visible { outline:3px solid rgba(22,119,255,.28); outline-offset:2px; }
+#digital-chessboard-summary-root .dcs-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+#digital-chessboard-summary-root .dcs-workspace { width:100%; height:100%; min-width:0; min-height:0; padding:0 24px 24px; overflow-y:auto; overflow-x:hidden; background:var(--dcs-bg); }
+#digital-chessboard-summary-root .dcs-view-header { min-width:0; padding:24px 0 0; display:flex; align-items:center; }
+#digital-chessboard-summary-root .dcs-view-title { margin:0; color:var(--dcs-text); font-size:24px; font-weight:600; line-height:32px; letter-spacing:0; }
+#digital-chessboard-summary-root .dcs-sticky-summary-shell { position:sticky; top:0; z-index:80; min-width:0; padding:16px 0 12px; display:grid; gap:12px; isolation:isolate; background:var(--dcs-bg); }
+#digital-chessboard-summary-root .dcs-project-toolbar { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+#digital-chessboard-summary-root .dcs-project-selector { position:relative; z-index:30; width:min(430px,55vw); }
+#digital-chessboard-summary-root .dcs-project-trigger { width:100%; min-height:70px; padding:10px 18px; border:1px solid #dfe5ed; border-radius:9px; background:#fff; color:var(--dcs-text); display:grid; grid-template-columns:40px minmax(0,1fr) 20px; align-items:center; gap:12px; text-align:left; transition:border-color .16s ease,box-shadow .16s ease; }
+#digital-chessboard-summary-root .dcs-project-trigger:hover, #digital-chessboard-summary-root .dcs-project-trigger[aria-expanded="true"] { border-color:#b7c8df; box-shadow:0 3px 10px rgba(15,23,42,.06); }
+#digital-chessboard-summary-root .dcs-project-icon, #digital-chessboard-summary-root .dcs-kpi-icon { width:40px; height:40px; flex:0 0 40px; border-radius:8px; display:grid; place-items:center; color:#2563eb; background:#eff6ff; }
+#digital-chessboard-summary-root .dcs-project-copy { min-width:0; display:grid; gap:2px; }
+#digital-chessboard-summary-root .dcs-project-copy small { color:#5e6675; font-size:12px; line-height:15px; }
+#digital-chessboard-summary-root .dcs-project-copy strong { overflow:hidden; font-size:17px; font-weight:600; line-height:21px; text-overflow:ellipsis; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-project-copy > span { overflow:hidden; color:#7b8495; font-size:10px; line-height:13px; text-overflow:ellipsis; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-project-trigger > svg { transition:transform .16s ease; }
+#digital-chessboard-summary-root .dcs-project-trigger > svg.is-rotated { transform:rotate(180deg); }
+#digital-chessboard-summary-root .dcs-project-popover { position:absolute; top:calc(100% + 8px); left:0; width:100%; max-height:320px; padding:8px; overflow-y:auto; border:1px solid var(--dcs-border); border-radius:10px; background:#fff; box-shadow:0 18px 45px rgba(20,31,50,.16); }
+#digital-chessboard-summary-root .dcs-project-popover > p { margin:12px; color:var(--dcs-muted); font-size:13px; }
+#digital-chessboard-summary-root .dcs-project-popover button { width:100%; min-height:54px; padding:8px 10px; border:0; border-radius:8px; background:transparent; color:var(--dcs-text); display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; }
+#digital-chessboard-summary-root .dcs-project-popover button:hover, #digital-chessboard-summary-root .dcs-project-popover button:focus-visible { background:#f5f8fc; }
+#digital-chessboard-summary-root .dcs-project-popover button[aria-selected="true"] { color:#155dc1; background:#eef5ff; }
+#digital-chessboard-summary-root .dcs-project-popover button > span { min-width:0; display:flex; align-items:center; gap:10px; }
+#digital-chessboard-summary-root .dcs-project-option-icon { width:32px; height:32px; flex:0 0 32px; border-radius:7px; color:#2563eb; background:#eff6ff; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-project-popover button span span { min-width:0; display:grid; gap:2px; }
+#digital-chessboard-summary-root .dcs-project-popover strong, #digital-chessboard-summary-root .dcs-project-popover small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-project-popover strong { font-size:13px; }
+#digital-chessboard-summary-root .dcs-project-popover small { color:var(--dcs-muted); font-size:10px; }
+#digital-chessboard-summary-root .dcs-toolbar-actions { display:flex; align-items:center; gap:12px; }
+#digital-chessboard-summary-root .dcs-toolbar-actions button { min-width:132px; height:52px; padding:0 18px; border:1px solid #dfe5ed; border-radius:9px; background:#fff; color:#242933; display:inline-flex; align-items:center; justify-content:center; gap:10px; font-size:14px; font-weight:600; transition:border-color .16s ease,background .16s ease; }
+#digital-chessboard-summary-root .dcs-toolbar-actions button:hover { border-color:#b7c5d8; background:#fbfcfe; }
+#digital-chessboard-summary-root .dcs-archive-banner { min-height:44px; padding:8px 12px; border:1px solid #f2d8a7; border-radius:9px; color:#855b0a; background:#fff8e8; display:flex; align-items:center; gap:10px; }
+#digital-chessboard-summary-root .dcs-archive-banner > span { display:grid; gap:1px; }
+#digital-chessboard-summary-root .dcs-archive-banner strong { font-size:12px; }
+#digital-chessboard-summary-root .dcs-archive-banner small { font-size:10px; }
+#digital-chessboard-summary-root .dcs-archive-banner button { margin-left:auto; border:0; background:transparent; color:#155cae; font-size:12px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-kpi-grid { min-width:0; display:grid; grid-template-columns:repeat(6,minmax(210px,1fr)); gap:8px; overflow-x:auto; scrollbar-width:none; }
+#digital-chessboard-summary-root .dcs-kpi-card { min-width:210px; min-height:0; padding:16px; border:1px solid var(--dcs-border); border-radius:12px; background:#fff; display:grid; grid-auto-rows:max-content; align-content:start; gap:4px; box-shadow:0 1px 3px rgba(20,27,45,.025); }
+#digital-chessboard-summary-root .dcs-kpi-header { min-width:0; display:grid; grid-template-columns:40px minmax(0,1fr); align-items:center; gap:12px; }
+#digital-chessboard-summary-root .dcs-kpi-label { min-width:0; margin-left:52px; overflow:hidden; color:#3f4754; font-size:14px; font-weight:600; line-height:18px; text-overflow:ellipsis; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-kpi-value { min-width:0; min-height:34px; display:flex; align-items:center; gap:20px; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-kpi-value strong { font-size:28px; font-weight:500; line-height:34px; letter-spacing:-.02em; }
+#digital-chessboard-summary-root .dcs-kpi-value span { display:inline-flex; align-items:center; gap:5px; font-size:15px; font-weight:700; }
+#digital-chessboard-summary-root .dcs-kpi-icon.is-green { color:#158653; background:#e9f8f0; }
+#digital-chessboard-summary-root .dcs-kpi-icon.is-red { color:#d92d20; background:#fff0f0; }
+#digital-chessboard-summary-root .dcs-kpi-icon.is-violet { color:#7f56d9; background:#f4f0ff; }
+#digital-chessboard-summary-root .dcs-kpi-icon.is-orange { color:#e46f25; background:#fff2e9; }
+#digital-chessboard-summary-root .dcs-kpi-icon.is-yellow { color:#b77a00; background:#fff7df; }
+#digital-chessboard-summary-root .dcs-kpi-icon.is-neutral { color:#667085; background:#f2f4f7; }
+#digital-chessboard-summary-root .dcs-kpi-card.is-skeleton span, #digital-chessboard-summary-root .dcs-kpi-card.is-skeleton b, #digital-chessboard-summary-root .dcs-list-skeleton span { border-radius:7px; background:linear-gradient(90deg,#edf0f4 25%,#f7f8fa 50%,#edf0f4 75%); background-size:200% 100%; animation:dcs-shimmer 1.2s infinite; }
+#digital-chessboard-summary-root .dcs-kpi-card.is-skeleton .dcs-kpi-header > span { width:40px; height:40px; }
+#digital-chessboard-summary-root .dcs-kpi-card.is-skeleton b { width:80px; height:34px; }
+#digital-chessboard-summary-root .dcs-kpi-card.is-skeleton > .dcs-kpi-skeleton-label { width:128px; height:18px; margin-left:52px; }
+#digital-chessboard-summary-root .dcs-analytics-grid { min-width:0; margin:0 0 12px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+#digital-chessboard-summary-root .dcs-analytics-card { height:306px; min-width:0; overflow:hidden; border:1px solid var(--dcs-border); border-radius:12px; background:#fff; display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(20,27,45,.025); }
+#digital-chessboard-summary-root .dcs-analytics-card > header { min-height:60px; padding:0 18px; flex:0 0 60px; border-bottom:1px solid var(--dcs-border); display:flex; align-items:center; gap:10px; }
+#digital-chessboard-summary-root .dcs-card-title-icon { width:21px; height:21px; flex:0 0 21px; color:#334155; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-analytics-card h2 { margin:0; min-width:0; color:var(--dcs-text); font-size:17px; font-weight:600; line-height:22px; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-card-scroll { min-height:0; flex:1; padding:8px 12px; overflow-y:auto; scrollbar-width:none; }
+#digital-chessboard-summary-root .dcs-card-scroll::-webkit-scrollbar { display:none; }
+#digital-chessboard-summary-root .dcs-analytics-card > footer { width:100%; height:58px; min-height:58px; padding:10px 18px; flex:0 0 58px; border-top:1px solid var(--dcs-border); background:#fff; display:flex; align-items:center; }
+#digital-chessboard-summary-root .dcs-link-button { width:100%; min-height:38px; padding:0 13px; border:1px solid #dfe5ed; border-radius:7px; background:#fff; color:#165db8; display:inline-flex; align-items:center; justify-content:center; gap:9px; font-size:13px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-link-button:hover { border-color:#b7c8df; background:#f8fbff; }
+#digital-chessboard-summary-root .dcs-weekly-delta-wrap { position:relative; margin-left:auto; flex:0 0 auto; display:inline-flex; }
+#digital-chessboard-summary-root .dcs-weekly-delta-tag { --tag:#667085; height:24px; padding:0 8px 0 4px; border:1px solid #dfe4eb; border-radius:16px; background:#f4f6f8; color:var(--tag); display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:650; cursor:help; }
+#digital-chessboard-summary-root .dcs-weekly-delta-tag.is-positive { --tag:#138653; border-color:#c8ebd8; background:#e9f8f0; }
+#digital-chessboard-summary-root .dcs-weekly-delta-tag.is-negative { --tag:#d92d20; border-color:#f3caca; background:#fff0f0; }
+#digital-chessboard-summary-root .dcs-weekly-tag-icon { width:16px; height:16px; border-radius:50%; color:#fff; background:var(--tag); display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-weekly-delta-tooltip { position:absolute; z-index:20; top:calc(100% + 8px); right:0; width:max-content; max-width:min(340px,calc(100vw - 48px)); padding:8px 10px; border-radius:8px; background:#202630; color:#fff; box-shadow:0 8px 22px rgba(20,31,50,.16); font-size:12px; line-height:17px; opacity:0; pointer-events:none; transform:translateY(-3px); transition:opacity .16s ease,transform .16s ease; }
+#digital-chessboard-summary-root .dcs-weekly-delta-wrap:hover .dcs-weekly-delta-tooltip, #digital-chessboard-summary-root .dcs-weekly-delta-wrap:focus-within .dcs-weekly-delta-tooltip { opacity:1; transform:translateY(0); }
+#digital-chessboard-summary-root .dcs-weekly-list, #digital-chessboard-summary-root .dcs-attention-list { margin:0; padding:0; display:grid; gap:2px; list-style:none; }
+#digital-chessboard-summary-root .dcs-weekly-item { min-width:0; height:39px; padding:0 2px; border-radius:7px; background:#fbfcfe; display:grid; grid-template-columns:22px minmax(0,1fr); align-items:center; gap:8px; }
+#digital-chessboard-summary-root .dcs-weekly-item > span { width:10px; height:10px; margin:auto; border-radius:50%; background:#15a66d; }
+#digital-chessboard-summary-root .dcs-weekly-item p { margin:0; overflow:hidden; color:#303744; font-size:14px; font-weight:500; line-height:18px; text-overflow:ellipsis; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-list-skeleton { height:39px; padding:8px; }
+#digital-chessboard-summary-root .dcs-list-skeleton span { display:block; width:80%; height:20px; }
+#digital-chessboard-summary-root .dcs-list-empty { padding:32px; color:var(--dcs-muted); text-align:center; font-size:13px; }
+#digital-chessboard-summary-root .dcs-object-filter { position:relative; margin-left:auto; min-width:170px; height:36px; padding:0 30px 0 10px; border:1px solid #dfe5ed; border-radius:8px; display:flex; align-items:center; gap:7px; }
+#digital-chessboard-summary-root .dcs-object-filter select { min-width:0; width:100%; border:0; outline:0; appearance:none; color:#344054; background:transparent; font-size:12px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-object-filter > svg:last-of-type { position:absolute; right:9px; pointer-events:none; }
+#digital-chessboard-summary-root .dcs-attention-item { width:100%; min-width:0; height:39px; padding:0 2px; border:0; border-radius:7px; background:#fbfcfe; display:grid; grid-template-columns:22px minmax(0,1fr) 24px 18px; align-items:center; gap:8px; color:#303744; text-align:left; transition:background .2s ease,color .2s ease; }
+#digital-chessboard-summary-root .dcs-attention-item:hover, #digital-chessboard-summary-root .dcs-attention-item:focus-visible { background:#f0f5fb; color:#151923; }
+#digital-chessboard-summary-root .dcs-attention-item > span:nth-child(2) { overflow:hidden; font-size:14px; font-weight:500; line-height:18px; text-overflow:ellipsis; white-space:nowrap; }
+#digital-chessboard-summary-root .dcs-attention-item b { font-size:14px; font-weight:500; text-align:right; }
+#digital-chessboard-summary-root .dcs-attention-status { width:20px; height:20px; margin:auto; display:block; stroke-width:2.2; }
+#digital-chessboard-summary-root .dcs-attention-status.is-critical { color:#e52420; }
+#digital-chessboard-summary-root .dcs-attention-status.is-warning { color:#f59e0b; }
+#digital-chessboard-summary-root .dcs-inline-state { min-height:120px; padding:20px; display:flex; align-items:center; justify-content:center; gap:12px; color:#9a5700; text-align:left; }
+#digital-chessboard-summary-root .dcs-inline-state > span { width:38px; height:38px; border-radius:9px; background:#fff4e5; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-inline-state > div { display:grid; gap:5px; }
+#digital-chessboard-summary-root .dcs-inline-state strong { color:#344054; font-size:13px; }
+#digital-chessboard-summary-root .dcs-inline-state button { width:max-content; padding:0; border:0; background:transparent; color:#155cae; font-size:12px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-inline-state.is-success { color:#158653; }
+#digital-chessboard-summary-root .dcs-table-card { min-width:0; min-height:328px; overflow:hidden; border:1px solid var(--dcs-border); border-radius:12px; background:#fff; box-shadow:0 1px 3px rgba(20,27,45,.025); }
+#digital-chessboard-summary-root .dcs-table-title { min-height:66px; padding:14px 24px 10px; display:flex; align-items:center; justify-content:space-between; }
+#digital-chessboard-summary-root .dcs-table-title > div { display:flex; align-items:baseline; gap:12px; }
+#digital-chessboard-summary-root .dcs-table-title h2 { margin:0; font-size:18px; font-weight:600; line-height:24px; }
+#digital-chessboard-summary-root .dcs-table-title span { color:var(--dcs-muted); font-size:12px; }
+#digital-chessboard-summary-root .dcs-readonly-chip { min-height:30px; padding:0 10px; border-radius:7px; background:#fff5df; color:#9a6500!important; display:inline-flex; align-items:center; gap:7px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-table-shell { min-height:0; }
+#digital-chessboard-summary-root .dcs-table-scroll { max-height:calc(100vh - 330px); min-height:306px; }
+#digital-chessboard-summary-root .dcs-objects-table { --dcs-disclosure:48px; width:100%; min-width:1368px; color:#242933; }
+#digital-chessboard-summary-root .dcs-col-disclosure { width:48px; }
+#digital-chessboard-summary-root .dcs-col-object { width:250px; }
+#digital-chessboard-summary-root .dcs-col-type { width:170px; }
+#digital-chessboard-summary-root .dcs-col-readiness { width:260px; }
+#digital-chessboard-summary-root .dcs-col-delta { width:220px; }
+#digital-chessboard-summary-root .dcs-col-risk { width:150px; }
+#digital-chessboard-summary-root .dcs-col-update { width:210px; }
+#digital-chessboard-summary-root .dcs-col-actions { width:210px; }
+#digital-chessboard-summary-root .dcs-objects-table th, #digital-chessboard-summary-root .dcs-objects-table td { border-right:1px solid var(--dcs-border); border-bottom:1px solid var(--dcs-border); background:#fff; color:#242933; font-size:14px; }
+#digital-chessboard-summary-root .dcs-objects-table th:last-child, #digital-chessboard-summary-root .dcs-objects-table td:last-child { border-right:0; }
+#digital-chessboard-summary-root .dcs-objects-table thead th { position:sticky; top:0; z-index:5; border-top:1px solid var(--dcs-border); color:#596174; background:#fff; }
+#digital-chessboard-summary-root .dcs-objects-table tbody tr.dcs-object-row > th, #digital-chessboard-summary-root .dcs-objects-table tbody tr.dcs-object-row > td { font-weight:500; }
+#digital-chessboard-summary-root .dcs-objects-table tbody tr.dcs-object-row:hover > th, #digital-chessboard-summary-root .dcs-objects-table tbody tr.dcs-object-row:hover > td { background:#f6f8fb; }
+#digital-chessboard-summary-root .dcs-objects-table tfoot td { height:51px; padding:0; border:0; background:#fff; }
+#digital-chessboard-summary-root .dcs-sticky-disclosure { position:sticky; left:0; z-index:7; padding:0!important; text-align:center!important; }
+#digital-chessboard-summary-root .dcs-sticky-name { position:sticky; left:var(--dcs-disclosure); z-index:6; box-shadow:1px 0 0 var(--dcs-border); }
+#digital-chessboard-summary-root thead .dcs-sticky-disclosure { z-index:9; }
+#digital-chessboard-summary-root thead .dcs-sticky-name { z-index:8; }
+#digital-chessboard-summary-root .dcs-sticky-name { display:table-cell; }
+#digital-chessboard-summary-root tbody .dcs-sticky-name { align-items:center; gap:8px; }
+#digital-chessboard-summary-root .dcs-sticky-name > span { vertical-align:middle; }
+#digital-chessboard-summary-root .dcs-object-name-icon { width:24px; margin-right:8px; color:#6d7a90; display:inline-grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-disclosure-button, #digital-chessboard-summary-root .dcs-menu-button { width:28px; height:28px; padding:0; border:0; border-radius:6px; background:transparent; color:#3f4654; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-disclosure-button { margin:auto; }
+#digital-chessboard-summary-root .dcs-disclosure-button:hover, #digital-chessboard-summary-root .dcs-menu-button:hover { background:#edf3fb; }
+#digital-chessboard-summary-root .dcs-progress { min-width:0; width:100%; display:flex; align-items:center; gap:10px; }
+#digital-chessboard-summary-root .dcs-progress > b { min-width:32px; font-weight:500; }
+#digital-chessboard-summary-root .dcs-progress > span { min-width:0; flex:1; height:6px; overflow:hidden; border-radius:999px; background:#edf0f5; }
+#digital-chessboard-summary-root .dcs-progress i { display:block; height:100%; border-radius:inherit; background:var(--dcs-primary); }
+#digital-chessboard-summary-root .dcs-delta { display:inline-flex; align-items:center; gap:7px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-delta.is-positive { color:#14a36b; }
+#digital-chessboard-summary-root .dcs-delta.is-negative { color:#e52420; }
+#digital-chessboard-summary-root .dcs-delta.is-neutral { color:#667085; }
+#digital-chessboard-summary-root .dcs-risk { display:inline-flex; align-items:center; gap:8px; }
+#digital-chessboard-summary-root .dcs-risk-indicator { width:16px; height:16px; border-radius:50%; color:#fff; display:grid; place-items:center; font-size:11px; font-weight:700; }
+#digital-chessboard-summary-root .dcs-risk.is-critical .dcs-risk-indicator { background:#e52420; }
+#digital-chessboard-summary-root .dcs-risk.is-warning .dcs-risk-indicator { background:#f59e0b; }
+#digital-chessboard-summary-root .dcs-risk.is-none .dcs-risk-indicator { background:#13a06b; }
+#digital-chessboard-summary-root .dcs-risk b { font-weight:500; }
+#digital-chessboard-summary-root .dcs-risk-star { color:#f59e0b; display:inline-grid; }
+#digital-chessboard-summary-root .dcs-risk-star svg { fill:currentColor; }
+#digital-chessboard-summary-root .dcs-actions-cell { position:relative; padding:0 8px 0 14px!important; }
+#digital-chessboard-summary-root .dcs-actions-layout { width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+#digital-chessboard-summary-root .dcs-open-button { min-width:92px; height:34px; border:1px solid #dfe5ed; border-radius:8px; background:#fff; color:#155cae; font-size:12px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-open-button:hover { border-color:#b7c5d8; background:#fbfcfe; }
+#digital-chessboard-summary-root .dcs-row-menu-wrap { position:relative; margin-left:auto; display:inline-block; }
+#digital-chessboard-summary-root .dcs-row-menu { position:absolute; z-index:20; top:36px; right:0; width:210px; padding:6px; border:1px solid var(--dcs-border); border-radius:9px; background:#fff; box-shadow:0 14px 30px rgba(20,31,50,.15); }
+#digital-chessboard-summary-root .dcs-row-menu button { width:100%; min-height:38px; padding:0 9px; border:0; border-radius:6px; background:transparent; display:flex; align-items:center; gap:9px; text-align:left; font-size:12px; }
+#digital-chessboard-summary-root .dcs-row-menu button:hover { background:#f3f6fa; }
+#digital-chessboard-summary-root .dcs-expanded-row td { height:64px; background:#f8fafc; }
+#digital-chessboard-summary-root .dcs-expanded-row td:first-child { position:sticky; left:0; z-index:2; }
+#digital-chessboard-summary-root .dcs-expanded-row div { display:flex; align-items:center; gap:12px; }
+#digital-chessboard-summary-root .dcs-expanded-row strong { font-size:13px; }
+#digital-chessboard-summary-root .dcs-expanded-row span { color:var(--dcs-muted); font-size:12px; }
+#digital-chessboard-summary-root .dcs-table-state { height:250px!important; text-align:center!important; }
+#digital-chessboard-summary-root .dcs-table-state > div { display:grid; justify-items:center; gap:8px; color:var(--dcs-muted); }
+#digital-chessboard-summary-root .dcs-table-state strong { color:var(--dcs-text); font-size:14px; }
+#digital-chessboard-summary-root .dcs-table-state button { height:34px; padding:0 12px; border:1px solid var(--dcs-border); border-radius:7px; background:#fff; color:#155cae; font-weight:600; }
+#digital-chessboard-summary-root .dcs-unsupported { min-height:calc(100% - 130px); display:grid; place-content:center; justify-items:center; text-align:center; color:var(--dcs-muted); }
+#digital-chessboard-summary-root .dcs-unsupported > span { width:52px; height:52px; border-radius:12px; color:#2563eb; background:#eff6ff; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-unsupported h2 { margin:16px 0 7px; color:var(--dcs-text); font-size:20px; }
+#digital-chessboard-summary-root .dcs-unsupported p { max-width:480px; margin:0; line-height:1.5; }
+#digital-chessboard-summary-root .dcs-overlay { position:fixed; inset:0; z-index:2410; background:rgba(17,24,39,.28); display:flex; justify-content:flex-end; }
+#digital-chessboard-summary-root .dcs-drawer { width:min(480px,calc(100vw - 24px)); height:100%; background:#fff; box-shadow:-12px 0 32px rgba(24,35,55,.14); display:flex; flex-direction:column; }
+#digital-chessboard-summary-root .dcs-drawer > header, #digital-chessboard-summary-root .dcs-print-modal > header { min-height:78px; padding:14px 18px; border-bottom:1px solid var(--dcs-border); display:flex; align-items:center; justify-content:space-between; gap:16px; }
+#digital-chessboard-summary-root .dcs-drawer > header > div, #digital-chessboard-summary-root .dcs-print-modal > header > div { display:flex; align-items:center; gap:12px; }
+#digital-chessboard-summary-root .dcs-drawer > header > div > span, #digital-chessboard-summary-root .dcs-print-modal > header > div > span { width:42px; height:42px; border-radius:10px; color:#2563eb; background:#eff6ff; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-drawer h2, #digital-chessboard-summary-root .dcs-print-modal h2 { margin:0; font-size:17px; }
+#digital-chessboard-summary-root .dcs-drawer header p, #digital-chessboard-summary-root .dcs-print-modal header p { margin:4px 0 0; color:var(--dcs-muted); font-size:11px; }
+#digital-chessboard-summary-root .dcs-drawer header > button, #digital-chessboard-summary-root .dcs-print-modal header > button { width:36px; height:36px; padding:0; border:0; border-radius:8px; background:transparent; display:grid; place-items:center; }
+#digital-chessboard-summary-root .dcs-drawer header > button:hover, #digital-chessboard-summary-root .dcs-print-modal header > button:hover { background:#f2f4f7; }
+#digital-chessboard-summary-root .dcs-drawer-body { min-height:0; flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; }
+#digital-chessboard-summary-root .dcs-drawer > footer { min-height:68px; padding:12px 18px; border-top:1px solid var(--dcs-border); display:flex; justify-content:flex-end; gap:8px; }
+#digital-chessboard-summary-root .dcs-primary-button, #digital-chessboard-summary-root .dcs-secondary-button { min-height:40px; padding:0 15px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-size:13px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-primary-button { border:1px solid var(--dcs-primary); color:#fff; background:var(--dcs-primary); }
+#digital-chessboard-summary-root .dcs-secondary-button { border:1px solid var(--dcs-border); color:#394151; background:#fff; }
+#digital-chessboard-summary-root .dcs-archive-list { display:grid; gap:8px; }
+#digital-chessboard-summary-root .dcs-archive-list > button { width:100%; min-height:66px; padding:10px 12px; border:1px solid var(--dcs-border); border-radius:9px; background:#fff; display:flex; align-items:center; justify-content:space-between; text-align:left; }
+#digital-chessboard-summary-root .dcs-archive-list > button > span { display:flex; align-items:center; gap:10px; }
+#digital-chessboard-summary-root .dcs-archive-list span span { display:grid; gap:3px; }
+#digital-chessboard-summary-root .dcs-archive-list strong { font-size:13px; }
+#digital-chessboard-summary-root .dcs-archive-list small { color:var(--dcs-muted); font-size:11px; }
+#digital-chessboard-summary-root .dcs-overlay-state { min-height:240px; display:grid; place-content:center; justify-items:center; gap:10px; text-align:center; color:var(--dcs-muted); }
+#digital-chessboard-summary-root .dcs-overlay-state strong { color:var(--dcs-text); }
+#digital-chessboard-summary-root .dcs-overlay-state button { min-height:36px; padding:0 12px; border:1px solid var(--dcs-border); border-radius:7px; color:#155cae; background:#fff; font-weight:600; }
+#digital-chessboard-summary-root .dcs-detail-status { width:max-content; min-height:30px; padding:0 9px; border-radius:7px; display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:650; }
+#digital-chessboard-summary-root .dcs-detail-status.is-critical { color:#b42318; background:#feeceb; }
+#digital-chessboard-summary-root .dcs-detail-status.is-warning { color:#9a5700; background:#fff4e5; }
+#digital-chessboard-summary-root .dcs-detail-status.is-info { color:#155cae; background:#edf4ff; }
+#digital-chessboard-summary-root .dcs-detail-status .dcs-attention-status { display:inline-grid; }
+#digital-chessboard-summary-root .dcs-drawer-body h3 { margin:20px 0 8px; font-size:22px; }
+#digital-chessboard-summary-root .dcs-drawer-body > p { margin:0; color:#596174; font-size:13px; line-height:21px; }
+#digital-chessboard-summary-root .dcs-drawer-body dl { margin:24px 0; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+#digital-chessboard-summary-root .dcs-drawer-body dl div { min-height:72px; padding:12px; border:1px solid var(--dcs-border); border-radius:8px; display:grid; gap:5px; }
+#digital-chessboard-summary-root .dcs-drawer-body dt { color:var(--dcs-muted); font-size:11px; }
+#digital-chessboard-summary-root .dcs-drawer-body dd { margin:0; font-size:14px; font-weight:600; }
+#digital-chessboard-summary-root .dcs-modal-overlay { align-items:center; justify-content:center; padding:24px; }
+#digital-chessboard-summary-root .dcs-print-modal { width:min(880px,100%); max-height:calc(100vh - 48px); overflow:hidden; border-radius:12px; background:#f6f8fb; box-shadow:0 24px 60px rgba(17,24,39,.22); display:flex; flex-direction:column; }
+#digital-chessboard-summary-root .dcs-print-sheet { margin:18px; padding:28px; overflow:auto; background:#fff; box-shadow:0 3px 12px rgba(20,31,50,.08); }
+#digital-chessboard-summary-root .dcs-print-heading { padding-bottom:20px; border-bottom:1px solid #dfe3e8; display:flex; justify-content:space-between; }
+#digital-chessboard-summary-root .dcs-print-heading small, #digital-chessboard-summary-root .dcs-print-heading p { color:var(--dcs-muted); }
+#digital-chessboard-summary-root .dcs-print-heading h3 { margin:6px 0; font-size:23px; }
+#digital-chessboard-summary-root .dcs-print-heading p { margin:0; font-size:11px; }
+#digital-chessboard-summary-root .dcs-print-kpis { padding:18px 0; display:grid; grid-template-columns:repeat(4,1fr); }
+#digital-chessboard-summary-root .dcs-print-kpis div { padding:0 14px; display:grid; gap:8px; }
+#digital-chessboard-summary-root .dcs-print-kpis div + div { border-left:1px solid #dfe3e8; }
+#digital-chessboard-summary-root .dcs-print-kpis span { color:var(--dcs-muted); font-size:10px; }
+#digital-chessboard-summary-root .dcs-print-kpis strong { font-size:24px; }
+#digital-chessboard-summary-root .dcs-print-sheet table { width:100%; border-collapse:collapse; font-size:11px; }
+#digital-chessboard-summary-root .dcs-print-sheet th, #digital-chessboard-summary-root .dcs-print-sheet td { padding:10px; border:1px solid #dfe3e8; text-align:left; }
+#digital-chessboard-summary-root .dcs-print-modal > footer { min-height:66px; padding:12px 18px; border-top:1px solid var(--dcs-border); background:#fff; display:flex; justify-content:flex-end; gap:8px; }
+#digital-chessboard-summary-root .dcs-toast { position:fixed; right:24px; bottom:24px; z-index:2420; min-height:44px; padding:0 14px; border:1px solid #cfeadb; border-radius:9px; background:#fff; color:#176b43; box-shadow:0 10px 28px rgba(20,35,60,.12); display:flex; align-items:center; gap:8px; opacity:0; pointer-events:none; transform:translateY(8px); transition:opacity .18s ease,transform .18s ease; }
+#digital-chessboard-summary-root .dcs-toast.is-visible { opacity:1; transform:translateY(0); }
+#digital-chessboard-summary-root .dcs-spin { animation:dcs-spin 1s linear infinite; }
+@keyframes dcs-shimmer { to { background-position:-200% 0; } }
+@keyframes dcs-spin { to { transform:rotate(360deg); } }
+@media (max-width:1280px) { #digital-chessboard-summary-root .dcs-workspace { padding:0 18px 18px; } #digital-chessboard-summary-root .dcs-view-header { padding-top:18px; } #digital-chessboard-summary-root .dcs-toolbar-actions button { min-width:116px; } }
+@media (max-width:980px) { #digital-chessboard-summary-root .dcs-analytics-grid { grid-template-columns:minmax(0,1fr); } #digital-chessboard-summary-root .dcs-table-scroll { max-height:560px; } }
+@media (max-width:760px) { #digital-chessboard-summary-root .dcs-workspace { padding:0 12px 12px; } #digital-chessboard-summary-root .dcs-view-header { padding-top:12px; } #digital-chessboard-summary-root .dcs-sticky-summary-shell { padding:12px 0 10px; gap:10px; } #digital-chessboard-summary-root .dcs-project-toolbar { flex-wrap:wrap; } #digital-chessboard-summary-root .dcs-project-selector, #digital-chessboard-summary-root .dcs-toolbar-actions { width:100%; } #digital-chessboard-summary-root .dcs-toolbar-actions button { flex:1; } #digital-chessboard-summary-root .dcs-object-filter { min-width:130px; } }
+@media (prefers-reduced-motion:reduce) { #digital-chessboard-summary-root *, #digital-chessboard-summary-root *::before, #digital-chessboard-summary-root *::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+@media print { body > *:not(.app-shell), .top-navbar, #dashboard-view, #digital-chessboard-view, #objects-view, #digital-chessboard-summary-root .dcs-sticky-summary-shell, #digital-chessboard-summary-root .dcs-analytics-grid, #digital-chessboard-summary-root .dcs-table-card, #digital-chessboard-summary-root .dcs-print-modal > header, #digital-chessboard-summary-root .dcs-print-modal > footer { display:none!important; } #digital-chessboard-summary-view, #digital-chessboard-summary-root, #digital-chessboard-summary-root .dcs-workspace, #digital-chessboard-summary-root .dcs-overlay, #digital-chessboard-summary-root .dcs-print-modal { position:static!important; display:block!important; width:auto!important; height:auto!important; max-height:none!important; padding:0!important; margin:0!important; overflow:visible!important; background:#fff!important; box-shadow:none!important; } #digital-chessboard-summary-root .dcs-print-sheet { margin:0; box-shadow:none; } }

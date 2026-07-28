@@ -235,7 +235,7 @@ body.is-filtered .selection-toggle-btn {
 }
 
 .ec-dropdown-item:hover {
-    background: #F8FAFC;
+    background: #FFFFFF;
     color: #2563EB;
 }
 
@@ -414,6 +414,7 @@ body.is-filtered .selection-toggle-btn {
 .event-source-product-chip {
     display: inline-flex;
     align-items: center;
+    box-sizing: border-box;
     gap: 8px;
     min-width: 0;
     max-width: 58%;
@@ -423,9 +424,16 @@ body.is-filtered .selection-toggle-btn {
     background: linear-gradient(90deg, var(--source-chip-bg, #DBEAFE) 0%, var(--source-chip-bg-end, #EEF4FF) 100%);
     color: var(--source-text-color, #2563EB);
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1;
     white-space: nowrap;
+}
+
+.event-source-product-chip .event-source-text {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    line-height: 1;
 }
 
 .event-source-chip-icon {
@@ -444,6 +452,125 @@ body.is-filtered .selection-toggle-btn {
     width: 12px;
     height: 12px;
     stroke: currentColor;
+}
+
+.event-source-aggregator {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    flex: 0 0 auto;
+    outline: none;
+    z-index: 40;
+}
+
+.event-source-aggregator-chip {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 8px;
+    height: 24px;
+    padding: 0 11px 0 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #EFF3F8 0%, #F6F8FB 100%);
+    color: #273244;
+    border: 1px solid rgba(203, 213, 225, 0.78);
+    box-shadow: none;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.event-source-aggregator-chip .event-source-text {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    line-height: 1;
+}
+
+.event-source-aggregator-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    border-radius: 50%;
+    background: #273244;
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-source-aggregator-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+}
+
+.event-source-aggregator-menu {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 8px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 184px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+    z-index: 90;
+}
+
+.event-source-aggregator:hover,
+.event-source-aggregator:focus-visible {
+    z-index: 100;
+}
+
+.event-source-aggregator:hover .event-source-aggregator-chip,
+.event-source-aggregator:focus-visible .event-source-aggregator-chip {
+    border-color: rgba(148, 163, 184, 0.9);
+    box-shadow: none;
+}
+
+.event-source-aggregator:hover .event-source-aggregator-menu,
+.event-source-aggregator:focus-visible .event-source-aggregator-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.event-source-aggregator-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 38px;
+    padding: 4px 12px 4px 6px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--source-chip-bg, #DBEAFE) 0%, var(--source-chip-bg-end, #EEF4FF) 100%);
+    color: var(--source-text-color, #2563EB);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.event-source-aggregator-item .event-source-chip-icon {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+}
+
+.event-source-aggregator-item .event-source-chip-icon svg {
+    width: 16px;
+    height: 16px;
 }
 
 .event-attributes-dot {
@@ -474,6 +601,8 @@ body.is-filtered .selection-toggle-btn {
 
 .event-source-text,
 .event-timestamp-text {
+    display: inline-flex;
+    align-items: center;
     white-space: nowrap;
 }
 
@@ -600,16 +729,6 @@ body.is-filtered .selection-toggle-btn {
     isolation: isolate;
 }
 
-.event-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: 1px solid transparent;
-    border-radius: var(--ec-radius);
-    pointer-events: none;
-    z-index: 5;
-}
-
 .event-card.priority-high.has-metric-link {
     height: calc(
         var(--event-card-main-padding-top) +
@@ -644,7 +763,7 @@ body.is-filtered .selection-toggle-btn {
     min-height: 0;
     padding: var(--event-card-main-padding-top) 22px var(--event-card-main-padding-bottom);
     position: relative;
-    z-index: 1;
+    z-index: 6;
     background: #FFFFFF;
     border-radius: calc(var(--ec-radius) - 1px) calc(var(--ec-radius) - 1px) 0 0;
 }
@@ -683,6 +802,32 @@ body.is-filtered .selection-toggle-btn {
     font-weight: 400;
 }
 
+.event-card-meta-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+}
+
+.event-task-presence {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 28px;
+    border: 1px solid #B8DEC3;
+    border-radius: 6px;
+    background: #EAF7EE;
+    color: #2E8B49;
+}
+
+.event-task-presence svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+}
+
 .event-card-title {
     display: -webkit-box;
     margin: 0 0 var(--event-card-title-bottom-gap);
@@ -712,6 +857,11 @@ body.is-filtered .selection-toggle-btn {
     flex: 0 0 var(--event-card-desc-height);
 }
 
+.event-card-desc strong {
+    font-weight: 500;
+    color: #111827;
+}
+
 .event-card-metric-block {
     display: flex;
     align-items: center;
@@ -737,11 +887,7 @@ body.is-filtered .selection-toggle-btn {
     border-color: var(--ec-blue) !important;
     box-shadow: var(--ec-shadow-hover);
     transform: translateY(-2px);
-    z-index: 2;
-}
-
-.event-card:hover::after {
-    border-color: var(--ec-blue);
+    z-index: 20;
 }
 
 .event-card-metric-block.is-empty {

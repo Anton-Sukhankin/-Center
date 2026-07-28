@@ -1,0 +1,44 @@
+{
+  "referenceViewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "states": [
+    {
+      "file": "01-open-filled-1440x900.png",
+      "setup": "Открыт первый демонстрационный чат; список чатов развёрнут"
+    },
+    {
+      "file": "02-open-empty-1440x900.png",
+      "setup": "Создан и открыт новый чат без сообщений"
+    },
+    {
+      "file": "03-chat-list-collapsed.png",
+      "setup": "Список чатов свёрнут; лента остаётся видимой"
+    },
+    {
+      "file": "04-create-dialog.png",
+      "setup": "Открыт диалог создания чата"
+    },
+    {
+      "file": "05-edit-dialog.png",
+      "setup": "Открыт диалог переименования текущего чата"
+    },
+    {
+      "file": "06-delete-dialog.png",
+      "setup": "Открыто подтверждение удаления неактивного чата"
+    },
+    {
+      "file": "07-typing-indicator.png",
+      "setup": "Сообщение отправлено; ответ провайдера ещё не получен"
+    },
+    {
+      "file": "08-min-width.png",
+      "setup": "Панель уменьшена ресайзом до минимальной ширины"
+    },
+    {
+      "file": "09-narrow-viewport.png",
+      "setup": "Viewport не шире 880px"
+    }
+  ]
+}

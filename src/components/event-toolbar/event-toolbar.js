@@ -36,6 +36,7 @@ function renderToolbar() {
 
     const isFiltered = toolbarState.mode === 'filtered';
     const currentTab = (window.filterState && window.filterState.activeTab) || 'today';
+    const isMetricsTab = currentTab === 'metrics';
     const searchQuery = (window.filterState && window.filterState.searchQuery) || '';
 
     container.innerHTML = `
@@ -55,35 +56,47 @@ function renderToolbar() {
                         Закреплённые 
                         <span class="tab-badge" id="badge-pinned">${window.filterState?.pinnedCount || 0}</span>
                     </button>
+                    <button class="seg-tab ${currentTab === 'metrics' ? 'active' : ''}" onclick="updateAppTab('metrics')">
+                        Метрики
+                    </button>
                 </div>
             </div>
 
             <!-- CENTER AREA: Adaptive Search -->
             <div class="toolbar-center">
-                <div class="toolbar-search">
-                    <i data-lucide="search"></i>
-                    <input type="text" 
-                           id="toolbar-search-input" 
-                           placeholder="Введите запрос" 
-                           value="${searchQuery}"
-                           oninput="updateAppSearch(this.value)">
-                </div>
+                ${!isMetricsTab ? `
+                    <div class="toolbar-search">
+                        <i data-lucide="search"></i>
+                        <input type="text"
+                               id="toolbar-search-input"
+                               placeholder="Введите запрос"
+                               value="${searchQuery}"
+                               oninput="updateAppSearch(this.value)">
+                    </div>
+                ` : ''}
             </div>
 
             <!-- RIGHT AREA: Actions -->
             <div class="toolbar-right">
-                <button class="btn-analytics" onclick="window.openGlobalAnalytics()">
-                    <i data-lucide="sparkles"></i>
-                    Аналитика
-                </button>
+                ${!isMetricsTab ? `
+                    <button class="btn-analytics" onclick="window.openGlobalAnalytics()">
+                        <i data-lucide="sparkles"></i>
+                        Аналитика
+                    </button>
+                ` : ''}
                 
-                ${currentTab === 'all' ? `
+                ${currentTab === 'all' && !isMetricsTab ? `
                     <button class="btn-filter ${isFiltered ? 'active' : ''}" onclick="window.toggleAppFilter()">
                         <i data-lucide="sliders-horizontal"></i>
                         Фильтр
                         ${isFiltered ? '<span class="filter-indicator" id="filter-indicator"></span>' : ''}
                     </button>
                 ` : ''}
+
+                <button class="btn-ai-chat" id="open-scenter-ai-chat" onclick="window.scenterChat?.toggle?.()" aria-label="Открыть ассистента">
+                    <i data-lucide="message-circle"></i>
+                    Задать вопрос
+                </button>
             </div>
         </div>
     `;

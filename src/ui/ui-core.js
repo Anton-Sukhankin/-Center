@@ -20,9 +20,19 @@
         return `<i data-lucide="${escapeAttr(name)}"${className ? ` class="${escapeAttr(className)}"` : ''}${style ? ` style="${escapeAttr(style)}"` : ''}></i>`;
     }
 
+    function renderInlineText(value, options = {}) {
+        let html = escapeHtml(value);
+        html = html.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+        if (options.preserveLineBreaks) {
+            html = html.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+        }
+        return html;
+    }
+
     window.SCenterUI = {
         escapeHtml,
         escapeAttr,
-        icon
+        icon,
+        renderInlineText
     };
 })(window);

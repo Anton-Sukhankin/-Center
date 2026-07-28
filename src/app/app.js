@@ -6,13 +6,44 @@
     // ======================================
 
     const appData = window.appData;
+    const ui = window.SCenterUI;
     if (!appData) {
         throw new Error('Data layer is not loaded. Check src/data/app-data.js before src/app/app.js.');
+    }
+    if (!ui) {
+        throw new Error('UI helper layer is not loaded. Check src/ui/ui-core.js before src/app/app.js.');
     }
 
     const projectStructureData = window.projectStructureData;
     if (!projectStructureData) {
         throw new Error('Project structure layer is not loaded. Check src/data/project-structure.js before src/app/app.js.');
+    }
+
+    const taskData = window.taskData;
+    const taskFeature = window.SCenterTasks;
+    if (!taskData || !taskFeature || typeof taskFeature.createController !== 'function') {
+        throw new Error('Task feature is not loaded. Check src/data/task-data.js and src/features/tasks/task-drawer.js before src/app/app.js.');
+    }
+
+    const metricsDashboardData = window.metricsDashboardData;
+    const metricsDashboardFeature = window.SCenterMetricsDashboard;
+    if (!metricsDashboardData || !metricsDashboardFeature) {
+        throw new Error('Metrics dashboard is not loaded. Check metrics-dashboard data and feature before src/app/app.js.');
+    }
+
+    const digitalChessboardFeature = window.SCenterDigitalChessboard;
+    if (!window.digitalChessboardData || !digitalChessboardFeature) {
+        throw new Error('Digital chessboard is not loaded. Check its data and feature scripts before src/app/app.js.');
+    }
+
+    const digitalChessboardSummaryFeature = window.SCenterDigitalChessboardSummary;
+    if (!window.digitalChessboardSummaryData || !digitalChessboardSummaryFeature) {
+        throw new Error('Digital chessboard summary is not loaded. Check its data and feature scripts before src/app/app.js.');
+    }
+
+    const objectsFeature = window.SCenterObjects;
+    if (!window.objectsData || !objectsFeature) {
+        throw new Error('Objects feature is not loaded. Check its data and feature scripts before src/app/app.js.');
     }
 
     let businessUnits = projectStructureData.getProjectStructure();
@@ -28,6 +59,34 @@
     let mockEventsTemplate = appData.getEventsForContext(activeContext);
     let mockEvents = appData.clone(mockEventsTemplate);
     window.metricsData = appData.getMetricsForContext(activeContext, mockEvents);
+    window.metricsDashboardViewModel = metricsDashboardData.getDashboardForContext(activeContext, mockEvents);
+    window.activeMetricId = window.metricsData.id;
+
+    function getEventById(eventId) {
+        return mockEvents.find(event => event.id === eventId) || null;
+    }
+
+    function closeTaskConflictingPanels() {
+        ['closeBIModal', 'closeMetricDrawer', 'closeFilterDrawer', 'closeAIDrawer'].forEach(methodName => {
+            if (typeof window[methodName] === 'function') window[methodName]();
+        });
+        if (window.aiInsights && typeof window.aiInsights.closeModal === 'function') {
+            window.aiInsights.closeModal();
+        }
+    }
+
+    const taskController = taskFeature.createController({
+        taskData,
+        getEventById,
+        renderEventDrawer,
+        renderEventFeed,
+        closeConflictingPanels: closeTaskConflictingPanels,
+        refreshIcons: () => {
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+            }
+        }
+    });
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(value * 1000000);
     };
@@ -47,6 +106,10 @@
         if (!findMetricById(window.metricsData, window.activeMetricId)) {
             window.activeMetricId = window.metricsData.id;
         }
+    }
+
+    function refreshMetricsDashboardForCurrentContext() {
+        window.metricsDashboardViewModel = metricsDashboardData.getDashboardForContext(activeContext, mockEvents);
     }
 
     function resetFiltersForContextSwitch() {
@@ -71,6 +134,7 @@
         mockEventsTemplate = appData.getEventsForContext(activeContext);
         mockEvents = appData.clone(mockEventsTemplate);
         refreshMetricsForCurrentContext();
+        refreshMetricsDashboardForCurrentContext();
     }
 
     window.setActiveEntity = function (type, id, projectId, entityData) {
@@ -89,8 +153,9 @@
         renderLeftSidebar();
         renderProjectHeader();
         renderEventFeed();
-        renderProjectStats();
-        renderFinancialTree();
+        digitalChessboardSummaryFeature.setContext(activeContext);
+        digitalChessboardFeature.setContext(activeContext);
+        objectsFeature.setContext(activeContext);
     };
 
     function findEntityById(id, nodes) {
@@ -416,7 +481,6 @@
                 window.toolbarState.excludedCount = 0;
             }
             refreshMetricsForCurrentContext();
-            renderFinancialTree();
             
             if (typeof draftFilters !== 'undefined') draftFilters = { ...filterState };
             renderEventFeed();
@@ -530,7 +594,10 @@
         // Handle Empty State / Content rendering
         const resultsContainer = document.getElementById('event-feed-sections');
         const priorityContainer = document.getElementById('priority-events-container');
+        const priorityTabsBar = document.querySelector('.priority-tabs-bar');
         if (!resultsContainer || !priorityContainer) return;
+
+        const isMetricsTab = filterState.activeTab === 'metrics';
 
         // NEW: Cards truly disappear from the DOM when excluded
         const visibleEvents = displayEvents.filter(evt => !evt.excluded); 
@@ -566,6 +633,10 @@
             lowTab.setAttribute('aria-selected', activePriorityView === 'low' ? 'true' : 'false');
         }
 
+        if (priorityTabsBar) {
+            priorityTabsBar.classList.toggle('is-hidden', isMetricsTab);
+        }
+
         // Sync Toolbar Mode
         if (window.setToolbarMode) {
             window.setToolbarMode(hasFilters ? 'filtered' : 'default', activeCount);
@@ -578,9 +649,16 @@
 
         // Render active priority tab
         const isPinnedEmptyState = filterState.activeTab === 'pinned' && displayEvents.length === 0;
-        priorityContainer.classList.toggle('is-empty-state', isPinnedEmptyState);
+        priorityContainer.classList.toggle('is-empty-state', isPinnedEmptyState || isMetricsTab);
 
-        if (isPinnedEmptyState) {
+        if (isMetricsTab) {
+            priorityContainer.classList.add('is-metrics-dashboard');
+            metricsDashboardFeature.render(priorityContainer, {
+                context: activeContext,
+                viewModel: window.metricsDashboardViewModel
+            });
+        } else if (isPinnedEmptyState) {
+            priorityContainer.classList.remove('is-metrics-dashboard');
             priorityContainer.innerHTML = `
                 <div class="pinned-empty-state">
                     <div class="empty-icon-circle">
@@ -591,6 +669,7 @@
                 </div>
             `;
         } else {
+            priorityContainer.classList.remove('is-metrics-dashboard');
             priorityContainer.innerHTML = activePriorityEvents.length > 0
                 ? activePriorityEvents.map(evt => renderEventCard(evt)).join('')
                 : `<div class="priority-empty-state">В выбранном приоритете нет событий.</div>`;
@@ -605,7 +684,10 @@
 
     function renderEventCard(evt) {
         evt = appData.getEventListViewModel(evt, window.metricsData);
-        return window.SCenterComponents.renderEventListCard(evt);
+        return window.SCenterComponents.renderEventListCard({
+            ...evt,
+            linkedTaskCount: taskController.getTaskCountForEvent(evt.id)
+        });
     }
 
     /**
@@ -639,7 +721,6 @@
         if (evt) {
             evt.excluded = !evt.excluded;
             refreshMetricsForCurrentContext();
-            renderFinancialTree();
 
             // Update global excludedCount
             if (window.toolbarState) {
@@ -678,7 +759,6 @@
             window.toolbarState.excludedCount = 0;
         }
         if (window.renderToolbar) window.renderToolbar();
-        renderFinancialTree();
         renderEventFeed();
     }
 
@@ -756,6 +836,7 @@
         // Update Header
         const priorityLabel = evt.priorityName || (evt.priority === 'high' ? 'Высокий' : 'Низкий');
         const priorityClass = evt.priority === 'high' || evt.priority === 'critical' ? 'high' : 'low';
+        const eventDescriptionHtml = ui.renderInlineText(evt.detailText || evt.text || '', { preserveLineBreaks: true });
         titleNode.innerHTML = `
             <div class="event-detail-hero">
                 <img src="assets/images/event-detail-header.png" alt="" class="event-detail-hero-image">
@@ -821,7 +902,10 @@
 
 
             ${(evt.impactType === 'positive' || evt.impactType === 'negative') ? `
-            <div class="card-content ${evt.impactType === 'negative' ? 'negative' : ''}" onclick="onMetricClick('${evt.metricId || 'NP_SAMOLET'}', '${evt.impactType}')">
+            <button class="card-content metric-impact-trigger ${evt.impactType === 'negative' ? 'negative' : ''}"
+                    type="button"
+                    onclick="onMetricClick('${evt.metricId || 'NP_SAMOLET'}')"
+                    aria-label="Открыть график связанной метрики">
                 <div class="impact-card-top">
                     <div class="impact-card-icon-box">
                         <i data-lucide="bar-chart-3" style="width:24px;height:24px;"></i>
@@ -836,70 +920,94 @@
                 <div class="impact-card-expand">
                     <i data-lucide="maximize-2" style="width:16px;height:16px;"></i>
                 </div>
-            </div>
+            </button>
             ` : ''}
 
             <!-- Description Section -->
-            <div class="drawer-card">
+            <div class="drawer-card event-description-card">
                 <div class="drawer-card-title">Описание события</div>
-                <div class="drawer-card-desc">
-                    ${evt.text}
-                    ${(() => {
-                        const title = (evt.title || "").toLowerCase();
-                        if (title.includes('затрат') || title.includes('бюджет') || title.includes('экономия') || title.includes('выручк')) {
-                            return 'Мониторинг динамики затрат проводится в режиме реального времени. Система автоматически обновит прогноз финансового результата после подтверждения данных.';
-                        } else if (title.includes('задержк') || title.includes('срок') || title.includes('этап') || title.includes('график')) {
-                            return 'Процесс выполнения работ находится под контролем авторского надзора. Зафиксированные изменения будут отражены в актуализированном графике ГПР.';
-                        } else if (title.includes('проверк') || title.includes('безопасн') || title.includes('контрол') || title.includes('compliance')) {
-                            return 'Все протоколы безопасности были соблюдены в полном объеме. Данный инцидент не несет критических рисков для общего срока завершения этапа.';
-                        } else {
-                            return 'Аналитическое подразделение приступило к верификации предоставленной информации. Дополнительные детали будут доступны в следующем ежедневном отчете.';
-                        }
-                    })()}
+                <div class="drawer-card-desc event-description-content" id="event-description-content">
+                    ${eventDescriptionHtml}
                 </div>
+                <button class="event-description-toggle"
+                        id="event-description-toggle"
+                        type="button"
+                        onclick="toggleEventDescription(event)"
+                        aria-expanded="false"
+                        aria-controls="event-description-content">
+                    <span>Дополнительно</span>
+                    <span class="event-description-toggle-icon" aria-hidden="true">
+                        <i data-lucide="chevron-down" style="width:16px;height:16px;"></i>
+                    </span>
+                </button>
             </div>
 
-            <!-- Action Rows -->
-            <div class="action-row" onclick="event.stopPropagation()">
-                <div class="action-row-left">
-                    <div class="action-icon-box">
-                        <i data-lucide="plus-circle"></i>
-                    </div>
-                    <span class="action-label">Создать задачу</span>
-                </div>
-                <i data-lucide="chevron-right" style="color:#ADB5BD; width:18px;height:18px;"></i>
-            </div>
+            ${taskController.renderLinkedTaskCards(evt)}
 
-            <div class="action-row" onclick="event.stopPropagation()">
-                <div class="action-row-left">
-                    <div class="action-icon-box">
-                        <i data-lucide="message-square"></i>
-                    </div>
-                    <span class="action-label">Запросить обоснование</span>
-                </div>
-                <i data-lucide="chevron-right" style="color:#ADB5BD; width:18px;height:18px;"></i>
-            </div>
         `;
 
         // Footer Toolbar
         drawerFooter.innerHTML = `
-            <button class="footer-btn" onclick="event.stopPropagation()">
+            <button class="footer-btn footer-btn-icon ${evt.pinned ? 'active' : ''}"
+                    onclick="togglePin('${evt.id}', event)"
+                    title="${evt.pinned ? 'Открепить' : 'Закрепить'}"
+                    aria-label="${evt.pinned ? 'Открепить событие' : 'Закрепить событие'}">
+                <i data-lucide="pin" style="width:16px;height:16px;"></i>
+            </button>
+            <button class="footer-btn footer-btn-priority" onclick="event.stopPropagation()">
                 <i data-lucide="layers" style="width:16px;height:16px;"></i>
                 Изменить приоритет
             </button>
-            <button class="footer-btn ${evt.pinned ? 'active' : ''}" onclick="togglePin('${evt.id}', event)">
-                <i data-lucide="pin" style="width:16px;height:16px;"></i>
-                ${evt.pinned ? 'Открепить' : 'Закрепить'}
+            <span class="drawer-footer-spacer" aria-hidden="true"></span>
+            <button class="footer-btn footer-btn-primary" type="button" data-task-action="create-task" data-task-create-entry="footer">
+                <i data-lucide="clipboard-plus" style="width:16px;height:16px;"></i>
+                Создать задачу
             </button>
             <button class="footer-btn delete" onclick="deleteFromDrawer('${evt.id}')">
                 <i data-lucide="trash-2" style="width:18px;height:18px;"></i>
             </button>
         `;
 
-        lucide.createIcons();
         if (overlay) overlay.classList.add('active');
         drawer.classList.add('open');
+        drawer.setAttribute('aria-hidden', 'false');
+        taskController.enterEventDetail(evt);
+        syncEventDescriptionToggle();
+        lucide.createIcons();
     }
+
+    function setEventDescriptionToggleIcon(toggle, iconName) {
+        const iconSlot = toggle?.querySelector('.event-description-toggle-icon');
+        if (!iconSlot) return;
+        iconSlot.innerHTML = `<i data-lucide="${iconName}" style="width:16px;height:16px;"></i>`;
+    }
+
+    function syncEventDescriptionToggle() {
+        const card = document.querySelector('.event-description-card');
+        const content = document.getElementById('event-description-content');
+        const toggle = document.getElementById('event-description-toggle');
+        if (!card || !content || !toggle) return;
+
+        card.classList.remove('is-collapsible', 'is-expanded');
+        toggle.setAttribute('aria-expanded', 'false');
+        setEventDescriptionToggleIcon(toggle, 'chevron-down');
+
+        if (card.scrollHeight > 350) {
+            card.classList.add('is-collapsible');
+        }
+    }
+
+    window.toggleEventDescription = function(event) {
+        if (event) event.stopPropagation();
+        const card = document.querySelector('.event-description-card');
+        const toggle = document.getElementById('event-description-toggle');
+        if (!card || !toggle) return;
+
+        const isExpanded = card.classList.toggle('is-expanded');
+        toggle.setAttribute('aria-expanded', String(isExpanded));
+        setEventDescriptionToggleIcon(toggle, isExpanded ? 'chevron-up' : 'chevron-down');
+        lucide.createIcons();
+    };
 
     /**
      * Helper for Drawer Sparkline SVG
@@ -987,23 +1095,37 @@
         if (evt) renderEventDrawer(evt);
     }
 
+    // Compact event cards use this documented global integration point.
+    window.openEventDrawer = openEventDrawer;
+
     const eventDrawerOverlay = document.getElementById('event-drawer-overlay');
     const closeEventDrawerBtn = document.getElementById('close-event-drawer-btn');
 
-    function closeEventDrawer() {
+    function closeEventDrawer(options = {}) {
+        if (!options.force && taskController.handleCloseRequest()) return;
+
+        if (typeof window.closeBIModal === 'function') {
+            window.closeBIModal({ skipFocusRestore: true });
+        }
         const overlay = document.getElementById('event-drawer-overlay');
         const drawer = document.getElementById('event-drawer');
         if (overlay) overlay.classList.remove('active');
-        if (drawer) drawer.classList.remove('open');
-        
-        // Synchronized closing of the new BI-modal v2
-        if (window.closeBIModal) {
-            window.closeBIModal();
+        if (drawer) {
+            drawer.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
         }
+        taskController.reset();
     }
 
     if (closeEventDrawerBtn) closeEventDrawerBtn.addEventListener('click', closeEventDrawer);
     if (eventDrawerOverlay) eventDrawerOverlay.addEventListener('click', closeEventDrawer);
+    document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape' || event.defaultPrevented) return;
+        const drawer = document.getElementById('event-drawer');
+        if (!drawer?.classList.contains('open')) return;
+        event.preventDefault();
+        closeEventDrawer();
+    });
 
     window.deleteFromDrawer = function(id) {
         closeEventDrawer();
@@ -1020,273 +1142,38 @@
 
 
     // ======================================
-    // RIGHT PANEL — Stage 4 High Fidelity
+    // METRICS INTEGRATION — active BI bridge and isolated-panel shims
     // ======================================
-    window.activeMetricId = 'NP_SAMOLET';
-
-    // SVG Sparkline Generator
-    function generateSparkline(data, color = '#3b82f6') {
-        const width = 60;
-        const height = 24;
-        const padding = 2;
-        const max = Math.max(...data, 1);
-        const min = Math.min(...data, 0);
-        const range = max - min || 1;
-        
-        const points = data.map((v, i) => {
-            const x = (i / (data.length - 1)) * (width - 2 * padding) + padding;
-            const y = height - ((v - min) / range) * (height - 2 * padding) - padding;
-            return `${x},${y}`;
-        }).join(' ');
-        
-        return `
-            <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible;">
-                <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        `;
-    }
-
-    // Reactive Update: updateMetrics
-    window.updateMetrics = function(impactValue, metricId) {
+    // The right metrics panel and metric tree remain isolated. The BI graph is
+    // active again as an independent feature opened from an event detail card.
+    window.updateMetrics = function() {
         refreshMetricsForCurrentContext();
-        renderFinancialTree();
     };
 
-    function getStatusInfo(node) {
-        if (!node.plan || node.plan === 0) return { label: 'Нет данных', cls: 'neutral', icon: 'info' };
-        const val = node.fact - node.plan;
-        const pct = (val / Math.abs(node.plan) * 100).toFixed(1);
-        const isExpense = node.budgetImpact === '-';
-        const isGood = isExpense ? val <= 0 : val >= 0;
-        const severity = Math.abs(pct);
-
-        if (severity > 15 && !isGood) return { label: 'Критический риск', cls: 'danger', icon: 'alert-triangle' };
-        if (severity > 5 && !isGood) return { label: 'Отклонение', cls: 'warning', icon: 'zap' };
-        if (isGood) return { label: 'В норме', cls: 'success', icon: 'check-circle' };
-        return { label: 'В допуске', cls: 'neutral', icon: 'circle' };
-    }
-
-    function findMetricWithParent(node, id, parent) {
-        if (node.id === id) return { node, parent };
-        if (node.children) {
-            for (let child of node.children) {
-                let found = findMetricWithParent(child, id, node);
-                if (found) return found;
-            }
-        }
-        return null;
-    }
-
-    function renderProjectStats() {
-        const container = document.querySelector('.metrics-static-block');
-        if (!container) return;
-        const { renderConstructionMetricCard } = window.SCenterComponents;
-        const constructionMetrics = appData.getConstructionMetricsForContext(activeContext);
-        const formatInteger = (value) => new Intl.NumberFormat('ru-RU', {
-            maximumFractionDigits: 0
-        }).format(value || 0);
-        const formatDeltaBadge = (value, color) => {
-            const sign = value > 0 ? '+' : '';
-            return `<span class="fa-badge-deviation" style="background:${color};">${sign}${formatInteger(value)}</span>`;
-        };
-        const durationBadgeColor = constructionMetrics.duration.delta > 0 ? '#FF814A' : '#22C55E';
-        const volumeBadgeColor = constructionMetrics.volume.delta < 0 ? '#FF814A' : '#A855F7';
-        const durationChart = `
-            <svg width="100%" height="100%" viewBox="0 0 60 80" fill="none" preserveAspectRatio="xMidYMid meet">
-                <rect x="4" y="24" width="22" height="52" rx="4" fill="#E0EBFF" />
-                <rect x="34" y="24" width="22" height="52" rx="4" fill="#6B96FF" />
-                <rect x="34" y="8" width="22" height="14" rx="4" fill="#FF814A" />
-            </svg>
-        `;
-        const volumeChart = `
-            <svg width="100%" height="100%" viewBox="0 0 80 88" preserveAspectRatio="xMidYMid meet">
-                <circle cx="40" cy="44" r="32" fill="none" stroke="#F1E3FF" stroke-width="10" />
-                <path d="M 40,12 A 32,32 0 1,1 15,64" fill="none" stroke="#A855F7" stroke-width="10" stroke-linecap="round" />
-            </svg>
-        `;
-        
-        container.innerHTML = `
-            <div class="fa-accordion-container open" id="construction-accordion">
-                <button class="fa-accordion-header" onclick="toggleConstructionAccordion()">
-                    <h3 class="fa-accordion-title">Строительные показатели</h3>
-                    <i data-lucide="chevron-down" class="fa-accordion-chevron"></i>
-                </button>
-                <div class="fa-accordion-body">
-                    <div class="fa-accordion-content">
-                        ${renderConstructionMetricCard({
-                            iconName: 'calendar',
-                            title: 'Длительность проекта',
-                            chartHtml: durationChart,
-                            leftValue: formatInteger(constructionMetrics.duration.plan),
-                            leftLabel: 'ПЛАН (ДНЕЙ)',
-                            leftColor: '#E0EBFF',
-                            rightValueHtml: `${formatInteger(constructionMetrics.duration.forecast)} ${formatDeltaBadge(constructionMetrics.duration.delta, durationBadgeColor)}`,
-                            rightLabel: 'ПРОГНОЗ',
-                            rightColor: '#6B96FF'
-                        })}
-                        ${renderConstructionMetricCard({
-                            iconName: 'package',
-                            title: 'Объём проекта',
-                            chartHtml: volumeChart,
-                            leftValue: formatInteger(constructionMetrics.volume.plan),
-                            leftLabel: 'ПЛАН (М²)',
-                            leftColor: '#F1E3FF',
-                            rightValueHtml: `${formatInteger(constructionMetrics.volume.forecast)} <span style="font-size: 14px; margin-left: 2px; color: #94A3B8; font-weight: 500;">м²</span> ${formatDeltaBadge(constructionMetrics.volume.delta, volumeBadgeColor)}`,
-                            rightLabel: 'ПРОГНОЗ',
-                            rightColor: '#A855F7'
-                        })}
-                    </div>
-                </div>
-            </div>
-        `;
-        lucide.createIcons();
-    }
-
-    window.toggleConstructionAccordion = function() {
-        const accordion = document.getElementById('construction-accordion');
-        if (accordion) {
-            accordion.classList.toggle('open');
-        }
-    };
-
-    // Helper for large numbers
-    function formatFullCurrency(value) {
-        return new Intl.NumberFormat('ru-RU', {
-            style: 'currency',
-            currency: 'RUB',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(value);
-    }
-
-    function renderFinancialTree() {
-        const container = document.querySelector('.metrics-financial-block');
-        if (!container) return;
-
-        const result = findMetricWithParent(window.metricsData, window.activeMetricId, null);
-        if (!result) return;
-        const active = result.node;
-        const parent = result.parent;
-
-        // Mocking much larger numbers to match the Figma visual "wow" factor
-        const multiplier = 1000000;
-        const displayFact = active.fact * multiplier;
-        const displayDeltaBudget = (active.fact - active.plan) * multiplier;
-        const deltaPrevMonthPct = active.deltaPrevMonth || 0;
-        const isUp = active.fact >= active.plan;
-        const { renderFinancialMetricSummaryCard, renderFinancialMetricChildCard } = window.SCenterComponents;
-
-        // Navigation & Layout Wrapper
-        container.innerHTML = `
-            <div class="fa-pn-block">
-                <div class="fa-section-wrapper">
-                    <div class="fa-section-header-top" style="margin-left: 0; padding-left: 4px;">Финансовые показатели</div>
-                    <div class="fa-nav-container">
-                        <button class="fa-back-square" onclick="setActiveMetricId('${parent ? parent.id : metricsData.id}')" ${!parent || active.id === metricsData.id ? 'disabled style="opacity:0.3; cursor:default;"' : ''}>
-                            <i data-lucide="chevron-left"></i>
-                        </button>
-                        <button class="fa-nav-title-btn" onclick="openTreeDrawer()">
-                            <i data-lucide="network"></i>
-                            <span>Структура метрик</span>
-                        </button>
-                    </div>
-
-                    ${renderFinancialMetricSummaryCard({
-                        metric: active,
-                        displayFact,
-                        displayDeltaBudget,
-                        deltaPrevMonthPct,
-                        isUp,
-                        formatCurrency: formatFullCurrency
-                    })}
-
-                    <!-- Children List -->
-                    <div id="fin-children-list">
-                        ${active.children && active.children.length > 0 ? `
-                            <div class="fa-child-list">
-                                ${active.children.map((child, idx) => {
-                                    const hasChildren = child.children && child.children.length > 0;
-                                    const cIsUp = child.fact >= child.plan;
-                                    const cDisplayFact = child.fact * multiplier;
-                                    return renderFinancialMetricChildCard({
-                                        metric: child,
-                                        index: idx,
-                                        displayFact: cDisplayFact,
-                                        isUp: cIsUp,
-                                        hasChildren,
-                                        formatCurrency: formatFullCurrency
-                                    });
-                                }).join('')}
-                            </div>
-                        ` : `
-                            <div class="fa-empty-state" style="padding: 20px 0;">
-                                <i data-lucide="database" style="color:#CBD5E1; width:32px; height:32px; margin-bottom:8px;"></i>
-                                <div style="color: #94A3B8; font-weight: 500;">Нижний уровень декомпозиции</div>
-                            </div>
-                        `}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        lucide.createIcons();
-    }
-
-    renderProjectStats();
-    renderFinancialTree();
-    
     window.setActiveMetricId = function(id) {
-        window.activeMetricId = id;
-        renderFinancialTree();
+        if (findMetricById(window.metricsData, id)) {
+            window.activeMetricId = id;
+            return true;
+        }
+        return false;
     };
 
+    window.openTreeDrawer = function() {
+        return false;
+    };
 
-    // openChartWidget — opens the chart modal for a specific metric
-    // Bridge to new BI Modal v2.0
     window.openChartWidget = function(metricId, forceSideBySide = false) {
-        const targetNode = findMetricById(metricsData, metricId);
-        if (targetNode && window.openBIModalV2) {
-            const isDrawerOpen = forceSideBySide || !!(document.querySelector('#metric-drawer.active') || document.querySelector('#event-drawer.open'));
-            window.openBIModalV2(targetNode, isDrawerOpen);
-        }
+        const targetNode = findMetricById(window.metricsData, metricId);
+        if (!targetNode || typeof window.openBIModalV2 !== 'function') return false;
+
+        window.setActiveMetricId(metricId);
+        const isEventDrawerOpen = Boolean(document.querySelector('#event-drawer.open'));
+        return window.openBIModalV2(targetNode, forceSideBySide || isEventDrawerOpen);
     };
 
-    // Global metric click (used from Drawer inline button or other metric triggers)
-    window.onMetricClick = function (metricId, forceSideBySide = false) {
-        const targetNode = findMetricById(metricsData, metricId);
-        if (targetNode && window.openBIModalV2) {
-            const isDrawerOpen = forceSideBySide || !!(document.querySelector('#metric-drawer.active') || document.querySelector('#event-drawer.open'));
-            window.openBIModalV2(targetNode, isDrawerOpen);
-        }
+    window.onMetricClick = function(metricId, forceSideBySide = true) {
+        return window.openChartWidget(metricId, forceSideBySide);
     };
-
-    // ======================================
-    // RIGHT SIDEBAR — Drag to Resize
-    // ======================================
-    const rightSidebar = document.getElementById('right-sidebar');
-    const resizer = document.getElementById('right-resizer');
-    if (rightSidebar && resizer) {
-        let isResizing = false;
-        resizer.addEventListener('mousedown', () => {
-            isResizing = true;
-            document.body.style.cursor = 'col-resize';
-            resizer.classList.add('resizing');
-        });
-        document.addEventListener('mousemove', (e) => {
-            if (!isResizing) return;
-            const newWidth = document.body.clientWidth - e.clientX;
-            if (newWidth >= 300 && newWidth <= window.innerWidth * 0.45) {
-                rightSidebar.style.width = newWidth + 'px';
-            }
-        });
-        document.addEventListener('mouseup', () => {
-            if (isResizing) {
-                isResizing = false;
-                document.body.style.cursor = '';
-                resizer.classList.remove('resizing');
-            }
-        });
-    }
 
     // ======================================
     // UTILITY: Find metric by ID
@@ -1302,10 +1189,194 @@
         return null;
     }
 
+    const dashboardView = document.getElementById('dashboard-view') || document.querySelector('.content-area');
+    const digitalChessboardSummaryView = document.getElementById('digital-chessboard-summary-view');
+    const digitalChessboardSummaryRoot = document.getElementById('digital-chessboard-summary-root');
+    const digitalChessboardView = document.getElementById('digital-chessboard-view');
+    const digitalChessboardRoot = document.getElementById('digital-chessboard-root');
+    const objectsView = document.getElementById('objects-view');
+    const objectsRoot = document.getElementById('objects-root');
+    const dashboardNav = document.getElementById('nav-dashboard');
+    const digitalChessboardNav = document.getElementById('nav-digital-chessboard');
+    const digitalViewSwitcher = document.getElementById('digital-view-switcher');
+    const digitalSectionMenu = document.getElementById('digital-section-menu');
+    const digitalSectionItems = Array.from(digitalSectionMenu?.querySelectorAll('[data-main-view]') || []);
+    const mainViews = new Set(['dashboard', 'digital-chessboard-summary', 'digital-chessboard', 'objects']);
+    let activeMainView = 'dashboard';
+
+    function collectProjectOptions(nodes) {
+        const projects = [];
+        (nodes || []).forEach((node) => {
+            if (node.type === 'project') {
+                projects.push({
+                    id: node.id,
+                    name: node.name,
+                    subtitle: [node.headerAttributes?.region, node.headerAttributes?.cluster].filter(Boolean).join(' · ')
+                });
+            }
+            if (Array.isArray(node.children)) projects.push(...collectProjectOptions(node.children));
+        });
+        return projects;
+    }
+
+    function getSummarySelectableProjects(summaryContext) {
+        if (summaryContext?.type === 'bu') {
+            const businessUnit = findEntityById(summaryContext.id, businessUnits);
+            return collectProjectOptions(businessUnit ? [businessUnit] : []);
+        }
+        return collectProjectOptions(businessUnits);
+    }
+
+    function selectSummaryProject(projectId) {
+        const project = findEntityById(projectId, businessUnits);
+        if (!project || project.type !== 'project') return false;
+        window.setActiveEntity('project', project.id, project.id, project);
+        return true;
+    }
+
+    function setDigitalSectionMenuOpen(isOpen, options = {}) {
+        if (!digitalSectionMenu || !digitalChessboardNav) return;
+        digitalSectionMenu.hidden = !isOpen;
+        digitalChessboardNav.setAttribute('aria-expanded', String(isOpen));
+
+        if (isOpen && options.focus) {
+            const activeItem = digitalSectionItems.find((item) => item.dataset.mainView === activeMainView);
+            const target = options.focus === 'last'
+                ? digitalSectionItems[digitalSectionItems.length - 1]
+                : activeItem || digitalSectionItems[0];
+            target?.focus();
+        } else if (!isOpen && options.restoreFocus) {
+            digitalChessboardNav.focus();
+        }
+    }
+
+    function syncMainViewNavigation() {
+        const dashboardIsActive = activeMainView === 'dashboard';
+        const digitalSectionIsActive = !dashboardIsActive;
+        dashboardNav?.classList.toggle('active', dashboardIsActive);
+        digitalChessboardNav?.classList.toggle('active', digitalSectionIsActive);
+        dashboardNav?.setAttribute('aria-current', dashboardIsActive ? 'page' : 'false');
+        digitalChessboardNav?.setAttribute('aria-current', digitalSectionIsActive ? 'page' : 'false');
+        digitalSectionItems.forEach((item) => {
+            const isActive = item.dataset.mainView === activeMainView;
+            item.classList.toggle('is-active', isActive);
+            item.setAttribute('aria-current', isActive ? 'page' : 'false');
+        });
+    }
+
+    function setMainView(nextView) {
+        if (!mainViews.has(nextView)) return false;
+        activeMainView = nextView;
+        const dashboardIsActive = activeMainView === 'dashboard';
+        const summaryIsActive = activeMainView === 'digital-chessboard-summary';
+        const chessboardIsActive = activeMainView === 'digital-chessboard';
+        const objectsIsActive = activeMainView === 'objects';
+
+        if (dashboardView) dashboardView.hidden = !dashboardIsActive;
+        if (digitalChessboardSummaryView) digitalChessboardSummaryView.hidden = !summaryIsActive;
+        if (digitalChessboardView) digitalChessboardView.hidden = !chessboardIsActive;
+        if (objectsView) objectsView.hidden = !objectsIsActive;
+        syncMainViewNavigation();
+        setDigitalSectionMenuOpen(false);
+
+        if (summaryIsActive || chessboardIsActive || objectsIsActive) {
+            closeTaskConflictingPanels();
+            closeEventDrawer({ force: true });
+        }
+
+        if (summaryIsActive) {
+            digitalChessboardSummaryFeature.setContext(activeContext);
+            digitalChessboardSummaryFeature.show();
+        } else {
+            digitalChessboardSummaryFeature.hide();
+        }
+
+        if (chessboardIsActive) {
+            digitalChessboardFeature.setContext(activeContext);
+            digitalChessboardFeature.show();
+        } else {
+            digitalChessboardFeature.hide();
+        }
+
+        if (objectsIsActive) {
+            objectsFeature.setContext(activeContext);
+            objectsFeature.show();
+        } else {
+            objectsFeature.hide();
+        }
+
+        return true;
+    }
+
+    dashboardNav?.addEventListener('click', (event) => {
+        event.preventDefault();
+        setMainView('dashboard');
+    });
+    digitalChessboardNav?.addEventListener('click', (event) => {
+        event.preventDefault();
+        const shouldOpen = digitalSectionMenu?.hidden !== false;
+        if (shouldOpen) {
+            closeTaskConflictingPanels();
+            closeEventDrawer({ force: true });
+        }
+        setDigitalSectionMenuOpen(shouldOpen);
+    });
+    digitalChessboardNav?.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && digitalSectionMenu?.hidden === false) {
+            event.preventDefault();
+            setDigitalSectionMenuOpen(false, { restoreFocus: true });
+            return;
+        }
+        if (event.key === 'Tab' && digitalSectionMenu?.hidden === false) {
+            setDigitalSectionMenuOpen(false);
+            return;
+        }
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        closeTaskConflictingPanels();
+        closeEventDrawer({ force: true });
+        setDigitalSectionMenuOpen(true, { focus: event.key === 'ArrowUp' ? 'last' : 'active' });
+    });
+    digitalSectionItems.forEach((item) => {
+        item.addEventListener('click', () => {
+            if (setMainView(item.dataset.mainView)) digitalChessboardNav?.focus();
+        });
+    });
+    digitalSectionMenu?.addEventListener('keydown', (event) => {
+        const currentIndex = digitalSectionItems.indexOf(document.activeElement);
+        let targetIndex = null;
+        if (event.key === 'ArrowDown') targetIndex = (Math.max(currentIndex, -1) + 1) % digitalSectionItems.length;
+        if (event.key === 'ArrowUp') targetIndex = (currentIndex <= 0 ? digitalSectionItems.length : currentIndex) - 1;
+        if (event.key === 'Home') targetIndex = 0;
+        if (event.key === 'End') targetIndex = digitalSectionItems.length - 1;
+        if (targetIndex !== null && digitalSectionItems.length) {
+            event.preventDefault();
+            digitalSectionItems[targetIndex]?.focus();
+        }
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            setDigitalSectionMenuOpen(false, { restoreFocus: true });
+        }
+        if (event.key === 'Tab') setDigitalSectionMenuOpen(false);
+    });
+    document.addEventListener('click', (event) => {
+        if (!digitalViewSwitcher?.contains(event.target)) setDigitalSectionMenuOpen(false);
+    });
+
+    digitalChessboardSummaryFeature.mount(digitalChessboardSummaryRoot, {
+        context: activeContext,
+        getSelectableProjects: getSummarySelectableProjects,
+        onProjectSelect: selectSummaryProject
+    });
+    digitalChessboardSummaryFeature.hide();
+    digitalChessboardFeature.mount(digitalChessboardRoot, { context: activeContext });
+    digitalChessboardFeature.hide();
+    objectsFeature.mount(objectsRoot, { context: activeContext });
+    objectsFeature.hide();
+    syncMainViewNavigation();
+
     renderLeftSidebar();
     renderProjectHeader();
     renderEventFeed();
-    renderProjectStats();
-    renderFinancialTree();
 });
 

@@ -1,0 +1,5 @@
+/* Единственное визуальное правило, которое относится к оболочке S.Cost, а не к чату. */
+body.ai-drawer-open.ai-chat-open .ai-drawer.chat-list-collapsed {
+  width: min(calc(var(--review-drawer-visible-width) - 220px), calc(var(--ai-drawer-default-width) - 278px)) !important;
+  min-width: 560px;
+}

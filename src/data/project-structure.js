@@ -297,6 +297,8 @@
             type: type || found.node.type,
             id: found.node.id,
             entity: clone(found.node),
+            parentProject: found.parentProject ? clone(found.parentProject) : null,
+            parentBusinessUnit: found.parentBusinessUnit ? clone(found.parentBusinessUnit) : null,
             projectId,
             projectIds: scope.projectIds,
             queueIds: scope.queueIds,

@@ -1,0 +1,16 @@
+.sct-shell { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+.sct-scroll { width: 100%; height: 100%; min-width: 0; min-height: 0; overflow: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.sct-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
+.sct-table { border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: 14px; }
+.sct-table th, .sct-table td { height: 51px; padding: 0 14px; text-align: left; vertical-align: middle; white-space: nowrap; }
+.sct-table thead th { height: 42px; font-size: 14px; font-weight: 600; text-align: left; }
+.sct-indicator { position: absolute; z-index: 8; display: none; border-radius: 999px; pointer-events: none; }
+.sct-indicator.is-visible { display: block; }
+.sct-indicator.is-vertical { right: 3px; width: 4px; }
+.sct-indicator.is-horizontal { right: 8px; left: 4px; height: 4px; }
+.sct-indicator b { position: absolute; display: block; border-radius: 999px; background: rgba(100,116,139,.28); pointer-events: auto; cursor: grab; transition: background .14s ease; }
+.sct-indicator b:hover, .sct-indicator b.is-dragging { background: rgba(71,85,105,.45); }
+.sct-indicator b.is-dragging { cursor: grabbing; }
+.sct-indicator.is-vertical b { left: 0; width: 100%; min-height: 22px; }
+.sct-indicator.is-horizontal b { top: 0; height: 100%; min-width: 22px; }
+@media (prefers-reduced-motion: reduce) { .sct-indicator b { transition-duration: .01ms; } }

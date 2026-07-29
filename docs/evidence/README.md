@@ -11,7 +11,7 @@
 
 ## Маршруты
 
-| Область | Manifest |
+| Область | Маршрут к evidence или manifest |
 |---|---|
 | Цифровая шахматка | `digital-chessboard/README.md` |
 | Сводка цифровой шахматки | `digital-chessboard-summary/README.md` |

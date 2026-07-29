@@ -37,7 +37,7 @@
 
 Визуальный источник сохранен в `docs/reference/metrics-dashboard-reference.png`.
 
-![Референс дашборда метрик](../reference/metrics-dashboard-reference.png)
+![Референс дашборда метрик](../../reference/metrics-dashboard-reference.png)
 
 Аудит ограничен одним статичным экраном. По изображению нельзя проверить клавиатурную навигацию, фокус, hover, адаптивное поведение, загрузку, ошибки и фактический контраст CSS-цветов.
 

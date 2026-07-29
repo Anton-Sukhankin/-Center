@@ -33,6 +33,5 @@
 
 ## Материалы
 
-- Текущий баннер в drawer: `current-banner.png`.
-- Базовая композиция: `assets/images/event-detail-header.png`.
-- Цветовой и семантический ориентир: `workbench/event-task-creation/assets/task-create-header-green-v2-outpaint.png`.
+- Текущий баннер в drawer: [`current-banner.png`](./current-banner.png).
+- Базовая композиция: [`assets/images/event-detail-header.png`](../../../../assets/images/event-detail-header.png).

@@ -41,7 +41,7 @@
 
 Основные правила размещения:
 
-- пользовательские сценарии фиксируются в `src/features/<feature>/README.md`, `docs/decision-actions.md`, `docs/context-behavior.md` и `SYSTEM_QUESTIONNAIRE.md`;
+- пользовательские сценарии фиксируются в `src/features/<feature>/README.md`, `docs/decision-actions.md` и `docs/context-behavior.md`;
 - визуальные компоненты фиксируются в `src/components/<component>/README.md`;
 - сущности, атрибуты, связи и источники данных фиксируются в `docs/entity-model.md` и `src/data/README.md`;
 - расчетная логика фиксируется отдельно от визуального дерева и структуры сущностей: в `src/data/README.md`, профильных feature-документах и при необходимости в отдельном плане `docs/plans/`;
@@ -96,23 +96,7 @@
 
 Проект пока работает через обычные `<script>` без ES-модулей. Поэтому публичные точки интеграции через `window.*` считаются контрактом.
 
-Нельзя менять или удалять публичные интерфейсы без отдельного этапа:
-
-- `window.filterState`;
-- `window.toolbarState`;
-- `window.metricsData`;
-- `window.activeContext`;
-- `window.renderEventFeed`;
-- `window.openFilterDrawer`;
-- `window.openTreeDrawer`;
-- `window.openBIModalV2`;
-- `window.aiInsights`;
-- `window.appData`;
-- `window.projectStructureData`;
-- `window.SCenterUI`;
-- `window.SCenterComponents`.
-
-После частичного возврата аналитического графика `window.openBIModalV2` является активным контрактом `src/features/bi/`. `window.openTreeDrawer` остается no-op/stub-контрактом: drawer структуры метрик и правая панель не возвращены в активный интерфейс.
+Нельзя менять или удалять публичные интерфейсы без отдельного этапа депрекации. Актуальные владельцы полного перечня: `src/app/README.md`, `src/data/README.md` и локальные README в `src/features/` и `src/components/`. Общий стандарт намеренно не дублирует изменяемый список API.
 
 ## Проверки после изменений
 
@@ -131,7 +115,6 @@
 - `README.md` — краткая корневая точка входа в проект;
 - `docs/README.md` — постоянный маршрутизатор, реестр и статус всех документов;
 - `docs/documentation-standards.md` — правила классификации, источников истины, связности и жизненного цикла документации;
-- `SYSTEM_QUESTIONNAIRE.md` — рабочая анкета системы и контекст-инжиниринга: вопросы по назначению, ролям, данным, сценариям, аналитике, разработке и качеству документации;
 - `docs/system-overview.md` — краткий смысловой обзор системы: управленческая задача, единое окно данных, оперативные события, метрики и ИИ-аналитика;
 - `docs/user-roles.md` — ролевая модель системы и правила адаптации интерфейса, метрик, событий и доступности данных под пользователя;
 - `docs/access-control.md` — правила видимости бизнес-юнитов, проектов, очередей, метрик, событий и действий по ролям и зонам ответственности;

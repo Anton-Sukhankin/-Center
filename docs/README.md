@@ -116,17 +116,9 @@
 | `plans/system-scaling-roadmap.md` | основной roadmap, актуален | Синхронизировать с матрицей соответствия. |
 | `plans/project-cleanup-audit-plan.md` | макроплан, подготовлен к утверждению | Провести комплексный read-only аудит тремя субагентами, затем согласовать пакеты чистки. |
 | `plans/documentation-cleanup-plan.md` | дочерний план, ожидает аудит | Выполнять документальную нормализацию по подтвержденным находкам макроплана. |
-| `plans/tree-context-data-plan.md` | выполненный план | Архивировать после проверки переноса результатов. |
-| `plans/construction-metrics-context-plan.md` | выполненный план изолированной поверхности | Архивировать после проверки актуальных потребителей данных. |
-| `plans/event-metric-bi-modal-reintegration-plan.md` | выполненный план | Архивировать. |
-| `plans/event-task-creation-integration-plan.md` | завершенный план | Архивировать. |
-| `plans/metrics-dashboard-integration-plan.md` | этап 1 выполнен, future-часть остается | Отделить завершенную историю от нового этапа реальных данных. |
-| `plans/digital-chessboard-integration-plan.md` | выполнен и принят | Архивировать. |
-| `plans/digital-chessboard-summary-stand-plan.md` | выполнен, стенд удален | Архивировать. |
-| `plans/digital-chessboard-summary-integration-plan.md` | фактически выполнен, верхний статус устарел | Исправить статус и архивировать. |
-| `plans/objects-stand-plan.md` | выполнен, стенд удален | Архивировать. |
-| `plans/objects-integration-plan.md` | выполнен и принят | Архивировать. |
-| `plans/scenter-ai-chat-integration-plan.md` | этапы интеграции выполнены частично | Отделить завершенный перенос от будущего provider/actions-этапа. |
+| `plans/metrics-real-data-integration-plan.md` | future-план | Реальные источники, методика, качество данных и права дашборда метрик. |
+| `plans/ai-chat-provider-actions-plan.md` | future-план | Промышленный provider, безопасность, хранение и подтверждаемые actions. |
+| `archive/plans/README.md` | реестр завершенных планов | История решений; не использовать как источник текущего поведения. |
 
 ## Справочные и архивные материалы
 

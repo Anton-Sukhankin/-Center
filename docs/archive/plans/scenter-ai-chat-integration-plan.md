@@ -1,5 +1,7 @@
 ﻿# План: контракт интеграции ИИ-чата S.Center
 
+Статус: первоначальная demo-интеграция выполнена; промышленные provider и actions вынесены в `docs/plans/ai-chat-provider-actions-plan.md`.
+
 Документ подчиняется регламенту `docs/plans/README.md`.
 
 ## Goal
@@ -254,7 +256,7 @@ window.SCostAIChat.configure({
 
 В этом этапе обновляются:
 
-- `docs/plans/scenter-ai-chat-integration-plan.md`;
+- `docs/archive/plans/scenter-ai-chat-integration-plan.md`;
 - `src/features/chat/README.md`;
 - `docs/component-map.md`;
 - `docs/component-impact-map.md`;

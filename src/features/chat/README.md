@@ -246,6 +246,7 @@ Feature отражается в `docs/system-compliance-matrix.md` как час
 - `docs/component-map.md`;
 - `docs/component-impact-map.md`;
 - `docs/system-compliance-matrix.md`;
-- `docs/plans/scenter-ai-chat-integration-plan.md`;
+- `docs/plans/ai-chat-provider-actions-plan.md`;
+- `docs/archive/plans/scenter-ai-chat-integration-plan.md` — история первоначальной интеграции;
 - `docs/plans/system-scaling-roadmap.md`;
 - связанные README `analytics`, `filters`, `event-toolbar` и `app`; README изолированных метрик обновлять только при прямой команде на восстановление или аудит правого блока.

@@ -143,18 +143,9 @@
 | `evidence/metrics-dashboard/` | evidence метрик | Обновлять при изменении подтверждаемого визуального контракта. |
 | `evidence/tasks/` | аналитическое evidence задач | Использовать как обоснование, а не как источник текущего поведения. |
 
-## Переносимый пакет чата
+## AI-чат
 
-Пакет является временным интеграционным источником S.Cost, а не самостоятельной спецификацией S.Center. Активный контракт S.Center находится в `../src/features/chat/README.md`.
-
-| Документ | Роль | Следующее действие |
-| --- | --- | --- |
-| `../chat-transfer-package/README.md` | паспорт переносимого пакета | Проверить уникальное содержание и runtime-зависимость. |
-| `../chat-transfer-package/INTEGRATE_IN_TARGET.md` | одноразовая команда интеграции | Кандидат на архивирование или удаление после проверки. |
-| `../chat-transfer-package/docs/integration.md` | внешний integration contract | Перенести уникальные API-правила в постоянный контракт. |
-| `../chat-transfer-package/docs/behavior-contract.md` | внешний UI/behavior contract | Сопоставить с принятыми отличиями S.Center. |
-| `../chat-transfer-package/docs/screenshots/README.md` | перечень ожидаемых evidence | Проверить наличие и актуальность снимков. |
-| `../chat-transfer-package/tests/interaction-checklist.md` | приемочный checklist | Перенести применимые проверки в feature или QA-регламент. |
+Активное ядро, адаптерный API, поведенческий контракт и минимальная приемка находятся в `../src/features/chat/README.md`. История первоначального переноса хранится в `archive/plans/scenter-ai-chat-integration-plan.md`, визуальный концепт — в `evidence/chat/README.md`, будущий промышленный этап — в `plans/ai-chat-provider-actions-plan.md`.
 
 ## Расширение реестра
 

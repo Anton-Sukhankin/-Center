@@ -1,0 +1,8 @@
+node_modules/
+.vite/
+.pnpm-store/
+.backups/
+
+*.log
+Thumbs.db
+Desktop.ini

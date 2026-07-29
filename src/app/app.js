@@ -126,8 +126,6 @@
             window.toolbarState.excludedCount = 0;
             window.toolbarState.isSelectionMode = false;
         }
-        draftFilters = { ...filterState };
-        if (typeof syncDraftUI === 'function') syncDraftUI();
     }
 
     function randomizeDataForContext() {
@@ -316,8 +314,6 @@
     };
     window.filterState = filterState; // Expose for Toolbar
 
-    let draftFilters = { ...filterState };
-
     function hasActiveEventFilters() {
         const selectedMetricFilters = filterState.metrics && filterState.metrics.length > 0
             ? filterState.metrics
@@ -330,166 +326,22 @@
             || filterState.searchQuery !== '';
     }
 
-    function syncDraftUI() {
-        document.querySelectorAll('#inline-filter-block .f-chip[data-type="period"]').forEach(c => {
-            if (c.getAttribute('data-val') === draftFilters.period) c.classList.add('active');
-            else c.classList.remove('active');
-        });
-        document.querySelectorAll('#inline-filter-block .f-chip[data-type="source"]').forEach(c => {
-            if (draftFilters.sources.includes(c.getAttribute('data-val'))) c.classList.add('active');
-            else c.classList.remove('active');
-        });
-        const pToggle = document.getElementById('inline-filter-priority-toggle');
-        if (pToggle) pToggle.checked = draftFilters.priority === 'high' || draftFilters.priorityOnly;
-        
-        const mSelect = document.getElementById('inline-filter-metric-select');
-        if (mSelect) mSelect.value = draftFilters.metric;
-    }
-
-    function attachFilterListeners() {
-        const tabToday = document.getElementById('tab-today');
-        const tabAll = document.getElementById('tab-all');
-        const searchInput = document.getElementById('event-search-input'); // This might be null now
-        const toggleBtn = document.getElementById('filter-toggle-btn');
-        
-        const inlineFilterBlock = document.getElementById('inline-filter-block');
-        const closeInlineFilterBtn = document.getElementById('close-inline-filter-btn');
-        const applyBtn = document.getElementById('inline-btn-apply-filters');
-        const resetBtn = document.getElementById('inline-btn-reset-filters');
-        const cancelBtn = document.getElementById('inline-btn-cancel-filters');
-        
-        // Null checks for all elements to prevent crash when toolbar is active
-        if (tabToday) {
-            tabToday.addEventListener('click', () => {
-                filterState.activeTab = 'today';
-                tabToday.classList.add('active');
-                if (tabAll) tabAll.classList.remove('active');
-                if (toggleBtn) toggleBtn.style.display = 'none';
-                renderEventFeed();
-            });
+    window.resetAppFilters = function() {
+        filterState.period = '';
+        filterState.sources = [];
+        filterState.priority = 'all';
+        filterState.priorityOnly = false;
+        filterState.metric = '';
+        filterState.metrics = [];
+        filterState.searchQuery = '';
+        filterState.activeTab = 'all';
+        mockEvents.forEach(e => e.excluded = false);
+        if (window.toolbarState) {
+            window.toolbarState.excludedCount = 0;
         }
-
-        if (tabAll) {
-            tabAll.addEventListener('click', () => {
-                filterState.activeTab = 'all';
-                tabAll.classList.add('active');
-                if (tabToday) tabToday.classList.remove('active');
-                if (toggleBtn) toggleBtn.style.display = 'flex';
-                renderEventFeed();
-            });
-        }
-
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                filterState.searchQuery = e.target.value.toLowerCase();
-                renderEventFeed();
-            });
-        }
-
-        function openDrawer() {
-            draftFilters = { ...filterState };
-            syncDraftUI();
-            if (inlineFilterBlock) inlineFilterBlock.classList.add('open');
-        }
-
-        function closeDrawer() {
-            if (inlineFilterBlock) inlineFilterBlock.classList.remove('open');
-        }
-
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => {
-                if (inlineFilterBlock && inlineFilterBlock.classList.contains('open')) {
-                    closeDrawer();
-                } else {
-                    openDrawer();
-                }
-            });
-        }
-
-        if (closeInlineFilterBtn) closeInlineFilterBtn.addEventListener('click', closeDrawer);
-        if (cancelBtn) cancelBtn.addEventListener('click', closeDrawer);
-
-        // Chip logic updates DRAFT only
-        document.querySelectorAll('#inline-filter-block .f-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                const type = chip.getAttribute('data-type');
-                const val = chip.getAttribute('data-val');
-                if (!type) return;
-
-                if (type === 'period') {
-                    if (draftFilters.period === val) draftFilters.period = '';
-                    else draftFilters.period = val;
-                } else if (type === 'source') {
-                    if (draftFilters.sources.includes(val)) {
-                        draftFilters.sources = draftFilters.sources.filter(s => s !== val);
-                    } else {
-                        draftFilters.sources.push(val);
-                    }
-                }
-                syncDraftUI();
-            });
-        });
-
-        const priorityToggle = document.getElementById('inline-filter-priority-toggle');
-        if (priorityToggle) {
-            priorityToggle.addEventListener('change', (e) => {
-                draftFilters.priorityOnly = e.target.checked;
-                draftFilters.priority = e.target.checked ? 'high' : 'all';
-            });
-        }
-
-        const metricSelect = document.getElementById('inline-filter-metric-select');
-        if (metricSelect) {
-            metricSelect.addEventListener('change', (e) => {
-                draftFilters.metric = e.target.value;
-                draftFilters.metrics = e.target.value ? [e.target.value] : [];
-            });
-        }
-
-        if (applyBtn) {
-            applyBtn.addEventListener('click', () => {
-                filterState = { ...draftFilters, activeTab: filterState.activeTab, searchQuery: filterState.searchQuery };
-                window.filterState = filterState; // Keep in sync
-                renderEventFeed();
-                closeDrawer();
-            });
-        }
-        
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                draftFilters.period = '';
-                draftFilters.sources = [];
-                draftFilters.priority = 'all';
-                draftFilters.priorityOnly = false;
-                draftFilters.metric = '';
-                draftFilters.metrics = [];
-                syncDraftUI();
-            });
-        }
-
-        window.resetAppFilters = function() {
-            filterState.period = '';
-            filterState.sources = [];
-            filterState.priority = 'all';
-            filterState.priorityOnly = false;
-            filterState.metric = '';
-            filterState.metrics = [];
-            filterState.searchQuery = '';
-            filterState.activeTab = 'all'; // Чтобы показать ВСЕ события
-            mockEvents.forEach(e => e.excluded = false);
-            if (window.toolbarState) {
-                window.toolbarState.excludedCount = 0;
-            }
-            refreshMetricsForCurrentContext();
-            
-            if (typeof draftFilters !== 'undefined') draftFilters = { ...filterState };
-            renderEventFeed();
-            if (typeof syncDraftUI === 'function') syncDraftUI();
-        };
-    }
-
-    // Call once to attach listeners
-    attachFilterListeners();
+        refreshMetricsForCurrentContext();
+        renderEventFeed();
+    };
 
     window.setEventPriorityView = function(priorityView) {
         if (priorityView !== 'high' && priorityView !== 'low') return;
@@ -676,8 +528,6 @@
         }
 
         lucide.createIcons();
-        attachEventCardListeners();
-
         // Update Floating Action Bar
         if (window.updateFloatingBar) window.updateFloatingBar();
     }
@@ -760,61 +610,6 @@
         }
         if (window.renderToolbar) window.renderToolbar();
         renderEventFeed();
-    }
-
-    function attachEventCardListeners() {
-        const allCards = document.querySelectorAll('.event-card');
-        const alertDialogOverlay = document.getElementById('alert-dialog-overlay');
-        const alertCancelBtn = document.getElementById('alert-cancel-btn');
-        const alertConfirmBtn = document.getElementById('alert-confirm-btn');
-        let currentDeleteId = null;
-
-        // Click to open drawer
-        allCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const evtId = card.getAttribute('data-event-id');
-                openEventDrawer(evtId);
-            });
-        });
-
-        // Pin buttons
-        document.querySelectorAll('.pin-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const id = btn.getAttribute('data-event-id');
-                const evt = mockEvents.find(ev => ev.id === id);
-                if (evt) {
-                    evt.pinned = !evt.pinned;
-                    renderEventFeed();
-                }
-            });
-        });
-
-        // Trash buttons
-        document.querySelectorAll('.trash-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                currentDeleteId = btn.getAttribute('data-event-id');
-                if (alertDialogOverlay) alertDialogOverlay.classList.add('active');
-            });
-        });
-
-        if (alertCancelBtn) {
-            alertCancelBtn.onclick = function () {
-                alertDialogOverlay.classList.remove('active');
-                currentDeleteId = null;
-            };
-        }
-        if (alertConfirmBtn) {
-            alertConfirmBtn.onclick = function () {
-                if (currentDeleteId) {
-                    mockEvents = mockEvents.filter(e => e.id !== currentDeleteId);
-                    renderEventFeed();
-                }
-                alertDialogOverlay.classList.remove('active');
-                currentDeleteId = null;
-            };
-        }
     }
 
     // ======================================
@@ -1119,6 +914,12 @@
 
     if (closeEventDrawerBtn) closeEventDrawerBtn.addEventListener('click', closeEventDrawer);
     if (eventDrawerOverlay) eventDrawerOverlay.addEventListener('click', closeEventDrawer);
+    const alertCancelBtn = document.getElementById('alert-cancel-btn');
+    if (alertCancelBtn) {
+        alertCancelBtn.addEventListener('click', () => {
+            document.getElementById('alert-dialog-overlay')?.classList.remove('active');
+        });
+    }
     document.addEventListener('keydown', event => {
         if (event.key !== 'Escape' || event.defaultPrevented) return;
         const drawer = document.getElementById('event-drawer');

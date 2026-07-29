@@ -73,18 +73,21 @@
                         </button>
                     </div>
                 </div>
-                <a href="#" class="nav-item" id="nav-tasks">
-                    <i data-lucide="list-todo"></i>
+                <button type="button" class="nav-item nav-item-future" id="nav-tasks" disabled aria-disabled="true" title="Раздел будет доступен в будущей версии">
+                    <i data-lucide="list-todo" aria-hidden="true"></i>
                     <span>Трекер задач</span>
-                </a>
-                <a href="#" class="nav-item" id="nav-schedule">
-                    <i data-lucide="calendar-days"></i>
+                    <span class="nav-future-badge">Скоро</span>
+                </button>
+                <button type="button" class="nav-item nav-item-future" id="nav-schedule" disabled aria-disabled="true" title="Раздел будет доступен в будущей версии">
+                    <i data-lucide="calendar-days" aria-hidden="true"></i>
                     <span>ГПР и Расписание</span>
-                </a>
-                <a href="#" class="nav-item" id="nav-reports">
-                    <i data-lucide="file-bar-chart"></i>
+                    <span class="nav-future-badge">Скоро</span>
+                </button>
+                <button type="button" class="nav-item nav-item-future" id="nav-reports" disabled aria-disabled="true" title="Раздел будет доступен в будущей версии">
+                    <i data-lucide="file-bar-chart" aria-hidden="true"></i>
                     <span>Процессные отчеты</span>
-                </a>
+                    <span class="nav-future-badge">Скоро</span>
+                </button>
             </nav>
             <div class="navbar-user">
                 <div class="user-profile">
@@ -138,9 +141,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Filter Inline Block -->
-
 
                     <!-- Контейнер для результатов ленты (управляется через JS) -->
                     <div id="event-feed-sections">

@@ -28,15 +28,15 @@ function renderFloatingBar() {
             </div>
             
             <div class="fab-btn-wrap">
-                <button class="fbtn-outline" onclick="alert('Задачи созданы для всех выбранных событий (${activeCount})')">
-                    <i data-lucide="plus"></i>
-                    Создать задачу
+                <button type="button" class="fbtn-outline" disabled aria-disabled="true" title="Массовое создание задач будет доступно в будущей версии">
+                    <i data-lucide="plus" aria-hidden="true"></i>
+                    Создать задачу · Скоро
                 </button>
             </div>
 
             <div class="fab-exit-wrap">
-                <button class="fbtn-close" onclick="window.exitSelectionMode()" title="Закрыть фильтры и выйти">
-                    <i data-lucide="x"></i>
+                <button type="button" class="fbtn-close" onclick="window.exitSelectionMode()" title="Закрыть фильтры и выйти">
+                    <i data-lucide="x" aria-hidden="true"></i>
                 </button>
             </div>
         </div>

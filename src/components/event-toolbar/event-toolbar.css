@@ -229,8 +229,7 @@ body.ai-chat-open .btn-ai-chat {
 }
 
 /* --- Empty States for Tabs --- */
-.pinned-empty-state,
-.metrics-work-in-progress-state {
+.pinned-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;

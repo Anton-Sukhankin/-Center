@@ -138,19 +138,6 @@ window.updateAppSearch = function(val) {
 window.toggleAppFilter = function() {
     if (window.openFilterDrawer) {
         window.openFilterDrawer();
-    } else {
-        // Fallback for demo
-        const inlineFilter = document.getElementById('inline-filter-block');
-        if (inlineFilter) {
-            const isOpen = inlineFilter.classList.toggle('open');
-            if (isOpen) {
-                const count = (parseInt(document.getElementById('top-events-count')?.textContent) || 0) + 
-                              (parseInt(document.getElementById('other-events-count')?.textContent) || 0);
-                setToolbarMode('filtered', count);
-            } else {
-                setToolbarMode('default');
-            }
-        }
     }
 }
 

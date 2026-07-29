@@ -85,27 +85,16 @@
     border-color: #fff;
 }
 
-.fbtn-primary {
-    background: var(--fab-accent);
-    border: none;
-    color: white;
-    padding: 10px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
+.fbtn-outline:disabled,
+.fbtn-outline:disabled:hover {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: none;
 }
 
-.fbtn-primary:hover {
-    background: #1d4ed8;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-}
-
-.fbtn-primary i, .fbtn-outline i {
+.fbtn-outline i {
     width: 18px;
     height: 18px;
 }

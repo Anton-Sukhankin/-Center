@@ -9,7 +9,7 @@
 - `source-reference.png` — исходный desktop-референс пользователя;
 - `qa/reference-kpi-cards-option-2.png` — выбранное направление отдельных KPI-карточек с цветными icon-tile;
 - `qa/reference-kpi-cards-option-2-crop.png` — сфокусированный фрагмент выбранного направления;
-- `qa/digital-chessboard-summary/` в корне проекта — итоговые browser-capture интеграции, нормализованные сравнения и regression-capture раздела `Объекты`.
+- `docs/evidence/digital-chessboard-summary/` — итоговые browser-capture интеграции, принятые сравнения и regression-capture раздела `Объекты`.
 
 Промежуточные изображения, локальные команды запуска и диагностические API стенда не сохраняются: они не определяют актуальную функциональность.
 
@@ -39,4 +39,4 @@
 
 ## Проверка после удаления стенда
 
-Актуальная реализация должна проходить data/feature-тесты, browser-сценарии `ready`, `loading`, `empty`, error/retry, архив, печать, drawers, project switch и regression раздела `Объекты`. Результаты интеграционного сравнения находятся в корневом `design-qa.md`.
+Актуальная реализация должна проходить data/feature-тесты, browser-сценарии `ready`, `loading`, `empty`, error/retry, архив, печать, drawers, project switch и regression раздела `Объекты`. Результаты интеграционного сравнения находятся в `docs/evidence/digital-chessboard-summary/README.md`.

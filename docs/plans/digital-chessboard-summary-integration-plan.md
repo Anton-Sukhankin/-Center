@@ -563,5 +563,5 @@ Gate: нет двойных overlay, утечки scroll lock, потерянн�
 - создан `window.digitalChessboardSummaryData` с project/queue/BU semantics и явной границей demo-методики;
 - создан нативный lifecycle `window.SCenterDigitalChessboardSummary` с project selector bridge, KPI, weekly/attention, таблицей, архивом, печатью, detail-drawer и состояниями ошибок/пустых данных;
 - выделен `src/components/construction-table/`; раздел `Объекты` и `Сводка` используют общий shell/scroll contract без объединения feature-specific колонок и данных;
-- статические, data-, browser- и design-QA результаты зафиксированы в `design-qa.md`;
+- статические, data-, browser- и design-QA результаты зафиксированы в `docs/evidence/digital-chessboard-summary/README.md`;
 - после отдельной приемки выполнена сокращенная документальная миграция: актуальный UI/UX-контракт, границы demo-данных, осознанные отличия и ключевые QA-референсы сохранены в основной документации; временный локальный стенд удален после повторной функциональной и визуальной проверки.

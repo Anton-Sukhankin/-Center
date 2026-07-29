@@ -15,7 +15,7 @@
 - header находится в `index.html`; существующие пункты верхней навигации пока не образуют общий контроллер основных экранов;
 - dashboard занимает `.content-area` и включает левое дерево, шапку контекста, тулбар, события, метрики и связанные drawer/modal-сценарии;
 - исходное экспериментальное решение было реализовано на React/Vite и содержало отдельный header, который не переносился в действующий прототип;
-- текущая визуальная и поведенческая истина хранится в `src/features/digital-chessboard/README.md`, `design-qa.md` и `docs/reference/digital-chessboard/`;
+- текущая визуальная и поведенческая истина хранится в `src/features/digital-chessboard/README.md`, `docs/evidence/digital-chessboard/README.md` и `docs/reference/digital-chessboard/`;
 - `legacy/isolated/` не является источником для этой интеграции и не должно читаться или подключаться;
 - объект строительства описан как целевая сущность в `docs/entity-model.md`, но пока не является активным уровнем `src/data/project-structure.js`.
 

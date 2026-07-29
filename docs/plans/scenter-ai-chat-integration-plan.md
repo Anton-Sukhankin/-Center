@@ -209,7 +209,7 @@ window.SCostAIChat.configure({
 - кнопка не перекрывает карточки и не конкурирует с floating action bar;
 - контекст входа естественно связан с текущей лентой событий, фильтрами и выбранным объектом.
 
-Визуальный концепт точки входа сохранен как `output/chat-entry-point-proposal.svg`.
+Визуальный концепт точки входа сохранен как `docs/evidence/chat/entry-point-proposal.svg`.
 
 ## Impact
 

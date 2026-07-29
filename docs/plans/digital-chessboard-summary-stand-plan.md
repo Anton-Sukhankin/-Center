@@ -1,6 +1,6 @@
 # План: изолированный стенд «Сводка цифровой шахматки»
 
-Статус: выполнен и принят; функциональность интегрирована в основной прототип, актуальный документальный и QA-контекст сохранен, временный стенд удален 27.07.2026. Итоговая design-to-implementation приемка имеет статус `passed` в корневом `design-qa.md`.
+Статус: выполнен и принят; функциональность интегрирована в основной прототип, актуальный документальный и QA-контекст сохранен, временный стенд удален 27.07.2026. Итоговая design-to-implementation приемка имеет статус `passed` в `docs/evidence/digital-chessboard-summary/README.md`.
 
 Документ подчиняется `docs/plans/README.md`. Задача относится к сложным: создается новый интерактивный desktop/web-стенд, используются субагенты, переиспользуется табличный контракт действующего feature и моделируется новый пользовательский путь со множеством состояний.
 
@@ -43,7 +43,7 @@
 - print preview и print CSS без управляющего chrome;
 - ready, hover, focus, open/expanded, loading, empty, local error/retry, archive и print states;
 - keyboard navigation, `Escape`, focus-visible, responsive и reduced-motion;
-- локальный README и обязательный `design-qa.md` со статусом `passed` перед передачей.
+- локальный README и обязательный evidence-manifest со статусом `passed` перед передачей.
 
 ## Out Of Scope
 
@@ -130,7 +130,7 @@ UI-состояния dropdown, expanded rows, drawers, menus, loading и toast 
 - все основные действия доступны мышью и клавиатурой, overlays закрываются по `Escape` и возвращают фокус;
 - desktop, medium и narrow layouts не перекрывают постоянные действия;
 - активные `index.html`, `src/`, `window.*`, component maps, compliance matrix и roadmap не изменены;
-- итоговая приемка перенесена в корневой `design-qa.md` и содержит `final result: passed`.
+- итоговая приемка перенесена в `docs/evidence/digital-chessboard-summary/README.md` и имеет статус `passed`.
 
 ## Documentation Updates
 
@@ -138,7 +138,7 @@ UI-состояния dropdown, expanded rows, drawers, menus, loading и toast 
 - сохранен канонический визуальный источник и описана исключенная shell-область;
 - запись о стенде добавлена в `docs/plans/README.md`;
 - активные `component-map`, `component-impact-map`, `system-compliance-matrix`, roadmap и feature README не изменяются до отдельной команды интеграции;
-- результат итоговой визуальной приемки хранится в корневом `design-qa.md`; канонические референсы — в `docs/reference/digital-chessboard-summary/`, нормализованные сравнения — в `qa/digital-chessboard-summary/`.
+- результат итоговой визуальной приемки хранится в `docs/evidence/digital-chessboard-summary/README.md`; канонические референсы — в `docs/reference/digital-chessboard-summary/`, принятые сравнения — рядом с evidence-manifest.
 
 ## Verification
 
@@ -148,7 +148,7 @@ UI-состояния dropdown, expanded rows, drawers, menus, loading и toast 
 - локальный HTTP endpoint `http://127.0.0.1:4173/` отвечает `200`;
 - во встроенном браузере проверены project switching, local retry, object drawer, archive snapshot и print preview; console errors отсутствуют;
 - повторные read-only аудиты трех субагентов выполнены, их P1-замечания по таблице, focus и package contract модерированы основным агентом;
-- исторический tiled browser-capture заменен нормализованными сравнениями в `qa/digital-chessboard-summary/`; итоговый статус интеграции — `passed`.
+- исторический tiled browser-capture заменен принятыми сравнениями в `docs/evidence/digital-chessboard-summary/`; итоговый статус интеграции — `passed`.
 
 ## Future Integration Gate
 

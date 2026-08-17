@@ -29,7 +29,7 @@ Project selector не создает собственный каталог Proje
 
 Поддержаны `ready`, `loading`, `empty`, `table-error/retry`, `attention-error/retry`, `unsupported-context`, `archive ready/empty/error/snapshot`, drawers и print preview. Для browser QA состояния доступны через `?summaryScenario=`.
 
-## UX-контракт
+## UX-контракт текущей реализации
 
 - в верхней левой части рабочей области раздела всегда отображается локальный заголовок `Сводка` размером `24px / 600`; он не заменяет общий header и остается частью feature-поверхности при обычном и unsupported-состоянии;
 - карточка выбора проекта в toolbar использует локально очищенный subtitle: слова `Москва` и `Премиум` не выводятся в trigger и option-строках, при этом исходные `headerAttributes` проекта в общем слое данных не изменяются;
@@ -45,7 +45,11 @@ Project selector не создает собственный каталог Proje
 
 Desktop-референс не задает глобальный header, sidebar и профиль пользователя: в интегрированном экране они принадлежат общей оболочке S.Center. Canonical demo-значения и название проекта могут отличаться от сохраненных изображений, поскольку feature не переносит локальный каталог проектов стенда.
 
-## Минимальная проверка
+## Будущая модель
+
+Реальные источники KPI и рисков, утвержденная методика агрегации, серверный архив, права, persistence и рабочие cross-feature переходы не входят в текущую demo-сводку и реализуются отдельным этапом.
+
+## Acceptance
 
 - syntax нового data/feature/shared component;
 - data test project/queue/BU/clone semantics;

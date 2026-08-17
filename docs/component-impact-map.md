@@ -28,7 +28,7 @@
 | Левое дерево навигации | Высокая | Активный контекст, шапку, события, строительные и финансовые метрики, фильтры. | Выбор бизнес-юнита, проекта, очереди; раскрытие/сворачивание; сброс фильтров; пересчет данных. | `src/components/navigation-tree-item/README.md`, `docs/context-behavior.md`, `docs/component-map.md`, `docs/system-compliance-matrix.md`, `docs/access-control.md`. | Высокий |
 | Шапка проекта / контекста | Средняя | Отображение активного контекста, атрибуты проекта, бизнес-юнита или очереди, визуальное подтверждение выбранного уровня. | Переключение дерева, отображение изображения, названия, стадии, БЮ, кластера, РП или руководителя бизнес-юнита. | `src/app/README.md`, `docs/context-behavior.md`, `docs/entity-model.md`, `docs/system-compliance-matrix.md`. | Средний |
 | Тулбар событий | Средняя/высокая | Вкладки периода, режим `Метрики`, поиск, фильтры, AI-анализ, счетчики, состояние закрепленных. | `Сегодня`, `Все события`, `Закрепленные`, `Метрики`, поиск, открытие фильтра, запуск аналитики, контекстные действия режима метрик. | `src/components/event-toolbar/README.md`, `src/features/filters/README.md`, `src/features/analytics/README.md`, `src/app/README.md`, `docs/component-map.md`, `docs/system-compliance-matrix.md`. | Средний |
-| Центральный дашборд метрик | Высокая | Активный проект, demo-данные сроков и бюджетов, тулбар, ассистента, режимы центральной области. | Переключение проектов, loading без старых данных, внутренние разделы, контрольные этапы, адаптив, возврат к событиям, бизнес-юнит и очередь. | `src/features/metrics-dashboard/README.md`, `src/data/README.md`, `src/app/README.md`, `docs/component-map.md`, `docs/system-compliance-matrix.md`, `docs/plans/metrics-real-data-integration-plan.md`. | Высокий |
+| Центральный дашборд метрик | Высокая | Общую оболочку, активный проект, demo-данные `Общие` и `Закупки`, полную таблицу закупочного риска, локальный drawer, тулбар, ассистента и режимы центральной области. | Переключение проектов, loading без старых данных, внутренние разделы, `Общие`, `Закупки`, контрольные этапы, полная таблица и детали закупочного риска, адаптив, возврат к событиям, бизнес-юнит и очередь. | `src/features/metrics-dashboard/README.md`, `src/features/metrics-dashboard/sections/overview/README.md`, `src/features/metrics-dashboard/sections/procurement/README.md`, `src/data/README.md`, `src/app/README.md`, `docs/component-map.md`, `docs/system-compliance-matrix.md`, `docs/plans/metrics-real-data-integration-plan.md`. | Высокий |
 | Сводка цифровой шахматки | Высокая | Header, общий контекст, summary view-model, KPI, проблемы, архив, печать, detail и shared table. | Переходы экранов; project/queue/BU; loading/error; фильтр проблем; архив/печать/detail; focus; shared scroll. | `src/features/digital-chessboard-summary/README.md`, `src/components/construction-table/README.md`, `src/data/README.md`, `src/app/README.md`, `docs/evidence/digital-chessboard-summary/README.md`, `docs/system-compliance-matrix.md`. | Высокий |
 | Цифровая шахматка | Высокая | Header, активный контекст, общий selector, demo-данные, период, работы, сравнение и модальные состояния. | Переходы экранов; project/queue/BU; выбор объекта/периода/работы; сравнение; focus; scroll. | `src/features/digital-chessboard/README.md`, `src/components/construction-object-selector/README.md`, `src/data/README.md`, `src/app/README.md`, `docs/evidence/digital-chessboard/README.md`, `docs/system-compliance-matrix.md`. | Высокий |
 | Объекты | Высокая | Общий header/dropdown, active context, общий selector и identity-каталог, карточку объекта, таблицу, фильтры, CSV и overlay/scroll состояния. | Переходы поверхностей; project/queue/BU; выбор объекта; параметры; раскрытие; фильтры; no-results; sticky-области; CSV; keyboard/focus; cleanup при hide. | `src/features/objects/README.md`, `src/components/construction-object-selector/README.md`, `src/data/README.md`, `src/app/README.md`, `docs/component-map.md`, `docs/system-compliance-matrix.md`, `docs/reference/objects/README.md`. | Высокий |
@@ -55,6 +55,21 @@
 3. Проверить пользовательские сценарии из колонки "Что проверить в интерфейсе".
 4. Обновить документы из колонки "Обязательная документация".
 5. Если изменение раскрывает будущую, но еще не реализованную логику, добавить или уточнить пункт в `docs/plans/system-scaling-roadmap.md`.
+
+## Матрица связанного обновления
+
+Матрица определяет постоянного владельца изменения. Она не требует механического обновления всех перечисленных документов: документ меняется только если затронут его контракт, но обязан быть проверен в рамках этапа.
+
+| Тип изменения | Основной владелец | Обязательные связанные проверки |
+| --- | --- | --- |
+| Назначение продукта или пользовательская ценность | `docs/system-overview.md` либо профильная системная спецификация | роли, доступ, `docs/system-compliance-matrix.md` |
+| Сущность, атрибут, связь или расчет | `docs/entity-model.md`, `src/data/README.md` | потребители в `component-map`, локальные README, compliance |
+| Локальная структура, поведение или состояние | README соответствующего component/feature | feature-потребитель, relevant row этой карты, compliance |
+| Drawer, modal, overlay, sticky или floating-механика | локальный README пространственного владельца | `src/app/README.md`, конфликтующие слои, browser QA |
+| Публичный `window.*` | README владельца API | `src/app/README.md`, `component-map`, compliance |
+| Visual reference или принятое evidence | локальный нормативный README | соответствующий manifest; reference/evidence не становится ТЗ |
+| Future-требование | `docs/plans/system-scaling-roadmap.md` и активный план | постоянные владельцы, которые будут обновлены после реализации |
+| Создание, перемещение, архивирование или удаление документа | `docs/README.md` | реестр планов/архива, ссылки, documentation checker |
 
 ## Когда обновлять эту карту
 

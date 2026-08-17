@@ -16,3 +16,14 @@ S.Center — прототип личного кабинета для центр�
 Точка входа прототипа — `index.html`. Локальный запуск выполняется командой `node scripts/serve-prototype.mjs`. Архитектурные роли активных слоев описаны в `src/app/README.md`, `src/data/README.md`, `src/ui/README.md`, а пользовательские сценарии и компоненты — в README внутри `src/features/` и `src/components/`.
 
 `legacy/isolated/` не входит в активный прототип и обычный обзор проекта.
+
+## Проверка документации
+
+Структурная проверка выполняется без внешних зависимостей:
+
+```powershell
+node scripts/check-documentation.mjs
+node --test scripts/check-documentation.test.mjs
+```
+
+Checker проверяет ссылки, реестры, локальные README, visual assets, пути к реализации и обязательные контракты пилотных сложных областей. Он только сообщает нарушения и не изменяет документы автоматически.

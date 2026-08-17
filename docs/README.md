@@ -17,6 +17,12 @@
 | Контекст и пользовательский путь | `context-behavior.md` | feature-паспорт, `component-map.md` |
 | Конкретный feature | `../src/features/<feature>/README.md` | `../src/app/README.md`, `../src/data/README.md` |
 | Конкретный компонент | `../src/components/<component>/README.md` | feature-потребитель, `component-impact-map.md` |
+| Frontend-изменение | локальный component/feature README | соответствующая строка `component-impact-map.md`, runtime и compliance |
+| Данные или расчет | `../src/data/README.md` | релевантный раздел `entity-model.md`, потребители из `component-map.md` |
+| Сверка закупочных метрик с Excel-первоисточником | `reference/procurement-metrics-source.md` | `../src/features/metrics-dashboard/sections/procurement/README.md`, `../src/data/procurement-metrics-data.js` |
+| Бизнес-анализ | `system-overview.md` или профильная системная спецификация | `user-roles.md`, `access-control.md`, `decision-actions.md`, compliance |
+| Testing и acceptance | локальный README затронутой области | строка `component-impact-map.md`, существующие `*.test.mjs`, evidence при необходимости |
+| Аудит документации | `documentation-standards.md` | полный реестр, карты, compliance и `audits/documentation-health.md` |
 | Будущую реализацию | `plans/system-scaling-roadmap.md` | конкретный активный план |
 | Нужно ли создавать план | `plans/README.md` | `documentation-standards.md` |
 | Справочный или визуальный источник | `reference/README.md` | постоянный паспорт затронутой области |
@@ -41,6 +47,7 @@
 | `../PROJECT_GUIDELINES.md` | управление проектом, основной | текущий, актуален | Оставить владельцем общих проектных правил; volatile-детали позднее сократить. |
 | `../AGENTS.md` | инструкция агентам, основной | текущий, актуален | Краткий исполнимый регламент; подробности направляет в профильные источники. |
 | `../.agentsignore` | проектное операционное соглашение | текущий, актуален | Не считать автоматически исполняемым механизмом Codex; применять через обязательное правило `AGENTS.md`. |
+| `../scripts/check-documentation.mjs` | автоматическая структурная проверка | текущий, актуален | Проверяет документацию без семантического переписывания; mutation-тесты находятся рядом. |
 | `archive/SYSTEM_QUESTIONNAIRE.md` | архивная рабочая анкета, ненормативный | история | Ответы перенесены в профильные спецификации; открытые решения — в roadmap. |
 | `evidence/README.md` | реестр доказательств приемки | текущий/история, актуален | Хранить только принятые материалы с локальным manifest. |
 
@@ -86,7 +93,9 @@
 | `../src/features/digital-chessboard/README.md` | активный demo-feature | Оставить владельцем поведения шахматки. |
 | `../src/features/digital-chessboard-summary/README.md` | активный demo-feature | Оставить владельцем поведения сводки. |
 | `../src/features/filters/README.md` | активный demo-feature | Оставить; future date picker, presets и большие выборки держать отдельно. |
-| `../src/features/metrics-dashboard/README.md` | активный demo-dashboard | Оставить; локальные pixel-правила позднее нормализовать. |
+| `../src/features/metrics-dashboard/README.md` | общая оболочка активного demo-dashboard | Оставить владельцем навигации, контекста и верхнеуровневых состояний; дочернее содержимое маршрутизировать в паспорта вкладок. |
+| `../src/features/metrics-dashboard/sections/overview/README.md` | вкладка `Общие`, текущая реализация | Оставить владельцем реализованных сроков, этапов и бюджетных оснований. |
+| `../src/features/metrics-dashboard/sections/procurement/README.md` | вкладка `Закупки`, текущая реализация и целевые состояния | Сохранять 19 метрик, сегментацию, demo-ограничения и фактический UI/behavior-контракт отдельно от будущей интеграции реальных данных. |
 | `../src/features/objects/README.md` | активный demo-feature | Оставить владельцем раздела «Объекты». |
 | `../src/features/tasks/README.md` | активный in-memory feature | Оставить; backend, workflow и права относятся к roadmap. |
 
@@ -102,6 +111,22 @@
 | `../src/components/event-toolbar/README.md` | toolbar и точки входа features | Оставить; проверять при изменении filters, analytics или chat. |
 | `../src/components/floating-action-bar/README.md` | контекстная нижняя панель | Оставить. |
 | `../src/components/navigation-tree-item/README.md` | строка дерева контекста | Оставить; синхронизировать с контекстом и data-слоем. |
+
+## Testing и acceptance
+
+Локальный README component/feature является владельцем ручной acceptance-проверки своей области. `component-impact-map.md` определяет каскад сценариев, `system-compliance-matrix.md` — статус current/target и Visual QA, а `docs/evidence/` хранит только принятое доказательство. Отдельный `testing-coverage.md` на текущем масштабе не создается: маршрут не должен дублировать эти владельцы.
+
+Автоматизированы следующие области:
+
+| Тест | Покрытие |
+| --- | --- |
+| `../src/components/construction-object-selector/construction-object-selector.test.mjs` | renderer, escaping и keyboard helper общего selector |
+| `../src/data/digital-chessboard-summary-data.test.mjs` | project/queue/BU, KPI, объекты и clone semantics сводки |
+| `../src/data/objects-data.test.mjs` | каталог объектов, строки, context и clone semantics |
+| `../src/features/digital-chessboard-summary/digital-chessboard-summary.test.mjs` | lifecycle и интеграция сводки |
+| `../scripts/check-documentation.test.mjs` | mutation-проверки документационной системы |
+
+Не перечисленные в таблице сценарии остаются ручными и фиксируются в локальном разделе `Acceptance`. При добавлении теста обновляются локальный README и эта таблица; отдельная coverage-карта создается только при появлении самостоятельного QA-процесса или невозможности поддерживать этот компактный маршрут.
 
 ## Планы и roadmap
 
@@ -120,6 +145,7 @@
 | Документ | Класс | Решение классификации |
 | --- | --- | --- |
 | `reference/README.md` | правила справочных материалов, основной | Оставить точкой входа в reference. |
+| `reference/procurement-metrics-source.md` | дословная транскрипция Excel-первоисточника, эталонный справочный снимок | Открывать только для source-level сверки состава и формулировок закупочных метрик; при изменении SHA-256 перепроверять весь диапазон. |
 | `reference/Транскрипция карточки события.txt` | транскрипция, ненормативный | Оставить справочным источником, не применять автоматически. |
 | `reference/digital-chessboard/README.md` | визуальный reference, ненормативный | Оставить; поведение определяет feature-паспорт. |
 | `reference/digital-chessboard-summary/README.md` | визуальный reference, ненормативный | Оставить; бизнес-методику из изображений не выводить. |
@@ -132,6 +158,8 @@
 
 | Документ | Статус | Следующее действие |
 | --- | --- | --- |
+| `../design-qa.md` | актуальная Product Design QA вкладки `Метрики → Закупки` | Обновлять при визуальном изменении вкладки или замене выбранного MagicPath-источника; не использовать как паспорт поведения. |
+| `audits/documentation-health.md` | компактный текущий audit-checkpoint | Обновлять после системной миграции документации или изменения checker; не использовать как источник продуктового поведения. |
 | `audits/project-cleanup-audit.md` | завершенный комплексный аудит структуры и чистки | Постоянный доказательный отчет; не использовать как источник текущего поведения. |
 | `evidence/digital-chessboard/README.md` | принятое evidence шахматки | Хранить рядом с минимальным набором снимков. |
 | `evidence/digital-chessboard-summary/README.md` | принятое evidence сводки | Хранить рядом с минимальным набором сравнений. |

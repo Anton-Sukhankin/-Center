@@ -1,0 +1,29 @@
+{
+  "mode": "edit",
+  "componentId": "438729686395265024",
+  "projectId": "433158690502225920",
+  "selectedRevisionId": "438729686395265025",
+  "jobId": "432825861566263296-external-agent-438730195684442112",
+  "generatedName": "boldly-light-2235",
+  "name": "Procurement Metrics 02 Circular Contracting",
+  "dimensions": {
+    "width": 1600,
+    "height": 1100
+  },
+  "selectedImages": [],
+  "editableFiles": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "41fdfeeed07e984d3216c56b2b98ab9a8fdaf9b590282920d8b9af8162cbef59"
+    },
+    {
+      "path": "src/components/generated/ProcurementMetrics02CircularContracting.tsx",
+      "sha256": "8ed23367bfa13cfa45980ea5e45c2cf241621e0bbc21e1381366a090144eac48"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "2858c9365ce10e708281d70906f52006819a16ae9175af0e7b6d9b97a8a113d3"
+    }
+  ],
+  "baseRevisionId": "438729686395265025"
+}

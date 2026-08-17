@@ -8,6 +8,7 @@
 
     const phaseSections = [
         { id: 'overview', label: 'Общие', available: true },
+        { id: 'procurement', label: 'Закупки', available: true },
         { id: 'design', label: 'Проектирование', available: false },
         { id: 'contracts', label: 'Тендеры и контрактация', available: false },
         { id: 'sales', label: 'Продажи', available: false },
@@ -325,6 +326,9 @@
             dataStatusLabel: 'Демо-данные',
             currency: 'RUB',
             phaseSections: clone(phaseSections),
+            procurement: typeof SCenterProcurementMetricsData !== 'undefined'
+                ? SCenterProcurementMetricsData.getForContext(context)
+                : null,
             schedule,
             milestones: buildMilestones(contextKey, schedule, context.type),
             budgets: isQueue ? buildQueueBudgets(projectId, contextId) : buildBudgets(projectId),

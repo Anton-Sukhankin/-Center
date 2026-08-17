@@ -1,0 +1,29 @@
+{
+  "mode": "edit",
+  "componentId": "438629674734751744",
+  "projectId": "433158690502225920",
+  "selectedRevisionId": "438629674734751745",
+  "jobId": "432825861566263296-external-agent-438632834526236672",
+  "generatedName": "clear-gate-1854",
+  "name": "Метрики закупок — 03 Аналитическая область",
+  "dimensions": {
+    "width": 1440,
+    "height": 1100
+  },
+  "selectedImages": [],
+  "editableFiles": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "fb8977e6c239ab9de0322a03b1e042052c3bfb080a3099424962a3360adc8909"
+    },
+    {
+      "path": "src/components/generated/GeneratedComponent.tsx",
+      "sha256": "ff8ddb4bb8b75ccc537fe4536030a3774a457fa876cab240ef6dcd6bc19aa1bc"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "33edc7235504241186e3fcaad3d1cf7aeb2b4b4c35a4b52ea8fc011e65820647"
+    }
+  ],
+  "baseRevisionId": "438629674734751745"
+}

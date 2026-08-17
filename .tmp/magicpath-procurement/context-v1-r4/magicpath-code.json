@@ -1,0 +1,25 @@
+{
+  "mode": "edit",
+  "componentId": "438634382102786048",
+  "projectId": "433158690502225920",
+  "selectedRevisionId": "438669651040423936",
+  "baseRevisionId": "438669651040423936",
+  "jobId": "432825861566263296-external-agent-438676559075876864",
+  "generatedName": "sunnily-evening-5515",
+  "name": "Procurement Metrics 01 Management Balance",
+  "selectedImages": [],
+  "editableFiles": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "0e0439b00dd47c0985080f99560edd1defb466f4c704785559e59f6098fa04be"
+    },
+    {
+      "path": "src/components/generated/ProcurementMetrics01ManagementBalance.tsx",
+      "sha256": "40f325da645563b636c7859f56f801baa45ee271cb36ed0a683550a02a540266"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "2858c9365ce10e708281d70906f52006819a16ae9175af0e7b6d9b97a8a113d3"
+    }
+  ]
+}

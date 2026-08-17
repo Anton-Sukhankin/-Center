@@ -17,5 +17,8 @@
 | `metrics-dashboard-integration-plan.md` | Интеграция центрального дашборда метрик. |
 | `objects-integration-plan.md` | Интеграция раздела объектов. |
 | `objects-stand-plan.md` | Временный стенд раздела объектов. |
+| `procurement-metrics-design-plan.md` | Подразделы `MetricsDashboard` и три концепта вкладки `Закупки`. |
+| `procurement-metrics-runtime-integration-plan.md` | Нативная runtime-интеграция выбранного дизайна вкладки `Метрики → Закупки`. |
+| `procurement-metrics-source-conformance-plan.md` | Сверка demo-runtime закупочных метрик с Excel-первоисточником и расчетным контекстом. |
 | `scenter-ai-chat-integration-plan.md` | Интеграция AI-чата S.Center. |
 | `tree-context-data-plan.md` | Данные и поведение дерева контекста. |

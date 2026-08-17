@@ -1,0 +1,29 @@
+{
+  "mode": "edit",
+  "componentId": "438748094553792512",
+  "projectId": "433158690502225920",
+  "selectedRevisionId": "438748094553792513",
+  "jobId": "432825861566263296-external-agent-438754826415910912",
+  "generatedName": "nice-field-6477",
+  "name": "Procurement Metrics 04 Split Analytics Layout",
+  "dimensions": {
+    "width": 1600,
+    "height": 1100
+  },
+  "selectedImages": [],
+  "editableFiles": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "71c1e8a8b1843f45913b2de601f15215e05691e944f5447fe670eb0589479521"
+    },
+    {
+      "path": "src/components/generated/ProcurementMetrics04SplitAnalyticsLayout.tsx",
+      "sha256": "a1bdd57f10d7c62021ed2c28365c4baed0fb05803120935d3d1f11c280af2c7b"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "3af92f9f6b5e93767188381bda25e0b3e26d2885569cffb8b46ff6d8966b1860"
+    }
+  ],
+  "baseRevisionId": "438748094553792513"
+}

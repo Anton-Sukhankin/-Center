@@ -6,6 +6,12 @@
 
 Компонент реализован как classic-script/IIFE, не использует React и регистрирует функции в существующем `window.SCenterComponents`.
 
+## Реализация и стили
+
+- `construction-object-selector.js` — pure renderer и keyboard helpers;
+- `construction-object-selector.css` — локальный `cos-` visual contract;
+- `construction-object-selector.test.mjs` — escaping, renderer и roving keyboard helper.
+
 ## View model карточки
 
 `renderConstructionObjectSelector(cards, options)` принимает массив:
@@ -46,3 +52,16 @@ Stable identity должна поступать из `window.constructionObjects
 - компонент не синхронизирует выбор между features;
 - компонент не хранит состояние и не навешивает глобальные listeners;
 - focus после перерендера восстанавливает вызывающая feature по флагу `focus` из keyboard helper.
+
+## Acceptance
+
+- `node --test src/components/construction-object-selector/construction-object-selector.test.mjs` проходит;
+- пять карточек выбираются мышью и клавишами стрелок, `Home`, `End`;
+- `aria-selected` и roving `tabindex` соответствуют активной карточке;
+- description и fallback не дублируют нижнюю meta-строку;
+- при ширине до `1180px` scroll остается локальным, без page-level overflow;
+- переключение между `Объектами` и `Шахматкой` не переносит feature-specific состояние.
+
+## Когда обновлять документ
+
+README обновляется при изменении view model, renderer, keyboard helper, visual contract или границы между общей identity объекта и feature-specific данными. Изменение общего контракта требует регрессии обеих features-потребителей.

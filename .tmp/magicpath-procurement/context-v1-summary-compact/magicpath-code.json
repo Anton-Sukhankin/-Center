@@ -1,0 +1,29 @@
+{
+  "mode": "edit",
+  "componentId": "438732741043953664",
+  "projectId": "433158690502225920",
+  "selectedRevisionId": "438743597223907328",
+  "baseRevisionId": "438743597223907328",
+  "jobId": "432825861566263296-external-agent-438744498063962112",
+  "generatedName": "smartly-grass-3290",
+  "name": "Procurement Metrics 03 Three Circular Cards",
+  "selectedImages": [],
+  "editableFiles": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "83452e4ac9bbf6209fc07ac537c76f2eaa74b3e468b0e138b66171272716f5c1"
+    },
+    {
+      "path": "src/components/generated/ProcurementMetrics03ThreeCircularCards.tsx",
+      "sha256": "c1a7a1284f55a02b8057951c8e6aac2ccebb057dd235f22411fb431213cdf490"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "2858c9365ce10e708281d70906f52006819a16ae9175af0e7b6d9b97a8a113d3"
+    }
+  ],
+  "dimensions": {
+    "width": 1600,
+    "height": 1100
+  }
+}

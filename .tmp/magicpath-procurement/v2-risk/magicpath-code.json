@@ -1,0 +1,29 @@
+{
+  "mode": "edit",
+  "componentId": "438634486624837632",
+  "projectId": "433158690502225920",
+  "selectedRevisionId": "438634486624837633",
+  "jobId": "432825861566263296-external-agent-438635459988590592",
+  "generatedName": "finely-mountain-9641",
+  "name": "Procurement Metrics 02 Risk Control",
+  "dimensions": {
+    "width": 1440,
+    "height": 1100
+  },
+  "selectedImages": [],
+  "editableFiles": [
+    {
+      "path": "src/App.tsx",
+      "sha256": "ec7668b062a9fa59d9eb2ff652a7ababafde80bc1c4f16c92aa768da475d5a78"
+    },
+    {
+      "path": "src/components/generated/ProcurementMetrics02RiskControl.tsx",
+      "sha256": "66755bbba3f84017bbc26373aebfb6d8087fe17a258fbe79a7d4492510d46bec"
+    },
+    {
+      "path": "src/index.css",
+      "sha256": "3af92f9f6b5e93767188381bda25e0b3e26d2885569cffb8b46ff6d8966b1860"
+    }
+  ],
+  "baseRevisionId": "438634486624837633"
+}

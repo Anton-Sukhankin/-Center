@@ -363,8 +363,7 @@
         });
 
         content.setAttribute('aria-labelledby', `metrics-section-tab-${state.activeSection}`);
-        content.innerHTML = renderActiveSection(viewModel);
-        refreshIcons();
+        renderActiveSectionInto(content, viewModel);
         return true;
     }
 
@@ -402,6 +401,24 @@
             : renderUnavailableSection(viewModel);
     }
 
+    function renderActiveSectionInto(content, viewModel) {
+        if (typeof SCenterProcurementMetricsSection !== 'undefined') {
+            SCenterProcurementMetricsSection.unmount();
+        }
+
+        if (
+            state.activeSection === 'procurement'
+            && viewModel.procurement
+            && typeof SCenterProcurementMetricsSection !== 'undefined'
+        ) {
+            SCenterProcurementMetricsSection.mount(content, viewModel.procurement);
+            return;
+        }
+
+        content.innerHTML = renderActiveSection(viewModel);
+        refreshIcons();
+    }
+
     function updateActiveSection() {
         if (!state.container || !state.viewModel) return;
 
@@ -417,8 +434,7 @@
         });
 
         content.setAttribute('aria-labelledby', `metrics-section-tab-${state.activeSection}`);
-        content.innerHTML = renderActiveSection(state.viewModel);
-        refreshIcons();
+        renderActiveSectionInto(content, state.viewModel);
     }
 
     function setSection(sectionId) {
@@ -453,6 +469,9 @@
     }
 
     function destroy() {
+        if (typeof SCenterProcurementMetricsSection !== 'undefined') {
+            SCenterProcurementMetricsSection.unmount();
+        }
         state.container = null;
         state.viewModel = null;
         state.context = null;

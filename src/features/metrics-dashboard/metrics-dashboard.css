@@ -10,7 +10,7 @@
     --metrics-text: #111827;
     --metrics-muted: #667085;
     --metrics-border: #e3e8ef;
-    --metrics-summary-value-size: clamp(26px, 2vw, 34px);
+    --metrics-summary-value-size: 24px;
     --metrics-title-value-gap: 6px;
     display: flex;
     flex-direction: column;

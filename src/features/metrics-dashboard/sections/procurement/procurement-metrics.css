@@ -395,7 +395,7 @@
 .procurement-risk-heading > span { display: inline-flex; align-items: center; gap: 5px; color: var(--metrics-muted); font-size: 12px; font-weight: 500; }
 .procurement-risk-heading > span svg { width: 12px; height: 12px; color: var(--metrics-red); }
 .procurement-risk-table-wrap { overflow-x: auto; }
-.procurement-risk-table { width: 100%; min-width: 930px; border-collapse: collapse; text-align: left; font-size: 12px; font-weight: 500; }
+.procurement-risk-table { width: 100%; min-width: 930px; border-collapse: collapse; text-align: left; font-size: 14px; font-weight: 500; }
 .procurement-risk-table th { padding: 8px 12px; background: #f8fafc; color: var(--metrics-muted); font-size: 12px; font-weight: 500; letter-spacing: 0.035em; text-transform: uppercase; white-space: nowrap; }
 .procurement-risk-table th:first-child,
 .procurement-risk-table td:first-child { padding-left: 16px; }
@@ -403,10 +403,10 @@
 .procurement-risk-table td:last-child { padding-right: 16px; text-align: right; }
 .procurement-risk-table tbody tr { height: 48px; border-top: 1px solid #edf0f4; cursor: pointer; transition: background-color 0.2s ease; }
 .procurement-risk-table tbody tr:hover { background: #f7faff; }
-.procurement-risk-table td { height: 48px; padding: 0 12px; color: #475467; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.procurement-risk-table td { height: 48px; padding: 0 12px; color: #475467; font-size: 14px; font-weight: 500; white-space: nowrap; }
 .procurement-risk-table td:first-child strong { color: var(--metrics-blue); font-weight: 500; }
 .procurement-risk-table td:nth-child(2) b { color: var(--metrics-text); font-weight: 500; }
-.procurement-risk-table td:nth-child(2) small { margin-left: 6px; color: var(--metrics-muted); font-size: 12px; font-weight: 500; }
+.procurement-risk-table td:nth-child(2) small { margin-left: 6px; color: var(--metrics-muted); font-size: 14px; font-weight: 500; }
 .procurement-risk-table td.is-negative { color: var(--metrics-red); font-weight: 500; }
 .procurement-risk-table td.is-positive { color: var(--metrics-green); font-weight: 500; }
 .procurement-risk-status { display: inline-flex; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 999px; font-size: 12px; font-weight: 500; }
@@ -414,7 +414,7 @@
 .procurement-risk-status.is-critical { background: var(--metrics-red-soft); color: #b91c1c; }
 .procurement-risk-status.is-attention { background: #fff7e8; color: #a15c00; }
 .procurement-risk-status.is-control { background: var(--metrics-green-soft); color: #12683c; }
-.procurement-risk-action { display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; border: 0; background: transparent; color: var(--metrics-blue); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
+.procurement-risk-action { display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; border: 0; background: transparent; color: var(--metrics-blue); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
 .procurement-risk-action:focus-visible { outline: 2px solid var(--metrics-blue); outline-offset: 3px; border-radius: 4px; }
 .procurement-risk-action svg { width: 12px; height: 12px; }
 .procurement-risk-empty td { height: 48px; color: var(--metrics-muted); text-align: center !important; cursor: default; }

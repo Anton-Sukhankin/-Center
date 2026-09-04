@@ -183,7 +183,7 @@
     function getSuggestedChatTitle(context) {
         if (context.activeEventId) return `Событие ${context.activeEventId}`;
         if (context.activeMetricId) return `Метрика ${context.activeMetricId}`;
-        return context.contextName || 'Контекст S.Center';
+        return context.contextName || 'Контекст AIShtab';
     }
 
     function createInitialWorkspace() {
@@ -194,7 +194,7 @@
             chats: [
                 {
                     id: 'scenter_chat_current_context',
-                    title: 'Контекст S.Center',
+                    title: 'Контекст AIShtab',
                     description: context.contextName || 'Текущий контекст',
                     participantsLabel: 'Пользователь / Ассистент',
                     unreadCount: 0,
@@ -315,7 +315,7 @@
         const textarea = document.getElementById('ai-chat-input');
         if (textarea) {
             textarea.setAttribute('placeholder', 'Задайте вопрос по проекту, событиям или метрикам...');
-            textarea.setAttribute('aria-label', 'Вопрос ассистенту S.Center');
+            textarea.setAttribute('aria-label', 'Вопрос ассистенту AIShtab');
         }
 
         updateChatInputRadiusState();
@@ -685,7 +685,7 @@
     function buildPnLIncidentAnswer() {
         return [
             '### Анализ инцидента: перенос РНС по 2-й очереди',
-            'Этот перенос сроков является событием высокого приоритета, потому что он напрямую угрожает рентабельности проекта и запускает каскадное влияние на P&L-дерево. Ниже — разбор того, как сдвиг проходит от календарной вехи до чистой прибыли, какие риски возникают и какие действия стоит выполнить в интерфейсе S.Center прямо сейчас.',
+            'Этот перенос сроков является событием высокого приоритета, потому что он напрямую угрожает рентабельности проекта и запускает каскадное влияние на P&L-дерево. Ниже — разбор того, как сдвиг проходит от календарной вехи до чистой прибыли, какие риски возникают и какие действия стоит выполнить в интерфейсе AIShtab прямо сейчас.',
             [
                 '**1. Каскадное влияние на дерево P&L**',
                 '- **Стартовая точка риска:** получение разрешения на строительство переносится на 6 месяцев. Это сдвигает старт продаж, старт части работ и календарный контур 2-й очереди.',
@@ -761,12 +761,12 @@
 
     function handleAction() {
         return {
-            text: 'В текущем этапе Ассистент S.Center не выполняет действия в интерфейсе. Он может объяснить следующий шаг, но изменение данных остается за пользователем.'
+            text: 'В текущем этапе Ассистент AIShtab не выполняет действия в интерфейсе. Он может объяснить следующий шаг, но изменение данных остается за пользователем.'
         };
     }
 
     function handleAttachFile() {
-        global.alert('Вложения для Ассистента S.Center будут подключены на отдельном этапе.');
+        global.alert('Вложения для Ассистента AIShtab будут подключены на отдельном этапе.');
     }
 
     function handleOpenChange(isOpen) {

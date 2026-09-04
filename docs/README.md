@@ -1,4 +1,4 @@
-# Документация S.Center
+# Документация AIShtab
 
 ## Назначение
 
@@ -89,10 +89,10 @@
 | --- | --- | --- |
 | `../src/features/analytics/README.md` | демонстрационный AI/ML-сценарий | Оставить; не представлять как реальную модель. |
 | `../src/features/bi/README.md` | активный узкий BI-сценарий | Оставить отдельно от изолированной правой панели. |
-| `../src/features/chat/README.md` | активное ядро, адаптер и demo-provider S.Center | Оставить владельцем поведения чата; промышленный provider/actions описывает отдельный future-план. |
-| `../src/features/digital-chessboard/README.md` | активный demo-feature | Оставить владельцем поведения шахматки. |
+| `../src/features/chat/README.md` | активное ядро, адаптер и demo-provider AIShtab | Оставить владельцем поведения чата; промышленный provider/actions описывает отдельный future-план. |
 | `../src/features/digital-chessboard-summary/README.md` | активный demo-feature | Оставить владельцем поведения сводки. |
 | `../src/features/filters/README.md` | активный demo-feature | Оставить; future date picker, presets и большие выборки держать отдельно. |
+| `../src/features/metrics/README.md` | активный drawer дерева финансовых метрик | Оставить владельцем trigger, раскрытия ветвей, выбора показателя, открытия BI и конфликтов right drawer. |
 | `../src/features/metrics-dashboard/README.md` | общая оболочка активного demo-dashboard | Оставить владельцем навигации, контекста и верхнеуровневых состояний; дочернее содержимое маршрутизировать в паспорта вкладок. |
 | `../src/features/metrics-dashboard/sections/overview/README.md` | вкладка `Общие`, текущая реализация | Оставить владельцем реализованных сроков, этапов и бюджетных оснований. |
 | `../src/features/metrics-dashboard/sections/procurement/README.md` | вкладка `Закупки`, текущая реализация и целевые состояния | Сохранять 19 метрик, сегментацию, demo-ограничения и фактический UI/behavior-контракт отдельно от будущей интеграции реальных данных. |
@@ -138,6 +138,10 @@
 | `plans/system-scaling-roadmap.md` | основной roadmap, актуален | Синхронизировать с матрицей соответствия. |
 | `plans/metrics-real-data-integration-plan.md` | future-план | Реальные источники, методика, качество данных и права дашборда метрик. |
 | `plans/ai-chat-provider-actions-plan.md` | future-план | Промышленный provider, безопасность, хранение и подтверждаемые actions. |
+| `archive/plans/digital-chessboard-transfer-package-plan.md` | завершенный план | История выделения и передачи автономной копии до последующего удаления активного раздела из AIShtab. |
+| `archive/plans/digital-chessboard-transfer-package-removal-plan.md` | завершенный план | История удаления локальной переносимой копии после подтвержденного копирования в другой проект. |
+| `archive/plans/digital-chessboard-retirement-plan.md` | завершенный план | История удаления активного раздела `Шахматка`, его runtime и demo-данных после переноса в другой проект. |
+| `archive/plans/metric-tree-reintegration-plan.md` | завершенный план | История возврата drawer дерева финансовых метрик и его связи с active BI. |
 | `archive/plans/README.md` | реестр завершенных планов | История решений; не использовать как источник текущего поведения. |
 
 ## Справочные и архивные материалы
@@ -147,7 +151,7 @@
 | `reference/README.md` | правила справочных материалов, основной | Оставить точкой входа в reference. |
 | `reference/procurement-metrics-source.md` | дословная транскрипция Excel-первоисточника, эталонный справочный снимок | Открывать только для source-level сверки состава и формулировок закупочных метрик; при изменении SHA-256 перепроверять весь диапазон. |
 | `reference/Транскрипция карточки события.txt` | транскрипция, ненормативный | Оставить справочным источником, не применять автоматически. |
-| `reference/digital-chessboard/README.md` | визуальный reference, ненормативный | Оставить; поведение определяет feature-паспорт. |
+| `reference/digital-chessboard/README.md` | визуальный reference, ненормативный | История перенесенного раздела; `object-cards-and-metrics.png` остается дополнительным источником активного раздела `Объекты`. |
 | `reference/digital-chessboard-summary/README.md` | визуальный reference, ненормативный | Оставить; бизнес-методику из изображений не выводить. |
 | `reference/objects/README.md` | визуальный reference, ненормативный | Оставить; формулы и действия строк не считать подтвержденными. |
 | `archive/meeting-event-card-action-plan.md` | архивный план | Оставить в архиве; не использовать как текущее описание реализации. |
@@ -161,7 +165,7 @@
 | `../design-qa.md` | актуальная Product Design QA вкладки `Метрики → Закупки` | Обновлять при визуальном изменении вкладки или замене выбранного MagicPath-источника; не использовать как паспорт поведения. |
 | `audits/documentation-health.md` | компактный текущий audit-checkpoint | Обновлять после системной миграции документации или изменения checker; не использовать как источник продуктового поведения. |
 | `audits/project-cleanup-audit.md` | завершенный комплексный аудит структуры и чистки | Постоянный доказательный отчет; не использовать как источник текущего поведения. |
-| `evidence/digital-chessboard/README.md` | принятое evidence шахматки | Хранить рядом с минимальным набором снимков. |
+| `evidence/digital-chessboard/README.md` | историческое evidence удаленного раздела | Хранить как подтверждение ранее принятой и затем перенесенной реализации; не считать описанием текущего runtime. |
 | `evidence/digital-chessboard-summary/README.md` | принятое evidence сводки | Хранить рядом с минимальным набором сравнений. |
 | `evidence/metrics-dashboard/` | evidence метрик | Обновлять при изменении подтверждаемого визуального контракта. |
 | `evidence/tasks/` | аналитическое evidence задач | Использовать как обоснование, а не как источник текущего поведения. |

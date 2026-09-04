@@ -60,13 +60,6 @@ body.metric-bi-open {
     gap: 20px;
 }
 
-.metric-bi-eyebrow {
-    margin-bottom: 5px;
-    color: var(--metric-bi-muted);
-    font-size: 12px;
-    font-weight: 500;
-}
-
 .metric-bi-title-zone h2 {
     margin: 0;
     color: var(--metric-bi-text);
@@ -226,6 +219,11 @@ body.metric-bi-open {
     pointer-events: none;
 }
 
+.metric-bi-highlight[hidden],
+.metric-bi-tooltip[hidden] {
+    display: none;
+}
+
 .metric-bi-tooltip strong { color: var(--metric-bi-text); font-weight: 600; }
 
 .metric-bi-table {
@@ -264,13 +262,6 @@ body.metric-bi-open {
 .metric-bi-cell.is-delay { color: #dc2626; }
 .metric-bi-cell.is-hovered { background: #e9eff6; }
 
-.metric-bi-footer {
-    padding: 0 38px 24px;
-    color: #94a3b8;
-    font-size: 11px;
-    line-height: 1.45;
-}
-
 .metric-impact-trigger {
     appearance: none;
     color: inherit;
@@ -300,7 +291,6 @@ body.metric-bi-open {
     .metric-bi-actions { width: 100%; justify-content: space-between; }
     .metric-bi-chart { height: 260px; margin-inline: 20px; }
     .metric-bi-table { margin-inline: 20px; }
-    .metric-bi-footer { padding-inline: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

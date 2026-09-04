@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЛК ПК | AIShtab</title>
+    <title>AIShtab</title>
     <meta name="description" content="Личный кабинет руководителя проекта — сводный дашборд с метриками, событиями и аналитикой">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,11 +20,11 @@
     <link rel="stylesheet" href="src/features/tasks/task-drawer.css">
     <link rel="stylesheet" href="src/features/metrics-dashboard/metrics-dashboard.css?v=20260817-summary-24">
     <link rel="stylesheet" href="src/features/metrics-dashboard/sections/procurement/procurement-metrics.css?v=20260817-risk-row-14">
+    <link rel="stylesheet" href="src/features/metrics/metric-drawer.css">
     <link rel="stylesheet" href="src/features/bi/bi-modal.css">
     <link rel="stylesheet" href="src/features/analytics/ai-insights.css">
     <link rel="stylesheet" href="src/features/chat/ai-chat-core.css">
     <link rel="stylesheet" href="src/features/chat/scenter-ai-chat.css">
-    <link rel="stylesheet" href="src/features/digital-chessboard/digital-chessboard.css?v=20260728a">
     <link rel="stylesheet" href="src/features/digital-chessboard-summary/digital-chessboard-summary.css?v=20260727">
     <link rel="stylesheet" href="src/features/objects/objects.css?v=20260727b">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -37,7 +37,7 @@
             <div class="navbar-brand">
                 <div class="logo">
                     <i data-lucide="building-2"></i>
-                    <span>ЛК ПК | AIShtab</span>
+                    <span>AIShtab</span>
                 </div>
             </div>
             <nav class="navbar-nav">
@@ -64,12 +64,6 @@
                             data-main-view="objects" aria-current="false">
                             <i data-lucide="building-2" aria-hidden="true"></i>
                             <span>Объекты</span>
-                            <i data-lucide="check" class="nav-view-menu-check" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" class="nav-view-menu-item" role="menuitem"
-                            data-main-view="digital-chessboard" aria-current="false">
-                            <i data-lucide="grid-3x3" aria-hidden="true"></i>
-                            <span>Шахматка</span>
                             <i data-lucide="check" class="nav-view-menu-check" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -159,9 +153,6 @@
         <section class="app-main-view" id="digital-chessboard-summary-view" aria-label="Сводка цифровой шахматки" hidden>
             <div id="digital-chessboard-summary-root"></div>
         </section>
-        <section class="app-main-view" id="digital-chessboard-view" aria-label="Цифровая шахматка" hidden>
-            <div id="digital-chessboard-root"></div>
-        </section>
         <section class="app-main-view" id="objects-view" aria-label="Объекты" hidden>
             <div id="objects-root"></div>
         </section>
@@ -247,7 +238,7 @@
     <!-- Floating Action Bar -->
     <div id="floating-bar-root" class="floating-bar-container"></div>
 
-    <!-- S.Center AI Chat Mount -->
+    <!-- AIShtab AI Chat Mount -->
     <div id="scenter-ai-chat-root"></div>
 
     <!-- BI graph opened from the metric link inside an event drawer -->
@@ -261,19 +252,18 @@
     <script src="src/data/task-data.js"></script>
     <script src="src/data/project-structure.js"></script>
     <script src="src/data/construction-objects-data.js?v=20260727"></script>
-    <script src="src/data/digital-chessboard-data.js?v=20260727b"></script>
     <script src="src/data/objects-data.js?v=20260727"></script>
     <script src="src/data/digital-chessboard-summary-data.js?v=20260727"></script>
     <script src="src/ui/ui-core.js"></script>
     <script src="src/components/construction-object-selector/construction-object-selector.js?v=20260727"></script>
     <script src="src/components/construction-table/construction-table.js?v=20260727"></script>
     <script src="src/features/tasks/task-drawer.js"></script>
-    <script src="src/features/metrics-dashboard/sections/procurement/procurement-metrics.js?v=20260817-donut-116"></script>
+    <script src="src/features/metrics-dashboard/sections/procurement/procurement-metrics.js?v=20260817-risk-heading-clean"></script>
     <script src="src/features/metrics-dashboard/metrics-dashboard.js"></script>
     <script src="src/features/bi/bi-modal.js"></script>
+    <script src="src/features/metrics/metric-drawer.js"></script>
     <script src="src/components/navigation-tree-item/navigation-tree-item.js"></script>
     <script src="src/components/event-card/event-card.js"></script>
-    <script src="src/features/digital-chessboard/digital-chessboard.js?v=20260728a"></script>
     <script src="src/features/digital-chessboard-summary/digital-chessboard-summary.js?v=20260727"></script>
     <script src="src/features/objects/objects.js?v=20260727f"></script>
     <script src="src/app/app.js?v=20260727g"></script>

@@ -227,7 +227,6 @@ const SCenterProcurementMetricsSection = (function () {
                     <div id="procurement-risk-title">
                         ${renderSectionTitle('Закупки под риском', `${riskSummary.count} тендеров · оценка ${riskSummary.totalCost}`, 'danger')}
                     </div>
-                    <span>${ui.icon('triangle-alert')}Выберите строку для подробностей</span>
                 </div>
                 <div class="procurement-risk-table-wrap">
                     <table class="procurement-risk-table">

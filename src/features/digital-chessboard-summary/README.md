@@ -41,9 +41,9 @@ Project selector не создает собственный каталог Proje
 - semantic `tfoot` завершает таблицу одной пустой строкой `51px` без border и padding;
 - overlays закрываются при hide, удерживают и возвращают focus;
 - выбранный project сбрасывает локальные filters/expanded/menu/archive/scroll, но соседние main-view не перемонтируются;
-- действие `Открыть в шахматке` остается информационным до отдельного согласования программного выбора объекта.
+- меню строки содержит только действие копирования ссылки; переход в удаленный раздел `Шахматка` не предлагается.
 
-Desktop-референс не задает глобальный header, sidebar и профиль пользователя: в интегрированном экране они принадлежат общей оболочке S.Center. Canonical demo-значения и название проекта могут отличаться от сохраненных изображений, поскольку feature не переносит локальный каталог проектов стенда.
+Desktop-референс не задает глобальный header, sidebar и профиль пользователя: в интегрированном экране они принадлежат общей оболочке AIShtab. Canonical demo-значения и название проекта могут отличаться от сохраненных изображений, поскольку feature не переносит локальный каталог проектов стенда.
 
 ## Будущая модель
 
@@ -53,7 +53,7 @@ Desktop-референс не задает глобальный header, sidebar 
 
 - syntax нового data/feature/shared component;
 - data test project/queue/BU/clone semantics;
-- dropdown mouse/keyboard и четыре main-view;
+- dropdown mouse/keyboard и три main-view;
 - project switch и propagation общего context;
 - weekly/attention/table/archive/print/drawers/retries;
 - `Escape`, focus trap/return, reduced-motion;

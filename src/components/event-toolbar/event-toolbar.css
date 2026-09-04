@@ -156,6 +156,7 @@
 }
 
 .btn-filter,
+.btn-metric-tree,
 .btn-ai-chat {
     background: #ffffff;
     border: 1px solid #E9ECEF;
@@ -173,12 +174,14 @@
 }
 
 .btn-filter:hover,
+.btn-metric-tree:hover,
 .btn-ai-chat:hover {
     background: #F8FAFC;
     border-color: #CBD5E1;
 }
 
 .btn-filter.active,
+body.metric-tree-open .btn-metric-tree,
 body.ai-chat-open .btn-ai-chat {
     background: #EFF6FF;
     border-color: #3b82f6;
@@ -186,10 +189,19 @@ body.ai-chat-open .btn-ai-chat {
     position: relative;
 }
 
+.btn-metric-tree svg,
 .btn-ai-chat svg {
     width: 18px;
     height: 18px;
     stroke-width: 2.2;
+}
+
+.btn-metric-tree:focus-visible,
+.btn-ai-chat:focus-visible,
+.btn-filter:focus-visible,
+.btn-analytics:focus-visible {
+    outline: 3px solid rgba(11, 107, 255, 0.24);
+    outline-offset: 2px;
 }
 
 /* Filter Dot Badge */

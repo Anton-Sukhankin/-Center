@@ -1,5 +1,5 @@
 /**
- * S.Center FilterDrawer Component — High-Fidelity Refinement
+ * AIShtab FilterDrawer Component — High-Fidelity Refinement
  * Phase: Pixel Perfect Accordions & Hierarchical Selectors
  */
 

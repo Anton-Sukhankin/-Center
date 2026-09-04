@@ -44,7 +44,7 @@
                     <span class="event-source-chip-icon" aria-hidden="true">
                         ${ui.icon(sourceIcon)}
                     </span>
-                    <span class="event-source-text">${ui.escapeHtml(event.sourceName || 'S.Center')}</span>
+                    <span class="event-source-text">${ui.escapeHtml(event.sourceName || 'AIShtab')}</span>
                 </span>
             `;
         }

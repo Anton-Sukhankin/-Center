@@ -9,6 +9,7 @@
     let forecastActive = false;
     let returnFocusTarget = null;
     let closeSideBySideTimer = null;
+    let hoverClearTimer = null;
 
     function escapeHtml(value) {
         return String(value == null ? '' : value)
@@ -169,7 +170,8 @@
         const stage = document.getElementById('metric-bi-chart');
         if (!stage) return;
 
-        stage.onmousemove = event => {
+        stage.onpointermove = event => {
+            cancelScheduledHoverClear();
             const visibleData = getVisibleData();
             const rect = stage.getBoundingClientRect();
             const relativeX = Math.max(0, Math.min(rect.width - 1, event.clientX - rect.left));
@@ -196,10 +198,33 @@
             });
         };
 
-        stage.onmouseleave = clearHoverState;
+        stage.onpointerleave = scheduleHoverClear;
+
+        const dialog = stage.closest('.metric-bi-dialog');
+        if (dialog) {
+            dialog.onpointermove = event => {
+                if (!stage.contains(event.target)) scheduleHoverClear();
+            };
+            dialog.onpointerleave = scheduleHoverClear;
+        }
+    }
+
+    function cancelScheduledHoverClear() {
+        if (!hoverClearTimer) return;
+        window.clearTimeout(hoverClearTimer);
+        hoverClearTimer = null;
+    }
+
+    function scheduleHoverClear() {
+        if (hoverClearTimer) return;
+        hoverClearTimer = window.setTimeout(() => {
+            hoverClearTimer = null;
+            clearHoverState();
+        }, 120);
     }
 
     function clearHoverState() {
+        cancelScheduledHoverClear();
         const highlight = document.getElementById('metric-bi-highlight');
         const tooltip = document.getElementById('metric-bi-tooltip');
         if (highlight) highlight.hidden = true;
@@ -216,7 +241,6 @@
                 <header class="metric-bi-header">
                     <div class="metric-bi-title-zone">
                         <div>
-                            <div class="metric-bi-eyebrow">Динамика показателя</div>
                             <h2 id="metric-bi-title">${escapeHtml(metric.name || 'Метрика')}</h2>
                         </div>
                         <div class="metric-bi-legend" aria-label="Легенда графика">
@@ -243,9 +267,6 @@
                     <svg class="metric-bi-svg" id="metric-bi-svg" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-label="График динамики метрики"></svg>
                 </div>
                 <div class="metric-bi-table" id="metric-bi-table"></div>
-                <footer class="metric-bi-footer">
-                    Данные графика демонстрационные и относятся к выбранной метрике текущего проекта.
-                </footer>
             </section>
         `;
 
@@ -287,6 +308,7 @@
         if (!overlay || !overlay.classList.contains('is-active')) return false;
 
         const wasSideBySide = overlay.classList.contains('is-side-by-side');
+        clearHoverState();
         overlay.classList.remove('is-active');
         overlay.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('metric-bi-open');

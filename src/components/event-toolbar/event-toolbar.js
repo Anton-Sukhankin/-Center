@@ -1,5 +1,5 @@
 /**
- * S.Center EventToolbar Component
+ * AIShtab EventToolbar Component
  * Native JS Implementation (ES6+)
  * Integrated with app.js state
  */
@@ -93,6 +93,13 @@ function renderToolbar() {
                     </button>
                 ` : ''}
 
+                ${isMetricsTab ? `
+                    <button class="btn-metric-tree" id="open-metric-tree" type="button" onclick="window.openTreeDrawer?.()" aria-label="Открыть структуру метрик" aria-controls="metric-drawer" aria-expanded="${window.AIShtabMetricTree?.isOpen?.() || false}">
+                        <i data-lucide="network"></i>
+                        Структура метрик
+                    </button>
+                ` : ''}
+
                 <button class="btn-ai-chat" id="open-scenter-ai-chat" onclick="window.scenterChat?.toggle?.()" aria-label="Открыть ассистента">
                     <i data-lucide="message-circle"></i>
                     Задать вопрос
@@ -120,6 +127,9 @@ function renderToolbar() {
  * Global functions for integration with app.js
  */
 window.updateAppTab = function(tab) {
+    if (tab !== 'metrics' && typeof window.closeMetricDrawer === 'function') {
+        window.closeMetricDrawer({ skipFocusRestore: true });
+    }
     if (window.filterState) {
         window.filterState.activeTab = tab;
         if (window.renderEventFeed) window.renderEventFeed();

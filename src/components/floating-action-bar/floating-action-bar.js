@@ -1,5 +1,5 @@
 /**
- * S.Center SelectionActionBar Component
+ * AIShtab SelectionActionBar Component
  * Displays bulk actions for filtered events
  */
 function renderFloatingBar() {

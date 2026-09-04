@@ -10,11 +10,15 @@
 | --- | --- |
 | `construction-metrics-context-plan.md` | Контекст строительных показателей. |
 | `digital-chessboard-integration-plan.md` | Интеграция цифровой шахматки. |
+| `digital-chessboard-retirement-plan.md` | Удаление активного раздела `Шахматка`, его runtime и demo-данных после переноса в другой проект. |
+| `digital-chessboard-transfer-package-plan.md` | Выделение автономного переносимого пакета раздела `Шахматка` без удаления активного feature. |
+| `digital-chessboard-transfer-package-removal-plan.md` | Удаление локальной переносимой копии после подтвержденной передачи в другой проект. |
 | `digital-chessboard-summary-integration-plan.md` | Интеграция сводки цифровой шахматки. |
 | `digital-chessboard-summary-stand-plan.md` | Временный стенд сводки. |
 | `event-metric-bi-modal-reintegration-plan.md` | Возврат BI-модалки из карточки события. |
 | `event-task-creation-integration-plan.md` | Создание и редактирование задачи из события. |
 | `metrics-dashboard-integration-plan.md` | Интеграция центрального дашборда метрик. |
+| `metric-tree-reintegration-plan.md` | Возврат drawer структуры метрик и перехода к active BI из тулбара режима `Метрики`. |
 | `objects-integration-plan.md` | Интеграция раздела объектов. |
 | `objects-stand-plan.md` | Временный стенд раздела объектов. |
 | `procurement-metrics-design-plan.md` | Подразделы `MetricsDashboard` и три концепта вкладки `Закупки`. |

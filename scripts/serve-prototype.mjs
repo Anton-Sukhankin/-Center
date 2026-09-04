@@ -66,5 +66,5 @@ createServer(async (request, response) => {
         send(response, status, status === 404 ? 'Not Found' : 'Internal Server Error');
     }
 }).listen(PORT, HOST, () => {
-    console.log(`S.Center prototype: http://${HOST}:${PORT}/`);
+    console.log(`AIShtab prototype: http://${HOST}:${PORT}/`);
 });

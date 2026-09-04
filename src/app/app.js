@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
 
     // ======================================
@@ -29,11 +29,6 @@
     const metricsDashboardFeature = window.SCenterMetricsDashboard;
     if (!metricsDashboardData || !metricsDashboardFeature) {
         throw new Error('Metrics dashboard is not loaded. Check metrics-dashboard data and feature before src/app/app.js.');
-    }
-
-    const digitalChessboardFeature = window.SCenterDigitalChessboard;
-    if (!window.digitalChessboardData || !digitalChessboardFeature) {
-        throw new Error('Digital chessboard is not loaded. Check its data and feature scripts before src/app/app.js.');
     }
 
     const digitalChessboardSummaryFeature = window.SCenterDigitalChessboardSummary;
@@ -106,6 +101,9 @@
         if (!findMetricById(window.metricsData, window.activeMetricId)) {
             window.activeMetricId = window.metricsData.id;
         }
+        if (window.AIShtabMetricTree?.isOpen?.()) {
+            window.AIShtabMetricTree.refresh();
+        }
     }
 
     function refreshMetricsDashboardForCurrentContext() {
@@ -152,7 +150,6 @@
         renderProjectHeader();
         renderEventFeed();
         digitalChessboardSummaryFeature.setContext(activeContext);
-        digitalChessboardFeature.setContext(activeContext);
         objectsFeature.setContext(activeContext);
     };
 
@@ -650,7 +647,7 @@
                     <span class="event-detail-meta-dot"></span>
                     <span class="event-detail-meta-item">
                         <span class="drawer-header-project-label">Источник:</span>
-                        <span class="drawer-header-project-value">${evt.sourceName || 'S.Center'}</span>
+                        <span class="drawer-header-project-value">${evt.sourceName || 'AIShtab'}</span>
                     </span>
                 </div>
             </div>
@@ -943,10 +940,10 @@
 
 
     // ======================================
-    // METRICS INTEGRATION — active BI bridge and isolated-panel shims
+    // METRICS INTEGRATION — active metric tree and BI bridge
     // ======================================
-    // The right metrics panel and metric tree remain isolated. The BI graph is
-    // active again as an independent feature opened from an event detail card.
+    // The legacy metric cards remain isolated. The metric tree is restored as
+    // an independent drawer and reuses the active BI graph.
     window.updateMetrics = function() {
         refreshMetricsForCurrentContext();
     };
@@ -956,10 +953,6 @@
             window.activeMetricId = id;
             return true;
         }
-        return false;
-    };
-
-    window.openTreeDrawer = function() {
         return false;
     };
 
@@ -993,8 +986,6 @@
     const dashboardView = document.getElementById('dashboard-view') || document.querySelector('.content-area');
     const digitalChessboardSummaryView = document.getElementById('digital-chessboard-summary-view');
     const digitalChessboardSummaryRoot = document.getElementById('digital-chessboard-summary-root');
-    const digitalChessboardView = document.getElementById('digital-chessboard-view');
-    const digitalChessboardRoot = document.getElementById('digital-chessboard-root');
     const objectsView = document.getElementById('objects-view');
     const objectsRoot = document.getElementById('objects-root');
     const dashboardNav = document.getElementById('nav-dashboard');
@@ -1002,7 +993,7 @@
     const digitalViewSwitcher = document.getElementById('digital-view-switcher');
     const digitalSectionMenu = document.getElementById('digital-section-menu');
     const digitalSectionItems = Array.from(digitalSectionMenu?.querySelectorAll('[data-main-view]') || []);
-    const mainViews = new Set(['dashboard', 'digital-chessboard-summary', 'digital-chessboard', 'objects']);
+    const mainViews = new Set(['dashboard', 'digital-chessboard-summary', 'objects']);
     let activeMainView = 'dashboard';
 
     function collectProjectOptions(nodes) {
@@ -1070,17 +1061,15 @@
         activeMainView = nextView;
         const dashboardIsActive = activeMainView === 'dashboard';
         const summaryIsActive = activeMainView === 'digital-chessboard-summary';
-        const chessboardIsActive = activeMainView === 'digital-chessboard';
         const objectsIsActive = activeMainView === 'objects';
 
         if (dashboardView) dashboardView.hidden = !dashboardIsActive;
         if (digitalChessboardSummaryView) digitalChessboardSummaryView.hidden = !summaryIsActive;
-        if (digitalChessboardView) digitalChessboardView.hidden = !chessboardIsActive;
         if (objectsView) objectsView.hidden = !objectsIsActive;
         syncMainViewNavigation();
         setDigitalSectionMenuOpen(false);
 
-        if (summaryIsActive || chessboardIsActive || objectsIsActive) {
+        if (summaryIsActive || objectsIsActive) {
             closeTaskConflictingPanels();
             closeEventDrawer({ force: true });
         }
@@ -1090,13 +1079,6 @@
             digitalChessboardSummaryFeature.show();
         } else {
             digitalChessboardSummaryFeature.hide();
-        }
-
-        if (chessboardIsActive) {
-            digitalChessboardFeature.setContext(activeContext);
-            digitalChessboardFeature.show();
-        } else {
-            digitalChessboardFeature.hide();
         }
 
         if (objectsIsActive) {
@@ -1170,8 +1152,6 @@
         onProjectSelect: selectSummaryProject
     });
     digitalChessboardSummaryFeature.hide();
-    digitalChessboardFeature.mount(digitalChessboardRoot, { context: activeContext });
-    digitalChessboardFeature.hide();
     objectsFeature.mount(objectsRoot, { context: activeContext });
     objectsFeature.hide();
     syncMainViewNavigation();

@@ -2,6 +2,7 @@ node_modules/
 .vite/
 .pnpm-store/
 .backups/
+dist/
 
 *.log
 Thumbs.db

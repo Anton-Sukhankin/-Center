@@ -36,8 +36,8 @@
   --color-text-dark: #1f2d3d;
   --color-text-medium: #657386;
   --color-text-muted: #8793a5;
-  --font-heading: "Inter", "Segoe UI", Arial, sans-serif;
-  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-heading: var(--font-interface);
+  --font-sans: var(--font-interface);
   --transition-fast: 0.16s ease;
   --shadow-sm: 0 6px 14px rgba(25, 45, 70, 0.12);
   --primary-base: 208;
@@ -184,23 +184,6 @@ body.resizing-chat .ai-drawer {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.btn-close-drawer {
-  font-size: 16px;
-  color: var(--color-text-muted);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
-}
-
-.btn-close-drawer:hover {
-  background-color: var(--color-bg-main);
-  color: var(--color-text-dark);
 }
 
 /* Контекстная панель */

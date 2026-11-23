@@ -4,13 +4,11 @@
 
 Компонент отображает повторяемую группу карточек выбора объекта строительства для раздела `Объекты`. Он не хранит выбранный объект и не объединяет feature-specific данные с общей identity объектов.
 
-Компонент реализован как classic-script/IIFE, не использует React и регистрирует функции в существующем `window.SCenterComponents`.
+Селектор — общий React-компонент для «Объектов» и «Сводки».
 
 ## Реализация и стили
 
-- `construction-object-selector.js` — pure renderer и keyboard helpers;
-- `construction-object-selector.css` — локальный `cos-` visual contract;
-- `construction-object-selector.test.mjs` — escaping, renderer и roving keyboard helper.
+[ConstructionObjectSelector](../../../react/construction/ConstructionObjectSelector.jsx) и `construction-object-selector.css`.
 
 ## View model карточки
 
@@ -32,11 +30,7 @@ Stable identity должна поступать из `window.constructionObjects
 
 ## Публичный API
 
-- `window.SCenterComponents.renderConstructionObjectSelector(cards, options)` возвращает HTML группы `role="tablist"`;
-- `window.SCenterComponents.getConstructionObjectSelectorNextId(cards, activeId, key)` вычисляет следующий ID без побочных эффектов;
-- `window.SCenterComponents.handleConstructionObjectSelectorKeydown(event, options)` обрабатывает `ArrowLeft`, `ArrowRight`, `ArrowUp`, `ArrowDown`, `Home`, `End`, вызывает `options.onSelect(id, { focus: true, event })` и возвращает признак обработки.
-
-`options` renderer содержит `activeId`, необязательные `ariaLabel`, `className` и `action`. Кнопки получают `data-construction-object-id`, `role="tab"`, `aria-selected` и roving `tabindex`.
+`ConstructionObjectSelector` получает карточки, выбранный идентификатор и обработчик `onSelect`. Компонент связывает вкладки с панелью и обрабатывает стрелки, `Home` и `End`.
 
 ## Визуальный контракт
 
@@ -48,7 +42,7 @@ Stable identity должна поступать из `window.constructionObjects
 
 ## Границы ответственности
 
-- компонент не меняет `window.activeContext`;
+- компонент не меняет структурный контекст;
 - компонент не синхронизирует выбор между features;
 - компонент не хранит состояние и не навешивает глобальные listeners;
 - focus после перерендера восстанавливает вызывающая feature по флагу `focus` из keyboard helper.

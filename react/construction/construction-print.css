@@ -1,0 +1,5 @@
+@media print {
+    body > #root:has(.dcs-print-sheet) { display: block !important; }
+    #digital-chessboard-summary-root .dcs-view-header,
+    #digital-chessboard-summary-root .dcs-toast { display: none !important; }
+}

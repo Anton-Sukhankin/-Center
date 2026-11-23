@@ -1,0 +1,15 @@
+[data-dialog-motion] {
+    animation: none !important;
+    transition: none !important;
+}
+
+.dialog-motion-surface {
+    position: fixed;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+@media print {
+    .dialog-motion-surface { display: none; }
+    [data-dialog-motion] { opacity: 1 !important; }
+}

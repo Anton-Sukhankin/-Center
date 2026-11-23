@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 import {
+    checkExactDuplicates,
     checkMarkdownLinks,
     checkOwnerReadmes,
     checkPlanRegistries,
@@ -32,6 +33,26 @@ test('broken Markdown link is reported', async (context) => {
     const findings = await checkMarkdownLinks(root);
     assert.equal(findings.length, 1);
     assert.equal(findings[0].code, 'BROKEN_MARKDOWN_LINK');
+});
+
+test('root output directories do not hide diagnostics in source files', async (context) => {
+    const root = await fixture();
+    context.after(() => fs.rm(root, { recursive: true, force: true }));
+    const markdown = '[missing](missing.md)\n';
+
+    for (const directory of ['dist', '.tmp', 'src/dist']) {
+        const target = path.join(root, directory);
+        await fs.mkdir(target, { recursive: true });
+        await fs.writeFile(path.join(target, 'sample.md'), markdown, 'utf8');
+    }
+    await fs.writeFile(path.join(root, 'README.md'), markdown, 'utf8');
+
+    const linkFindings = await checkMarkdownLinks(root);
+    assert.deepEqual(linkFindings.map((item) => item.file).sort(), ['README.md', 'src/dist/sample.md']);
+
+    const duplicateFindings = await checkExactDuplicates(root);
+    assert.equal(duplicateFindings.length, 1);
+    assert.deepEqual(duplicateFindings[0].file.split(', ').sort(), ['README.md', 'src/dist/sample.md']);
 });
 
 test('component without README is reported', async (context) => {

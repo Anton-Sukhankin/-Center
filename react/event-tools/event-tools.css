@@ -1,0 +1,36 @@
+.react-filter-drawer {
+    max-width: 100vw;
+}
+
+.react-filter-drawer button.fd-tree-toggle {
+    border: 0;
+    padding: 0;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.react-filter-drawer .fd-tree-label {
+    cursor: pointer;
+}
+
+.react-filter-drawer .fd-cancel,
+.react-filter-drawer .fd-empty {
+    color: var(--fd-text-muted);
+}
+
+.react-filter-drawer .fd-empty {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.task-assignee-dropdown.react-task-assignee-dropdown {
+    z-index: 2402;
+}
+
+.react-task-assignee-dropdown button.task-assignee-option {
+    width: 100%;
+    border: 0;
+    text-align: left;
+    font-family: inherit;
+}
+

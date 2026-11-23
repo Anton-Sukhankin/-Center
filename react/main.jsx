@@ -1,0 +1,22 @@
+import { createRoot } from 'react-dom/client';
+import App from './app/App.jsx';
+import '../src/styles/global.css';
+import '../src/components/construction-object-selector/construction-object-selector.css';
+import '../src/components/construction-table/construction-table.css';
+import '../src/components/event-toolbar/event-toolbar.css';
+import '../src/features/filters/filter-drawer.css';
+import '../src/styles/event-list.css';
+import '../src/components/floating-action-bar/floating-action-bar.css';
+import '../src/components/event-card/event-card.css';
+import '../src/features/tasks/task-drawer.css';
+import '../src/features/metrics-dashboard/metrics-dashboard.css';
+import '../src/features/metrics-dashboard/sections/procurement/procurement-metrics.css';
+import '../src/features/metrics/metric-drawer.css';
+import '../src/features/bi/bi-modal.css';
+import '../src/features/analytics/ai-insights.css';
+import '../src/features/digital-chessboard-summary/digital-chessboard-summary.css';
+import '../src/features/objects/objects.css';
+import './ui/refinements.css';
+import '../src/styles/workspace-theme.css';
+
+createRoot(document.getElementById('root')).render(<App />);

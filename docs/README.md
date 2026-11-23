@@ -10,6 +10,8 @@
 
 | Если нужно понять | Открыть сначала | Затем проверить |
 | --- | --- | --- |
+| Открыть локальный или опубликованный прототип | [Корневой README](../README.md#активная-реализация) | [Конфигурация публикации](../.openai/hosting.json) при сверке каталога Sites |
+| Найти компонент основного прототипа | [Паспорт React-прототипа](../react/README.md) | [Карта компонентов](component-map.md) |
 | Назначение продукта | `system-overview.md` | `user-roles.md`, `system-compliance-matrix.md` |
 | Текущую структуру и связи | `component-map.md` | `component-impact-map.md`, локальные README |
 | Реализовано ли требование | `system-compliance-matrix.md` | код, локальный README, `plans/system-scaling-roadmap.md` |
@@ -46,8 +48,8 @@
 | `documentation-standards.md` | управляющий стандарт, основной | постоянный, актуален | Владелец классификации и жизненного цикла документации. |
 | `../PROJECT_GUIDELINES.md` | управление проектом, основной | текущий, актуален | Оставить владельцем общих проектных правил; volatile-детали позднее сократить. |
 | `../AGENTS.md` | инструкция агентам, основной | текущий, актуален | Краткий исполнимый регламент; подробности направляет в профильные источники. |
-| `../.agentsignore` | проектное операционное соглашение | текущий, актуален | Не считать автоматически исполняемым механизмом Codex; применять через обязательное правило `AGENTS.md`. |
-| `../scripts/check-documentation.mjs` | автоматическая структурная проверка | текущий, актуален | Проверяет документацию без семантического переписывания; mutation-тесты находятся рядом. |
+| `../.agentsignore` | проектное операционное соглашение | текущий, актуален | Границы обычного поиска по проекту. Применять через `AGENTS.md`. |
+| `../scripts/check-documentation.mjs` | автоматическая структурная проверка | текущий, актуален | Проверяет связи и структуру. Тесты диагностики находятся рядом. |
 | `archive/SYSTEM_QUESTIONNAIRE.md` | архивная рабочая анкета, ненормативный | история | Ответы перенесены в профильные спецификации; открытые решения — в roadmap. |
 | `evidence/README.md` | реестр доказательств приемки | текущий/история, актуален | Хранить только принятые материалы с локальным manifest. |
 
@@ -70,7 +72,7 @@
 | `component-map.md` | карта топологии, основной | текущий, актуален | Владелец ответа «что где находится и с чем связано». |
 | `component-impact-map.md` | карта влияния, основной | текущий, актуален | Владелец каскадных проверок активной структуры. |
 | `system-compliance-matrix.md` | матрица соответствия, основной | текущий/целевой, актуален | Владелец current-vs-target по функциональности, данным, интеграции и visual QA. |
-| `app-decomposition-map.md` | переходная архитектурная карта, дополняющий | переходный, актуален | Оставить до завершения декомпозиции `src/app`. |
+| `app-decomposition-map.md` | архитектурная карта, дополняющий | текущий, актуален | Границы оболочки, данных и React-компонентов. |
 | `component-library.md` | архитектурная конвенция, дополняющий | текущий, актуален | Примеры связаны с активным каталогом компонентов. |
 
 ## Паспорта слоев
@@ -80,10 +82,15 @@
 | `../src/app/README.md` | паспорт связующего слоя, основной | текущий, актуален | Сохранить; feature-specific visual-контракты постепенно вынести в локальные паспорта. |
 | `../src/data/README.md` | паспорт слоя данных, основной | текущий/целевой, актуален | Сохранить явное разделение demo, расчетных и будущих данных; сократить feature-детали по мере роста. |
 | `../src/ui/README.md` | паспорт базового UI-слоя, основной | текущий, актуален | Сохранить компактным и нейтральным к предметной области. |
+| `../react/README.md` | паспорт React-прототипа, основной | текущий, актуален | Основной запуск, владельцы компонентов, общие данные и проверки. |
 
 ## Feature-паспорта
 
 Все файлы этой группы являются основными источниками текущего локального поведения; будущие требования внутри них должны оставаться явно отделенными.
+
+Просмотр изображения в шапке проекта: [план реализации и критерии проверки](plans/project-image-viewer.md).
+
+Переходы модальных окон: [аудит, пилот и порядок внедрения](plans/dialog-motion.md).
 
 | Документ | Особенность | Решение классификации |
 | --- | --- | --- |
@@ -92,9 +99,9 @@
 | `../src/features/chat/README.md` | активное ядро, адаптер и demo-provider AIShtab | Оставить владельцем поведения чата; промышленный provider/actions описывает отдельный future-план. |
 | `../src/features/digital-chessboard-summary/README.md` | активный demo-feature | Оставить владельцем поведения сводки. |
 | `../src/features/filters/README.md` | активный demo-feature | Оставить; future date picker, presets и большие выборки держать отдельно. |
-| `../src/features/metrics/README.md` | активный drawer дерева финансовых метрик | Оставить владельцем trigger, раскрытия ветвей, выбора показателя, открытия BI и конфликтов right drawer. |
+| `../src/features/metrics/README.md` | модуль структуры финансовых метрик | Дерево, реестр, поиск и открытие BI. [План переноса](plans/metric-structure-module.md). |
 | `../src/features/metrics-dashboard/README.md` | общая оболочка активного demo-dashboard | Оставить владельцем навигации, контекста и верхнеуровневых состояний; дочернее содержимое маршрутизировать в паспорта вкладок. |
-| `../src/features/metrics-dashboard/sections/overview/README.md` | вкладка `Общие`, текущая реализация | Оставить владельцем реализованных сроков, этапов и бюджетных оснований. |
+| `../src/features/metrics-dashboard/sections/overview/README.md` | вкладка `Общие`, текущая реализация | Владелец визуального и поведенческого контракта сроков, этапов и бюджетных оснований. |
 | `../src/features/metrics-dashboard/sections/procurement/README.md` | вкладка `Закупки`, текущая реализация и целевые состояния | Сохранять 19 метрик, сегментацию, demo-ограничения и фактический UI/behavior-контракт отдельно от будущей интеграции реальных данных. |
 | `../src/features/objects/README.md` | активный demo-feature | Оставить владельцем раздела «Объекты». |
 | `../src/features/tasks/README.md` | активный in-memory feature | Оставить; backend, workflow и права относятся к roadmap. |
@@ -107,7 +114,7 @@
 | --- | --- | --- |
 | `../src/components/construction-object-selector/README.md` | shared selector | Оставить; identity получает из data-слоя. |
 | `../src/components/construction-table/README.md` | shared table-shell | Оставить; feature-specific данные не переносить в компонент. |
-| `../src/components/event-card/README.md` | компактная и детальная карточки события | Владелец UI-контракта источников и multi-source поведения. |
+| `../src/components/event-card/README.md` | компактная и детальная карточки события | Владелец UI-контракта источников и multi-source поведения. [План открытия графика из футера](plans/event-card-metric-chart.md). |
 | `../src/components/event-toolbar/README.md` | toolbar и точки входа features | Оставить; проверять при изменении filters, analytics или chat. |
 | `../src/components/floating-action-bar/README.md` | контекстная нижняя панель | Оставить. |
 | `../src/components/navigation-tree-item/README.md` | строка дерева контекста | Оставить; синхронизировать с контекстом и data-слоем. |
@@ -120,10 +127,9 @@
 
 | Тест | Покрытие |
 | --- | --- |
-| `../src/components/construction-object-selector/construction-object-selector.test.mjs` | renderer, escaping и keyboard helper общего selector |
+| `../scripts/check-react-browser.mjs` | браузерный прогон React, включая селектор, сводку, графики, задачи, фильтры, CSV и ассистента |
 | `../src/data/digital-chessboard-summary-data.test.mjs` | project/queue/BU, KPI, объекты и clone semantics сводки |
 | `../src/data/objects-data.test.mjs` | каталог объектов, строки, context и clone semantics |
-| `../src/features/digital-chessboard-summary/digital-chessboard-summary.test.mjs` | lifecycle и интеграция сводки |
 | `../scripts/check-documentation.test.mjs` | mutation-проверки документационной системы |
 
 Не перечисленные в таблице сценарии остаются ручными и фиксируются в локальном разделе `Acceptance`. При добавлении теста обновляются локальный README и эта таблица; отдельная coverage-карта создается только при появлении самостоятельного QA-процесса или невозможности поддерживать этот компактный маршрут.
@@ -135,7 +141,23 @@
 | Документ | Статус классификации | Следующее действие |
 | --- | --- | --- |
 | `plans/README.md` | основной регламент, актуален | Обновлять реестр планов и правила закрытия. |
+| `archive/plans/aishtab-react-redesign-plan.md` | завершенный план | История перехода на React. |
+| `archive/plans/aishtab-react-foundation-plan.md` | завершенный подэтап | P0–P2. Эталон, архитектура и пилот. |
+| `archive/plans/aishtab-react-feature-migration-plan.md` | завершенный подэтап | P3. Перенос пакетов и техническая приемка. |
+| `archive/plans/aishtab-react-acceptance-cutover-plan.md` | завершенный подэтап | P4–P5. Приемка, Git-метка и переключение. |
+| `plans/aishtab-ux-benchmark-user-journeys-plan.md` | активный план, ожидает согласования | UX-бенчмарк компонентов AI Штаба и детализация сквозных пользовательских путей без изменения прототипа. |
+| [`archive/plans/aishtab-paper-dashboard-plan.md`](archive/plans/aishtab-paper-dashboard-plan.md) | завершённый план переноса | Порядок работ и таблица соответствия Paper / React. |
+| [`archive/plans/aishtab-paper-dashboard-01-shell.md`](archive/plans/aishtab-paper-dashboard-01-shell.md) | принятая постановка 01 | Хедер, навигация и шапка проекта. |
+| [`archive/plans/aishtab-paper-dashboard-02-events.md`](archive/plans/aishtab-paper-dashboard-02-events.md) | принятая постановка 02 | Лента и карточки событий. |
+| [`archive/plans/aishtab-paper-dashboard-03-actions.md`](archive/plans/aishtab-paper-dashboard-03-actions.md) | принятая постановка 03 | Тулбар и плавающая кнопка ассистента. |
+| [`archive/plans/aishtab-paper-dashboard-04-acceptance.md`](archive/plans/aishtab-paper-dashboard-04-acceptance.md) | завершённая приёмка | Независимые визуальные и функциональные проверки. |
+| [`archive/plans/aishtab-paper-card-header-polish.md`](archive/plans/aishtab-paper-card-header-polish.md) | завершённое уточнение | Компоновка карточек, наведение и центрирование хедера. |
+| [`archive/plans/aishtab-today-filter-plan.md`](archive/plans/aishtab-today-filter-plan.md) | завершённое уточнение | Круглая кнопка фильтра и сохранение оперативной вкладки при сбросе. |
+| [`archive/plans/aishtab-lightline-dialog-buttons.md`](archive/plans/aishtab-lightline-dialog-buttons.md) | завершённое уточнение | Кнопки Lightline в тулбаре и диалогах, индикатор открытого фильтра. |
 | `plans/system-scaling-roadmap.md` | основной roadmap, актуален | Синхронизировать с матрицей соответствия. |
+| [`archive/plans/aishtab-paper-metrics-overview-plan.md`](archive/plans/aishtab-paper-metrics-overview-plan.md) | завершенный план | Перенос оформления «Метрики / Общие» из Paper и проверка сценариев. |
+| [`archive/plans/aishtab-dashboard-shared-workspace-plan.md`](archive/plans/aishtab-dashboard-shared-workspace-plan.md) | завершенный план | Единая оболочка сегментов сводного дашборда. |
+| [`archive/plans/aishtab-toolbar-context-segments-plan.md`](archive/plans/aishtab-toolbar-context-segments-plan.md) | завершенный план | Перенос приоритетов и разделов метрик во вторую группу тулбара. |
 | `plans/metrics-real-data-integration-plan.md` | future-план | Реальные источники, методика, качество данных и права дашборда метрик. |
 | `plans/ai-chat-provider-actions-plan.md` | future-план | Промышленный provider, безопасность, хранение и подтверждаемые actions. |
 | `archive/plans/digital-chessboard-transfer-package-plan.md` | завершенный план | История выделения и передачи автономной копии до последующего удаления активного раздела из AIShtab. |
@@ -162,7 +184,8 @@
 
 | Документ | Статус | Следующее действие |
 | --- | --- | --- |
-| `../design-qa.md` | актуальная Product Design QA вкладки `Метрики → Закупки` | Обновлять при визуальном изменении вкладки или замене выбранного MagicPath-источника; не использовать как паспорт поведения. |
+| `../design-qa.md` | визуальная QA вкладки `Метрики → Закупки` и отдельного HTML-полигона | Разделять эталон активной вкладки и сгенерированный эталон эксперимента. |
+| `archive/plans/procurement-lab-fidelity.md` | завершённый протокол поэлементной приёмки HTML-полигона | Сохранять распределение задач, критерии и парные кропы отдельно от контракта React. |
 | `audits/documentation-health.md` | компактный текущий audit-checkpoint | Обновлять после системной миграции документации или изменения checker; не использовать как источник продуктового поведения. |
 | `audits/project-cleanup-audit.md` | завершенный комплексный аудит структуры и чистки | Постоянный доказательный отчет; не использовать как источник текущего поведения. |
 | `evidence/digital-chessboard/README.md` | историческое evidence удаленного раздела | Хранить как подтверждение ранее принятой и затем перенесенной реализации; не считать описанием текущего runtime. |
@@ -171,6 +194,11 @@
 | `evidence/tasks/` | аналитическое evidence задач | Использовать как обоснование, а не как источник текущего поведения. |
 
 ## AI-чат
+
+| Документ | Класс | Статус | Следующее действие |
+| --- | --- | --- | --- |
+| `plans/assistant-panel.md` | План UI | Реализация в React | Использовать критерии при регрессии панели. |
+| [plans/dark-theme-rollout.md](plans/dark-theme-rollout.md) | План UI | План выполненного переноса в React | Карта цветов, порядок миграции и критерии приёмки тёмной и светлой тем. |
 
 Активное ядро, адаптерный API, поведенческий контракт и минимальная приемка находятся в `../src/features/chat/README.md`. История первоначального переноса хранится в `archive/plans/scenter-ai-chat-integration-plan.md`, визуальный концепт — в `evidence/chat/README.md`, будущий промышленный этап — в `plans/ai-chat-provider-actions-plan.md`.
 

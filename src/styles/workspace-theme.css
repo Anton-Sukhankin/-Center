@@ -1,0 +1,113 @@
+.navbar-actions { display:flex; align-items:center; gap:8px; margin-inline-start:auto; justify-self:end; }
+.top-navbar:has(.navbar-actions) { display:flex; align-items:center; }
+
+/* Палитра Nova. Экранные цвета не переопределяют представление для печати. */
+@media screen {
+html[data-theme=dark] {
+ --ui-summary-card-surface:#26272b;
+ --ui-summary-icon-surface:color-mix(in srgb,var(--ui-summary-card-surface),white 9%);
+ --ui-data-divider:#595c65;
+ color-scheme:dark; --ui-page:#17181b;--ui-card:#202125;--ui-raised:#292b30;--ui-selected:#373a40;--ui-ink:#f1f2f4;--ui-muted:#b2b5bd;--ui-edge:#42454c;--ui-accent:#86b8ff;--ui-accent-fill:#245a9a;--ui-tint:#25364c;--ui-risk:#ff929b;
+ --bg-color:var(--ui-card);--dashboard-surface:var(--ui-page);--text-main:var(--ui-ink);--text-muted:var(--ui-muted);--border-color:var(--ui-edge);--table-head-fill:color-mix(in srgb,var(--ui-summary-card-surface),white 7%);--table-head-text:var(--ui-muted);
+ background:var(--ui-page);color:var(--ui-ink);
+ --ui-success:#83d7ae; --ui-warning:#f1c37c; --ui-violet:#c9acff;
+ --ui-danger-soft:#452a30; --ui-success-soft:#223a32; --ui-warning-soft:#403526; --ui-violet-soft:#363043;
+ --danger:var(--ui-risk); --success:var(--ui-success); --warning:var(--ui-warning);
+ --primary:var(--ui-accent-fill); --primary-hover:#326cae;
+ --gray-bg:var(--ui-raised); --gray-border:var(--ui-edge); --blue-50:var(--ui-tint);
+ --ui-contract:#315f98; --ui-open:#52779b; --ui-remaining:#3a4049;
+ --ui-budget:#788da9; --ui-overrun:#e58787;
+}
+html[data-theme=dark] {
+ & body,& .main-content,& .app-shell,& .main-wrapper,& #priority-events-panel {background:var(--ui-page);color:var(--ui-ink)}
+ & .dashboard-workspace {--dashboard-muted-text:var(--ui-muted)}
+ & .top-navbar {background:var(--ui-summary-card-surface);border-bottom:1px solid var(--ui-edge)}
+ & .left-panel {--tree-highlight:var(--ui-selected)}
+ & :is(.left-search-box,.left-panel-collapse-btn,.toolbar-segmented,.lightline-button,.footer-btn,.drawer-card) {background:var(--ui-card)!important;color:var(--ui-ink)!important;border-color:var(--ui-edge)!important}
+ & :is(.drawer-header,.drawer-footer,.right-drawer,.metric-bi-dialog,.event-params-register,.event-description-card,.metric-impact-trigger,.event-metrics-popover,.event-source-aggregator-menu,.metric-bi-tooltip) {background:var(--ui-raised)!important;color:var(--ui-ink)!important;border-color:var(--ui-edge)!important}
+ & .event-detail-body {background:var(--ui-page)!important}
+ & .bi-summary > div {background:transparent;color:var(--ui-ink);border-color:var(--ui-edge)}
+ & .metric-bi-table {background:transparent}
+ & :is(.drawer-overlay,.metric-bi-overlay){background:rgb(0 0 0 / 58%)}
+ & :is(.tree-item,.tree-item-label,.project-summary-title,.project-summary-label,.event-card-title,.event-card-desc strong,.drawer-header-title,.drawer-header-project-value,.impact-card-title,.event-params-register dd,.drawer-card-title,.event-source-text,.bi-summary strong,.metric-bi-cell,.metric-bi-header h2){color:var(--ui-ink)!important}
+ & :is(.event-timestamp-text,.event-card-desc,.drawer-card-desc,.event-params-register dt,.drawer-header-project-label,.impact-card-description,.event-description-text,.metric-bi-legend span,.bi-axis,.bi-summary-label,.seg-tab,.left-search-box input,.event-metrics-popover li) {color:var(--ui-muted)!important}
+ & .tree-item > .tree-icon {color:var(--ui-muted)}
+ & .tree-item.selected > .tree-icon {color:var(--ui-accent)}
+ & .tree-item:is(.selected,:hover),& .seg-tab.active,& .seg-tab:hover {background:var(--ui-selected)!important;color:var(--ui-ink)!important}
+ & .tree-item-text{color:var(--ui-muted)} & .tree-item.selected .tree-item-text{color:var(--ui-ink)}
+ & .tree-children::before,& .tree-node>.tree-item::before{border-color:var(--ui-edge)}
+ & .event-card-source-date>.event-source-aggregator{background:var(--ui-raised)}
+ & .event-description-card.is-preview .event-description-content::after{background:linear-gradient(transparent,var(--ui-raised) 86%)}
+ & .event-description-text strong,& .event-description-content b{color:var(--ui-ink)}
+ & .event-card {--ec-blue:var(--ui-accent);background:var(--ui-summary-card-surface)!important;color:var(--ui-ink)!important}
+ @media (hover:hover) {
+  & #event-feed-sections .event-card:hover {border-color:var(--ui-accent);box-shadow:0 3px 12px #0005}
+  & #event-feed-sections .event-card:hover .event-card-title {color:var(--ui-accent)!important}
+  & .metric-impact-trigger:hover {border-color:var(--ui-accent)!important;box-shadow:none}
+ }
+ & :is(.event-card-metric-block,.event-params-register>div,.metric-bi-header){border-color:var(--ui-edge)!important}
+ /* Только уже существующие внутренние линии данных, не контур таблицы или её шапки. */
+ & .metric-bi-table-row + .metric-bi-table-row {border-top-color:var(--ui-data-divider)}
+ & tbody > tr:not(:last-child) > :is(td,th),
+ & table:has(> tfoot) > tbody > tr:last-child > :is(td,th) {border-bottom-color:var(--ui-data-divider)!important}
+ & tbody > tr + tr > :is(td,th), & tfoot > tr > :is(td,th) {border-top-color:var(--ui-data-divider)!important}
+ & table tr > :is(th,td):not(:last-child) {border-inline-end-color:var(--ui-data-divider)!important}
+ & table tr > :is(th,td) + :is(th,td) {border-inline-start-color:var(--ui-data-divider)!important}
+ & :is(.event-action-btn:not(.pin-toggle),.event-card-metric-main svg,.tab-badge) {background:var(--ui-raised)!important;color:var(--ui-muted)!important}
+ & .event-card :is(.pin-toggle,.event-card-source-date > .event-source-product-chip,.event-card-source-date > .event-source-aggregator) {background:var(--ui-summary-icon-surface);color:var(--ui-muted)}
+ & .event-card .pin-toggle:is(:hover,:focus-visible,[aria-pressed=true]) {color:var(--ui-accent)}
+ & .event-card-metric-main:not(.event-card-metric-trigger) svg {color:var(--ui-accent)!important}
+ & .event-card-metric-trigger:is(:hover,:focus-visible) svg {color:var(--ui-accent)!important}
+ & :is(.event-metrics-more,.impact-card-icon-box) {background:var(--ui-tint)!important;color:var(--ui-accent)!important}
+ & .seg-tab .tab-badge-oval {background:var(--ui-raised)!important;color:var(--ui-muted)!important}
+ & .seg-tab.active :is(.tab-badge,.tab-badge-oval),& .footer-btn.footer-btn-primary:not(:disabled) {background:var(--ui-accent-fill)!important;color:#fff!important}
+ & .event-params-register .event-status-high,& .footer-btn.delete {color:var(--ui-risk)!important}
+ & :is(.drawer-close-btn,.event-description-toggle,.metric-bi-dialog .lightline-button) {background:var(--ui-card)!important;color:var(--ui-muted)!important;border-color:var(--ui-edge)!important}
+ & :is(#root,#lab-chart) :focus-visible {outline:2px solid var(--ui-accent)!important;outline-offset:2px}
+ & #root .left-search-box:focus-within {border-color:var(--ui-accent)!important;outline-color:var(--ui-accent)}
+ & #root .left-search-box input:focus{outline:none!important}
+ & .metric-bi-overlay {--metric-bi-text:var(--ui-ink);--metric-bi-muted:var(--ui-muted);--metric-bi-primary:var(--ui-accent)}
+ & .metric-bi-dialog {--interval-above:#acc0d6;--interval-below:#d6abc3}
+ & .bi-forecast-period,& .bi-forecast-bracket span{background:#2c3745!important}
+ & .bi-forecast-bracket {border-color:#a3b5c9}
+ & .bi-forecast-bracket span{color:#bed3ec}
+ & .bi-forecast-period::after {background:var(--ui-card)}
+ & .metric-bi-highlight {background:rgba(140,191,255,.13);border-color:#86b8ff}
+ & .metric-bi-svg [stroke="#0b6bff"]{stroke:var(--ui-accent)}
+ & .metric-bi-svg [fill="#0b6bff"]{fill:var(--ui-accent)}
+ & .metric-bi-svg [fill="white"],& .is-range .metric-bi-legend-mark.is-forecast::before,& .is-range .metric-bi-legend-mark.is-plan::before{fill:var(--ui-raised);background:var(--ui-raised)}
+ & .metric-bi-svg [stroke="#287967"]{stroke:#80bcac}
+ & .metric-bi-svg [stroke="#b65447"]{stroke:#e69b89}
+ & .is-range .metric-bi-legend-mark.is-ahead::before{background:#80bcac}
+ & .is-range .metric-bi-legend-mark.is-delay::before{background:#e69b89}
+ & .metric-bi-svg [stroke="#687c90"]{stroke:#aab7c6}
+ & .is-range .metric-bi-legend-mark.is-plan::before{border-color:#aab7c6}
+ & :is(.filter-drawer,.navigator-modal).active,& .modal-content {background:var(--ui-raised);color:var(--ui-ink);border-color:var(--ui-edge)}
+ & .task-drawer-body {background:var(--ui-page)}
+ & :is(.fd-heading span,.fd-nav b,.fd-badge.visible) {background:var(--ui-selected);color:var(--ui-ink)}
+ & #ai-analytics-modal .fd-heading span,& .btn-fd-apply,& .metrics-primary-button,& .procurement-dialog-primary {background:var(--ui-accent-fill);color:white}
+ & :is(.btn-fd-apply,.metrics-primary-button,.procurement-dialog-primary):hover {background:#326cae}
+ & .stage-line {--active:var(--ui-accent)}
+ @media(min-width:1580px){& #root .metric-bi-overlay.is-side-by-side {background:transparent}}
+ & .task-form-control:focus,& .task-form-select-trigger[aria-expanded=true] {border-color:var(--ui-accent)}
+ & #root :is(input,textarea).task-form-control:focus-visible {outline:none;border-color:var(--ui-accent)}
+ & :is(.lightline-filter-indicator,.lightline-filter[aria-expanded=true]) {background:var(--ui-tint)!important;color:var(--ui-accent)!important}
+ & .lightline-filter[data-filtered]::after {background:var(--ui-accent)}
+ & .task-project-team-footer .footer-btn-primary:disabled {background:var(--ui-selected)!important;color:var(--ui-muted)!important}
+ & .footer-btn.footer-btn-primary:not(:disabled):hover {background:#326cae!important}
+ & .task-form-project-team-action,& .task-form-action,& .event-task-presence {color:var(--ui-success)!important;background:var(--ui-success-soft)!important;border-color:#365947}
+ & #objects-root :is(.obj-primary-button,.obj-toolbar-button b) {background:var(--ui-accent-fill)}
+ & .event-source-aggregator-item {background:var(--ui-card);color:var(--ui-ink)}
+ & .event-description-content strong {color:var(--ui-ink)}
+ & .event-description-content mark {color:var(--ui-ink);background:var(--ui-warning-soft)}
+ & :is(.empty-title,.empty-subtitle,.priority-empty-state,.alert-dialog-title) {color:var(--ui-ink)}
+ & :is(.empty-subtitle,.alert-dialog-text) {color:var(--ui-muted)}
+ & .alert-dialog-cancel {background:var(--ui-card);color:var(--ui-ink);border-color:var(--ui-edge)}
+ & .procurement-map-tile.is-open,& .procurement-map-tile.is-remaining {color:white}
+ & :is(.procurement-overrun-percent,.procurement-overrun-amount.is-positive .procurement-overrun-percent){color:white}
+ & .analysis-loading svg [fill="white"] {fill:var(--ui-raised)}
+ & .analysis-loading svg [stroke="#2070db"] {stroke:var(--ui-accent)}
+ & .analysis-loading svg [fill="#2070db"] {fill:var(--ui-accent)}
+ & :is(.left-search-box input,.fd-search-box input)::placeholder {color:var(--ui-muted)}
+}
+}

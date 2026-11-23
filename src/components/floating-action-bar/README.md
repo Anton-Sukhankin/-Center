@@ -6,19 +6,11 @@
 
 ## Код
 
-- `floating-action-bar.js`;
-- `floating-action-bar.css`.
+[FloatingBar в App](../../../react/app/App.jsx) и `floating-action-bar.css`.
 
 ## Данные и зависимости
 
-Компонент использует:
-
-- `window.toolbarState`;
-- `window.filterState`;
-- `window.undoExclusions`;
-- `window.resetAllFilters`;
-- `window.resetToolbarMode`;
-- `window.updateFloatingBar`.
+App показывает панель при активной фильтрации ленты. Компонент получает `count` и `onReset`. Сброс очищает фильтры и временные исключения из выдачи. Во вкладке `Сегодня` сброс оставляет пользователя в ней; в остальных событийных режимах выход по-прежнему ведёт во `Все события`.
 
 ## Пользовательский путь
 

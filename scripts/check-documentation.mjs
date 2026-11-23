@@ -4,6 +4,8 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
+const PROJECT_OUTPUT_DIRS = new Set(['dist', '.tmp']);
+
 const EXCLUDED_PARTS = [
     `${path.sep}.git${path.sep}`,
     `${path.sep}legacy${path.sep}isolated${path.sep}`,
@@ -36,8 +38,8 @@ async function exists(target) {
     }
 }
 
-async function walk(root, predicate = () => true) {
-    if (!(await exists(root))) return [];
+async function walk(root, predicate = () => true, start = root) {
+    if (!(await exists(start))) return [];
     const output = [];
 
     async function visit(directory) {
@@ -45,6 +47,7 @@ async function walk(root, predicate = () => true) {
         for (const entry of entries) {
             const target = path.join(directory, entry.name);
             if (isExcluded(target)) continue;
+            if (directory === root && entry.isDirectory() && PROJECT_OUTPUT_DIRS.has(entry.name)) continue;
             if (entry.isDirectory()) {
                 await visit(target);
             } else if (entry.isFile() && predicate(target)) {
@@ -53,7 +56,7 @@ async function walk(root, predicate = () => true) {
         }
     }
 
-    await visit(root);
+    await visit(start);
     return output;
 }
 
@@ -141,7 +144,7 @@ export async function checkDocumentationRegistry(root) {
         }
     }
 
-    const readmes = await walk(path.join(root, 'src'), (file) => path.basename(file) === 'README.md');
+    const readmes = await walk(root, (file) => path.basename(file) === 'README.md', path.join(root, 'src'));
     for (const file of readmes) {
         candidates.push({ file, key: `../${relative(root, file)}` });
     }
@@ -163,7 +166,7 @@ export async function checkVisualReferences(root) {
     const visualRoots = [path.join(root, 'docs', 'reference'), path.join(root, 'docs', 'evidence')];
     const visuals = [];
     for (const visualRoot of visualRoots) {
-        visuals.push(...await walk(visualRoot, (file) => VISUAL_EXTENSIONS.has(path.extname(file).toLowerCase())));
+        visuals.push(...await walk(root, (file) => VISUAL_EXTENSIONS.has(path.extname(file).toLowerCase()), visualRoot));
     }
 
     const textFiles = await walk(root, (file) => TEXT_EXTENSIONS.has(path.extname(file).toLowerCase()));
@@ -243,8 +246,8 @@ export async function checkMethodologyIsolation(root) {
 export async function checkPathReferences(root) {
     const findings = [];
     const files = [
-        ...await walk(path.join(root, 'docs'), (file) => path.extname(file) === '.md' && !relative(root, file).startsWith('docs/archive/') && !relative(root, file).startsWith('docs/audits/') && !relative(root, file).startsWith('docs/evidence/') && !relative(root, file).startsWith('docs/reference/')),
-        ...await walk(path.join(root, 'src'), (file) => path.basename(file) === 'README.md')
+        ...await walk(root, (file) => path.extname(file) === '.md' && !relative(root, file).startsWith('docs/archive/') && !relative(root, file).startsWith('docs/audits/') && !relative(root, file).startsWith('docs/evidence/') && !relative(root, file).startsWith('docs/reference/'), path.join(root, 'docs')),
+        ...await walk(root, (file) => path.basename(file) === 'README.md', path.join(root, 'src'))
     ];
     const codeSpan = /`((?:src|docs|assets|scripts)\/[A-Za-zА-Яа-яЁё0-9_./-]+\.[A-Za-z0-9]+)`/g;
 

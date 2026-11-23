@@ -1,6 +1,6 @@
 /**
  * Demo data and derived view model for the central metrics dashboard.
- * The file is loaded before src/app/app.js and does not render UI.
+ * Подключается мостом react/app/data.js. Формирует данные для React-компонентов.
  */
 (function (window) {
     const DEMO_TODAY = '2026-07-24';
@@ -15,6 +15,13 @@
         { id: 'construction', label: 'СМР', available: false },
         { id: 'acceptance', label: 'Приемка и заселение', available: false }
     ];
+
+    const milestoneDemoTimes = {
+        'master-plan': '09:00', 'permit-phase-1': '10:30', 'works-phase-1': '14:00',
+        'permit-phase-2': '11:00', 'occupancy-phase-1-start': '09:30',
+        'occupancy-phase-1-end': '17:00', 'works-phase-2': '15:30',
+        'occupancy-phase-2-start': '10:00', 'occupancy-phase-2-end': '16:00'
+    };
 
     const milestoneBlueprint = [
         { id: 'master-plan', phaseId: 'design', name: 'Мастерплан v.1 (ГП)', ratio: 0 },
@@ -212,6 +219,7 @@
                 plannedDate,
                 forecastDate: completed ? null : addDays(plannedDate, forecastShift),
                 actualDate: completed ? addDays(plannedDate, variation) : null,
+                demoTime: milestoneDemoTimes[item.id] ?? null,
                 status: completed ? 'completed' : (current ? 'current' : 'planned')
             };
         });
@@ -326,8 +334,8 @@
             dataStatusLabel: 'Демо-данные',
             currency: 'RUB',
             phaseSections: clone(phaseSections),
-            procurement: typeof SCenterProcurementMetricsData !== 'undefined'
-                ? SCenterProcurementMetricsData.getForContext(context)
+            procurement: window.SCenterProcurementMetricsData
+                ? window.SCenterProcurementMetricsData.getForContext(context)
                 : null,
             schedule,
             milestones: buildMilestones(contextKey, schedule, context.type),

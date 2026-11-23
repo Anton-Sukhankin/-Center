@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Структура метрик · HTML-полигон AIShtab</title>
+  <link rel="stylesheet" href="./design-previews/metric-structure/lab.css">
+</head>
+<body>
+  <iframe class="scene" src="./index.html" title="Дашборд Nova — фон примера" inert tabindex="-1"></iframe>
+  <main class="launcher"><span>HTML-полигон · Nova</span><button id="open">Открыть структуру метрик</button></main>
+  <dialog id="module" aria-labelledby="module-title">
+    <header><div><h1 id="module-title">Структура метрик</h1><p>Финансовые показатели <span>·</span> Nova</p></div><button class="close" aria-label="Закрыть окно" data-close></button></header>
+    <div class="variants" role="group" aria-label="Варианты дизайна">
+      <button data-mode="tree" aria-pressed="true">Дерево</button><button data-mode="register" aria-pressed="false">Реестр</button>
+    </div>
+    <label class="register-search" hidden>
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6"/></svg>
+      <input id="register-query" type="search" placeholder="Поиск по названию метрики" aria-label="Поиск по названию метрики" aria-controls="content">
+    </label>
+    <section id="content" aria-label="Представление финансовых метрик"></section>
+    <footer><span><i class="sign plus">+</i> Прибавляется</span><span><i class="sign minus">−</i> Вычитается</span><small>Демоданные</small></footer>
+  </dialog>
+  <dialog id="chart" aria-labelledby="chart-title"><header><div><h2 id="chart-title"></h2><p>Динамика показателя · Nova</p></div><button class="close" aria-label="Закрыть график" data-close></button></header><section id="chart-body"></section></dialog>
+  <script type="module" src="./design-previews/metric-structure/lab.js"></script>
+</body></html>

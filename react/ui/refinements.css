@@ -1,0 +1,131 @@
+#root {
+    height: 100%;
+    min-width: 0;
+}
+
+#root :focus-visible {
+    outline: 2px solid #006bff;
+    outline-offset: 2px;
+}
+
+#root .left-search-box:focus-within {
+    border-color: #006bff;
+    outline: 1px solid #006bff;
+    outline-offset: -2px;
+}
+
+#root .left-search-box input:focus {
+    outline: none;
+}
+
+#root .tree-item-label,
+#root .tree-expander {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+}
+
+#root .tree-item-label {
+    flex: 1;
+    min-width: 0;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+}
+
+#root .top-navbar .nav-item:focus-visible {
+    outline-color: #93c5fd;
+    outline-offset: -4px;
+}
+
+.assistant-trigger { justify-self:end; display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 12px; border:1px solid var(--header-assistant-border,var(--ui-assistant-outline-color)); border-radius:24px; background:transparent; color:var(--header-assistant-text,#f7f8fc); font:500 14px/20px var(--font-interface); white-space:nowrap; cursor:pointer; }
+.assistant-trigger:hover,.assistant-trigger[aria-expanded=true] {background:rgba(145,160,185,.16)}
+.assistant-trigger.plan-chat { width:var(--plan-control); height:var(--plan-control); padding:0; justify-content:center; border-radius:50%; pointer-events:auto; }
+.top-navbar[data-surface=light] {--header-assistant-text:var(--text-main);--header-assistant-border:var(--border-color)}
+
+#root .selection-toggle-btn {
+    font: inherit;
+}
+
+#root .metric-bi-tooltip,
+#root .metric-bi-highlight {
+    pointer-events: none;
+}
+
+#root .aishtab-confirm-overlay {
+    z-index: 2404;
+}
+
+#root #ai-analytics-modal-overlay {
+    z-index: 2403;
+}
+
+#root .aishtab-insight-card {
+    margin-block: 0 12px;
+}
+
+#root #event-drawer {
+    max-width: 100vw;
+}
+
+#event-toolbar-root {
+    container-type: inline-size;
+}
+
+@media (max-width: 900px) {
+    #root .left-panel:not(.collapsed) {
+        width: clamp(136px, 35vw, 280px);
+    }
+
+    #root .dashboard-workspace .left-panel {
+        max-width: clamp(136px, 35vw, 280px);
+    }
+
+    #root .project-summary-meta {
+        gap: 5px 12px;
+    }
+}
+
+@media (max-width: 740px) {
+    #root .top-navbar {
+        height:56px;
+        gap: 0;
+        padding-inline: 8px;
+    }
+
+    #root .navbar-brand {
+        padding-inline: 4px;
+    }
+
+    #root .navbar-brand .logo svg {
+        width: 20px;
+        height: 20px;
+    }
+
+}
+
+@media (max-width: 620px) {
+    #root .left-search-box {
+        padding-inline: 8px;
+    }
+
+    #root .left-panel .tree-item {
+        padding-inline: 4px;
+        gap: 4px;
+    }
+
+    #root .left-panel .tree-children {
+        padding-left: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #root .left-panel,
+    #root .tree-item,
+    #root .nav-item {
+        transition: none;
+    }
+}

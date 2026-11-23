@@ -206,3 +206,6 @@ const SCenterProcurementMetricsData = (function () {
 
     return { getForContext };
 })();
+
+// Общий источник закупок для сборщика view model дашборда.
+window.SCenterProcurementMetricsData = SCenterProcurementMetricsData;

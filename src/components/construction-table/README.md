@@ -6,24 +6,18 @@
 
 ## Реализация и стили
 
-- `construction-table.js` — binding, refresh/destroy и локальные scroll-индикаторы;
-- `construction-table.css` — общий `sct-` visual contract;
-- `src/features/objects/` и `src/features/digital-chessboard-summary/` — потребители и владельцы строк, колонок и данных.
-
-Автоматического локального теста компонента сейчас нет.
+[ConstructionTable](../../../react/construction/ConstructionTable.jsx) и `construction-table.css`.
 
 ## Публичный интерфейс
 
-`window.SCenterConstructionTable.bind(root, options)` возвращает `refresh()` и `destroy()`.
-
-По умолчанию используются селекторы `sct-shell`, `sct-scroll`, `sct-indicator`. Для существующей таблицы разрешены feature-specific селекторы через options.
+`ConstructionTable` получает содержимое таблицы и настройки видимости. Локальные наблюдатели и события прокрутки принадлежат компоненту и очищаются при его размонтировании.
 
 ## Текущий контракт и границы
 
 - компонент не создает данные и разметку строк;
 - компонент не синхронизирует выбранные объекты разных feature;
 - `destroy()` обязателен перед заменой DOM таблицы и при hide/destroy feature;
-- общий визуальный контракт: `14px` typography, header `42px / 600`, строка `51px`, горизонтальный padding ячеек `14px`, выравнивание влево и `white-space: nowrap`;
+- общий визуальный контракт: `14px` typography, шапка `42px / 500`, заливка `#F1F3F7`, текст `#4C5C6F`, без нижнего бордера (в «Объектах» два уровня по 21 px), строка `51px`, горизонтальный padding ячеек `14px`, выравнивание влево и `white-space: nowrap`;
 - native scrollbar скрыт, а доступ к прокрутке сохраняется для wheel, touch, клавиатуры и overlay-индикаторов;
 - пустой semantic footer таблицы, если он нужен feature, имеет высоту строки `51px` и не получает border или padding;
 - feature-specific CSS может уточнять ширины колонок, sticky-ячейки, цвета и hover, но не должен менять общую геометрию без совместной регрессии `Объектов` и `Сводки`.

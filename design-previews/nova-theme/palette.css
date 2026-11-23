@@ -1,0 +1,4 @@
+/* В этом сценарии нет соседней карточки события. */
+#lab-chart .metric-bi-overlay{inset:0;padding:clamp(10px,2vw,32px);pointer-events:auto;backdrop-filter:blur(4px)}
+#lab-chart .metric-bi-dialog{width:min(1080px,100%);margin:auto}
+.lab-reopen{position:fixed;z-index:3000;inset:20px 20px auto auto;padding:12px}

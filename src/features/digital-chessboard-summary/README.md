@@ -1,31 +1,24 @@
 # Feature «Сводка» цифровой шахматки
 
+У архива и предпросмотра печати [общий переход](../../ui/README.md) от кнопок тулбара. Детализация без стабильной кнопки проявляется в конечном положении.
+
+В [React-версии](../../../react/construction/Summary.jsx) просмотр деталей и архив используют текущий проект и состояние фильтра проблем. Смена проекта обновляет данные без искусственной задержки общего экрана.
+
 ## Назначение
 
-Нативный classic-script/IIFE feature проектной сводки. Пользователь открывает его пунктом `Сводка` в dropdown `Цифровая шахматка`, меняет канонический проектный контекст и работает с KPI, недельной динамикой, проблемами и объектами строительства.
+«Сводка» показывает KPI проекта, недельную динамику, проблемы и объекты строительства. Она открывается прямой кнопкой «Сводка» в основном хедере AIShtab.
 
 ## Подключение
 
-Порядок в `index.html`: `construction-objects-data.js` → `objects-data.js` → `digital-chessboard-summary-data.js` → `construction-table` → feature → `src/app/app.js`.
-
-Root: `#digital-chessboard-summary-root`. Все feature-стили ограничены root и префиксом `dcs-`.
+[Summary](../../../react/construction/Summary.jsx) загружается из App при первом открытии. Таблица и селектор переиспользуют компоненты из `react/construction/`. Корень стилей — `#digital-chessboard-summary-root`.
 
 ## Публичный lifecycle
 
-`window.SCenterDigitalChessboardSummary` предоставляет:
-
-- `mount(root, { context, getSelectableProjects, onProjectSelect })`;
-- `setContext(context)`;
-- `show()`;
-- `hide()`;
-- `closeOverlays()`;
-- `destroy()`.
-
-Project selector не создает собственный каталог Project: доступные проекты поступают через app-owned `getSelectableProjects`, а смена выполняется через `onProjectSelect` и общий `window.setActiveEntity`.
+App передает `context`, `active`, `projects`, `onSelectProject` и `data`. Выбор проекта вызывает общий обработчик контекста. После первого открытия компонент хранит локальные состояния при переключении экрана. Видимость и закрытие вложенных слоев связаны с `active`.
 
 ## Данные и состояния
 
-`window.digitalChessboardSummaryData.getForContext(context)` использует canonical Project/Queue context, identity объектов из `constructionObjectsData` и готовность объектов из project-view-model `objectsData`. KPI, weekly, attention, risks и архив остаются детерминированными demo-представлениями сводки.
+`data.digitalChessboardSummaryData.getForContext(context)` использует canonical Project/Queue context, identity объектов из `constructionObjectsData` и готовность объектов из project-view-model `objectsData`. KPI, weekly, attention, risks и архив остаются детерминированными demo-представлениями сводки.
 
 Поддержаны `ready`, `loading`, `empty`, `table-error/retry`, `attention-error/retry`, `unsupported-context`, `archive ready/empty/error/snapshot`, drawers и print preview. Для browser QA состояния доступны через `?summaryScenario=`.
 
@@ -53,7 +46,7 @@ Desktop-референс не задает глобальный header, sidebar 
 
 - syntax нового data/feature/shared component;
 - data test project/queue/BU/clone semantics;
-- dropdown mouse/keyboard и три main-view;
+- прямой переход в «Сводку» мышью и клавиатурой и возврат на соседние экраны;
 - project switch и propagation общего context;
 - weekly/attention/table/archive/print/drawers/retries;
 - `Escape`, focus trap/return, reduced-motion;

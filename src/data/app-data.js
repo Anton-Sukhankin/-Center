@@ -1,5 +1,5 @@
 // Единый источник атрибутивных данных для событий и финансовых метрик.
-// Файл подключается обычным <script> до src/app/app.js и сохраняет текущую глобальную модель проекта.
+// Подключается мостом react/app/data.js и регистрирует общий набор appData.
 (function (window) {
     const eventSources = [
         { id: 'S.Pass', name: 'S.Pass', icon: 'circle-user', theme: { chipBg: '#DBEAFE', chipBgEnd: '#EEF4FF', iconBg: '#2563EB', iconColor: '#FFFFFF', textColor: '#2563EB' } },
@@ -17,7 +17,7 @@
 
     const rawEvents = [
         { id: 'e1', priority: 'high', sourceName: 'S.Pass', sourceIcon: 'circle-user', title: 'Сдвиг сроков монолита: Корпус 1', text: 'Зафиксировано отставание на 8 дней из-за поломки бетононасоса. Критический путь проекта смещен.', dateText: 'Сегодня 10:45', metricName: 'Окончание СМР', metricId: 'GANTT_DATES', impact: '+8 дней', impactType: 'negative', excluded: false },
-        { id: 'e2', priority: 'high', sourceName: 'S.Pass', sourceIcon: 'circle-user', title: 'Невыход подрядчика на фасадные работы', text: 'ООО «Фасад-Строй» не вывел рабочих на 3-ю секцию. Риск остановки работ по внешнему контуру.', dateText: 'Сегодня 09:20', metricName: 'Себестоимость СМР', metricId: 'COGS_CONSTRUCTION', impact: '-2.4 млн ₽', impactType: 'negative', excluded: false },
+        { id: 'e2', priority: 'high', sourceName: 'S.Pass', sourceIcon: 'circle-user', title: 'Невыход подрядчика на фасадные работы', text: 'ООО «Фасад-Строй» не вывел рабочих на 3-ю секцию. Риск остановки работ по внешнему контуру.', dateText: 'Сегодня 09:20', metricName: 'Себестоимость СМР', metricId: 'COGS_CONSTRUCTION', additionalMetricIds: ['OPER_PROFIT', 'FIN_EXPENSES', 'NP_SAMOLET'], impact: '-2.4 млн ₽', impactType: 'negative', excluded: false },
         { id: 'e3', priority: 'high', sourceName: 'S.Control', sourceIcon: 'activity', title: 'Превышение лимита: Вывоз мусора', text: 'Затраты по статье превысили бюджет Q1 на 25%. Требуется доп. согласование с фин. департаментом.', dateText: '2026-04-16 17:30', metricName: 'Чистая прибыль', metricId: 'NP_SAMOLET', impact: '-0.8 млн ₽', impactType: 'negative', excluded: false },
         { id: 'e4', priority: 'high', sourceName: 'MS Project', sourceIcon: 'file-text', title: 'Задержка получения РНС по 2 очереди', text: 'Выявлены замечания в ГПЗУ. Плановая дата получения разрешения сдвигается на 15 рабочих дней.', dateText: '2026-04-17 08:15', metricName: 'Срок реализации', metricId: 'GANTT_DATES', impact: '+15 дней', impactType: 'negative', excluded: false },
         { id: 'e5', priority: 'high', sourceName: 'AIShtab', sourceIcon: 'layers', title: 'Синхронизация данных 1С завершена', text: 'Автоматическая сверка задолженностей по всем подрядчикам прошла успешно. Ошибок не обнаружено.', dateText: 'Сегодня 16:15', metricName: 'Интеграция', metricId: 'OTHER_INCOME', impact: '+12.5 млн ₽', impactType: 'positive', excluded: false },
@@ -868,6 +868,10 @@
         const metric = normalized.metricId ? findMetricById(metricsRoot || metricsTemplate, normalized.metricId) : null;
         return {
             ...normalized,
+            additionalMetricNames: [...new Set(normalized.additionalMetricIds || [])]
+                .filter(id => id !== normalized.metricId)
+                .map(id => findMetricById(metricsRoot || metricsTemplate, id)?.name)
+                .filter(Boolean),
             metricName: normalized.metricName || (metric ? metric.name : '')
         };
     }

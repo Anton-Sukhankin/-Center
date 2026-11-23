@@ -6,26 +6,21 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 12px;
+    padding-inline: 12px;
     background: #ffffff;
     border-bottom: none;
-    gap: 12px;
-    height: 64px;
+    gap: 8px 12px;
+    flex-wrap: wrap;
 }
 
 /* --- Area Layout --- */
 .toolbar-left {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
     min-width: 0;
-}
-
-.toolbar-center {
-    flex: 1 1 auto;
-    min-width: 160px;
-    max-width: none;
-    width: auto;
 }
 
 .toolbar-right {
@@ -40,204 +35,225 @@
 
 /* --- Segmented Controls (Tabs) --- */
 .toolbar-segmented {
-    background: #F3F4F6;
-    border-radius: 12px;
-    padding: 4px;
+    --segment-selected-bg: #eef1f5;
+    background: #ffffff;
+    border: 1px solid #c4cdd8;
+    border-radius: 9px;
+    padding: 5px;
     display: flex;
-    gap: 2px;
-    transition: all 0.3s ease;
+    align-items: center;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    max-inline-size: 100%;
+    gap: 5px;
 }
 
 .seg-tab {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: none;
-    background: transparent;
-    font-size: 0.9rem;
+    justify-content: center;
+    gap: 7px;
+    padding: 6px 10px;
+    min-block-size: 34px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    font-size: 14px;
+    line-height: 20px;
     font-weight: 500;
-    color: #6B7280;
+    color: #4e6077;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 160ms ease-out, color 160ms ease-out;
     white-space: nowrap;
 }
 
-.seg-tab:hover {
-    color: #1F2937;
-}
 
 .seg-tab.active {
-    background: #ffffff;
-    color: #1F2937;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    border-radius: 8px;
+    background-color: var(--segment-selected-bg);
+    color: #172334;
 }
 
-/* Badges */
-.tab-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 20px;
-    background: rgba(107, 114, 128, 0.1);
-    color: #4B5563;
-    transition: all 0.2s;
+@media (hover: hover) {
+    .seg-tab:not(.active, :disabled):hover {
+        background-color: var(--segment-selected-bg);
+        color: #172334;
+    }
+
+
 }
 
-.seg-tab.active .tab-badge {
-    background: #F3F4F6;
-    color: #1F2937;
+.seg-tab:disabled {
+    color: #667085;
+    cursor: default;
 }
 
-/* --- Search Bar --- */
-.toolbar-search {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-}
-
-.toolbar-search i,
-.toolbar-search svg {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #9CA3AF;
-    width: 18px;
-    height: 18px;
-    pointer-events: none;
-}
-
-.toolbar-search input {
-    width: 100%;
-    height: 40px;
-    padding: 0 16px 0 44px;
-    background: #ffffff;
-    border: 1px solid #E9ECEF;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    color: #1F2937;
-    transition: all 0.2s ease;
-}
-
-.toolbar-search input::placeholder {
-    color: #9CA3AF;
-}
-
-.toolbar-search input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* --- Action Buttons --- */
-.btn-analytics {
-    background: #007BFF;
-    color: #ffffff !important;
-    border: none !important;
-    font-weight: 600 !important;
-    border-radius: 10px !important;
-    padding: 0 18px !important;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 0 0 auto;
-    white-space: nowrap;
-    transition: all 0.2s;
-}
-
-.btn-analytics:hover {
-    background: #0069d9;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-}
-
-.btn-filter,
-.btn-metric-tree,
-.btn-ai-chat {
-    background: #ffffff;
-    border: 1px solid #E9ECEF;
-    border-radius: 10px;
-    height: 40px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 0 0 auto;
-    white-space: nowrap;
-    font-weight: 500;
-    color: #1F2937;
-    transition: all 0.2s;
-}
-
-.btn-filter:hover,
-.btn-metric-tree:hover,
-.btn-ai-chat:hover {
-    background: #F8FAFC;
-    border-color: #CBD5E1;
-}
-
-.btn-filter.active,
-body.metric-tree-open .btn-metric-tree,
-body.ai-chat-open .btn-ai-chat {
-    background: #EFF6FF;
-    border-color: #3b82f6;
-    color: #2563eb;
-    position: relative;
-}
-
-.btn-metric-tree svg,
-.btn-ai-chat svg {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2.2;
-}
-
-.btn-metric-tree:focus-visible,
-.btn-ai-chat:focus-visible,
-.btn-filter:focus-visible,
-.btn-analytics:focus-visible {
-    outline: 3px solid rgba(11, 107, 255, 0.24);
+.seg-tab:focus-visible {
+    outline: 2px solid #1D4ED8;
     outline-offset: 2px;
 }
 
-/* Filter Dot Badge */
-.filter-indicator {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 10px;
-    height: 10px;
-    background: #3B82F6;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
-    animation: badge-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+@container (max-width: 615px) {
+    .toolbar-segmented > .seg-tab {
+        min-inline-size: 0;
+        padding-inline: 10px;
+        gap: 6px;
+    }
 }
 
-@keyframes badge-pop {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
+@container (max-width: 720px) {
+    .toolbar-left { flex-basis: 100%; }
+}
+
+@container (max-width: 420px) {
+    .toolbar-segmented {
+        display: grid;
+        align-items: stretch;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+    }
+
+    .toolbar-segmented > .seg-tab {
+        min-block-size: 44px;
+        flex-direction: column;
+        gap: 2px;
+        padding: 3px;
+        font-size: 12px;
+        text-align: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* --- Action Buttons --- */
+.event-toolbar .btn-analytics { height: 40px; white-space: nowrap; }
+
+:root {
+    --assistant-fab-size: 48px;
+    --assistant-fab-inline: max(24px, env(safe-area-inset-right));
+}
+
+body {
+    --assistant-fab-bottom: max(24px, env(safe-area-inset-bottom));
+    --assistant-fab-clearance: calc(var(--assistant-fab-bottom) + var(--assistant-fab-size) + 8px);
+    --dashboard-floating-clearance: var(--assistant-fab-clearance);
+}
+
+.assistant-fab {
+    position: fixed;
+    right: var(--assistant-fab-inline);
+    bottom: var(--assistant-fab-bottom);
+    z-index: 1900;
+}
+
+.btn-ai-chat {
+    display: grid;
+    width: var(--assistant-fab-size);
+    height: var(--assistant-fab-size);
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #0b6bff;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(11, 107, 255, 0.24);
+    cursor: pointer;
+    transition: background-color 160ms ease;
+}
+
+.btn-ai-chat:hover,
+.btn-ai-chat[aria-expanded="true"] {
+    background: #005bd8;
+}
+
+.btn-ai-chat svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+    stroke-width: 1.5;
+}
+
+.assistant-fab .btn-ai-chat:focus-visible {
+    outline: 2px solid #006bff;
+    outline-offset: 4px;
+}
+
+.assistant-fab-hint {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    visibility: hidden;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #1f2937;
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.btn-ai-chat:is(:hover, :focus-visible):not([aria-expanded="true"]) + .assistant-fab-hint {
+    visibility: visible;
+}
+
+body.is-filtered {
+    --dashboard-floating-clearance: max(120px, var(--assistant-fab-clearance));
+}
+
+#dashboard-view #event-feed-sections {
+    scroll-padding-block-end: var(--dashboard-floating-clearance);
+}
+
+/* Reserve space after the scrollable content for the fixed controls. */
+#dashboard-view #event-feed-sections > .priority-tab-panel {
+    flex-shrink: 0;
+}
+
+#dashboard-view #event-feed-sections::after {
+    content: "";
+    flex: 0 0 var(--dashboard-floating-clearance);
+}
+
+@media (max-width: 760px) {
+    body.is-filtered {
+        --assistant-fab-bottom: max(156px, env(safe-area-inset-bottom));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-ai-chat,
+    .seg-tab,
+    .seg-tab :is(.tab-badge, .tab-badge-oval) {
+        transition: none;
+    }
+
 }
 
 /* Consistent Badges */
-.tab-badge, .tab-badge-oval {
-    font-size: 0.75rem;
+.seg-tab :is(.tab-badge, .tab-badge-oval) {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 20px;
+    font-size: 12px;
+    line-height: 18px;
     font-weight: 500;
-    padding: 2px 8px;
-    border-radius: 20px;
-    background: #E5E7EB; /* Light grey */
-    color: #1F2937;
-    margin-left: 4px;
-    transition: all 0.2s;
+    font-variant-numeric: tabular-nums;
+    padding: 0 5px;
+    border-radius: 10px;
+    background-color: #dfe5ed;
+    color: #172334;
 }
 
-.seg-tab.active .tab-badge, .seg-tab.active .tab-badge-oval {
-    background: #F3F4F6;
-    color: #111827;
+@media (prefers-reduced-motion: no-preference) {
+    .seg-tab :is(.tab-badge, .tab-badge-oval) {
+        transition: background-color 160ms ease-out, color 160ms ease-out;
+    }
+}
+
+.seg-tab.active :is(.tab-badge, .tab-badge-oval) {
+    background-color: #2565b8;
+    color: #fff;
 }
 
 /* --- Empty States for Tabs --- */
@@ -251,16 +267,11 @@ body.ai-chat-open .btn-ai-chat {
     animation: fadeIn 0.4s ease-out;
 }
 
-.empty-icon-circle {
-    width: 64px;
-    height: 64px;
-    background: #F3F4F6;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9CA3AF;
-    margin-bottom: 20px;
+.pinned-empty-illustration {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 12px;
 }
 
 .empty-title {

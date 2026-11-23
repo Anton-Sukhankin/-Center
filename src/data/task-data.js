@@ -1,5 +1,5 @@
 // Демонстрационный in-memory слой данных задач и справочника ответственных.
-// Файл подключается обычным <script> до task feature и src/app/app.js.
+// Подключается мостом react/app/data.js для сценариев работы с задачами.
 (function (window) {
     'use strict';
 

@@ -6,22 +6,31 @@
     --ac-hover:#eef1f6; --ac-selected:#e7f1fd; --ac-blue:#007bfc; --ac-focus:#006bd6;
     position:fixed;z-index:2403;display:flex;flex-direction:column;isolation:isolate;box-sizing:border-box;
     font:400 14px/21px var(--font-interface);color:var(--ac-ink);background:var(--ac-base);
-    border:1px solid var(--ac-edge);box-shadow:0 12px 42px rgba(23,41,69,.13);
-    transition:top 320ms,left 320ms,height 320ms,width 320ms,border-radius 320ms;
+    border:1px solid var(--ac-panel-edge,var(--ac-edge));border-radius:var(--dialog-radius,16px);
+    box-shadow:0 18px 56px rgba(15,23,42,.16);
+    transition:top 320ms,left 320ms,height 320ms,width 320ms;
 }
 [data-theme="dark"] .ac-panel,.ac-panel[data-theme="dark"] {
     --ac-base:#26272d;--ac-ink:#f1f2f5;--ac-muted:#b9bdc8;--ac-title:#f1f2f5;
-    --ac-rule:rgba(255,255,255,.07);--ac-edge:rgba(255,255,255,.12);
+    --ac-rule:rgba(255,255,255,.07);--ac-edge:rgba(255,255,255,.12);--ac-panel-edge:rgb(255 255 255 / 14.7%);
     --ac-compose:rgba(54,55,59,.68);--ac-bubble:rgba(24,54,84,.74);--ac-hover:#303239;
     --ac-selected:#183654;--ac-blue:#006bd6;--ac-focus:#83beff;color-scheme:dark;
 }
-.ac-panel[role=dialog]{border-radius:12px!important}
-.ac-panel[data-full=true]{border-radius:0!important;border:0;z-index:2600}
+/* Без поддержки размытия или смешивания цветов остаётся сплошная поверхность. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (background-color: color-mix(in srgb, black 60%, transparent)) {
+    :is([data-theme="dark"] .ac-panel,.ac-panel[data-theme="dark"])[data-full=false] {
+        background-color:color-mix(in srgb, var(--ac-base) 60%, transparent);
+        -webkit-backdrop-filter:blur(22px) saturate(1.2);
+        backdrop-filter:blur(22px) saturate(1.2);
+    }
+}
+.ac-panel[data-full=true]{z-index:2600}
 .ac-panel[data-moving=true]{transition:none;user-select:none}
 .ac-panel button,.ac-panel textarea{font:inherit;color:inherit}
 .ac-panel button{cursor:pointer;background:none;border:0}
 .ac-panel button:disabled{cursor:default}
 #root .ac-panel :focus-visible{outline:2px solid var(--ac-focus);outline-offset:-2px}
+.ac-head,.ac-thread{background:transparent}
 .ac-head{display:flex;align-items:center;gap:16px;min-height:64px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--ac-rule);flex:none;cursor:move;touch-action:none;user-select:none}
 .ac-panel[data-full=true] .ac-head{cursor:default}
 .ac-mark,.ac-empty>span{display:grid;place-items:center;background:var(--ac-hover);color:var(--ac-muted)}

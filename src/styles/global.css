@@ -515,6 +515,8 @@ body {
 @media (prefers-reduced-motion: reduce) { .project-photo-zoom { transition: none; } }
 
 .project-photo-viewer {
+    --plan-button-fill: rgb(26 29 34 / 94%);
+    --plan-button-hover-fill: #41454c;
     position: fixed;
     inset: 0;
     margin: 0;
@@ -558,11 +560,11 @@ body {
     display: grid; place-items: center; color: white; cursor: pointer;
     border: 0; background: transparent; border-radius: 50%; pointer-events: auto;
 }
-.plan-close, .plan-zoom-tools { background: rgb(26 29 34 / 94%); box-shadow: 0 2px 12px #0003; }
+.plan-close, .plan-zoom-tools { background: var(--plan-button-fill); box-shadow: 0 2px 12px #0003; }
 .plan-zoom-tools { display: grid; border-radius: 24px; overflow: hidden; }
 .plan-zoom-tools .plan-control { border-radius: 0; }
 .plan-control:disabled { color: #a4a7ae; cursor: default; }
-.plan-control:not(:disabled):hover { background: #41454c; }
+.plan-control:not(:disabled):hover { background: var(--plan-button-hover-fill); }
 .plan-control:focus-visible, .plan-chat:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
 @media (max-height: 310px) {
     .project-photo-viewer[open] { --plan-edge: 8px; --plan-control: 32px; }

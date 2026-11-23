@@ -43,7 +43,8 @@
 
 .assistant-trigger { justify-self:end; display:inline-flex; align-items:center; gap:8px; height:40px; padding:0 12px; border:1px solid var(--header-assistant-border,var(--ui-assistant-outline-color)); border-radius:24px; background:transparent; color:var(--header-assistant-text,#f7f8fc); font:500 14px/20px var(--font-interface); white-space:nowrap; cursor:pointer; }
 .assistant-trigger:hover,.assistant-trigger[aria-expanded=true] {background:rgba(145,160,185,.16)}
-.assistant-trigger.plan-chat { width:var(--plan-control); height:var(--plan-control); padding:0; justify-content:center; border-radius:50%; pointer-events:auto; }
+.assistant-trigger.plan-chat { width:var(--plan-control); height:var(--plan-control); padding:0; justify-content:center; border-radius:50%; pointer-events:auto; background:var(--plan-button-fill); }
+.assistant-trigger.plan-chat:hover { background:var(--plan-button-hover-fill); }
 .top-navbar[data-surface=light] {--header-assistant-text:var(--text-main);--header-assistant-border:var(--border-color)}
 
 #root .selection-toggle-btn {

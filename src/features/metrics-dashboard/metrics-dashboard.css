@@ -48,7 +48,6 @@
 .metrics-panel,
 .metrics-budget-card {
     border: 1px solid var(--metrics-border);
-    background: var(--ui-card, #ffffff);
 }
 
 .metrics-summary-pair {
@@ -61,7 +60,7 @@
 
 .metrics-kpi-card,
 .metrics-budget-card {
-    background-color: var(--ui-summary-card-surface, var(--ui-card, #ffffff));
+    background: transparent;
 }
 
 .metrics-kpi-card {
@@ -154,7 +153,7 @@
 
 
 
-.metrics-panel { padding: 20px; border-radius: var(--metrics-card-radius); }
+.metrics-panel { padding: 20px; border-radius: var(--metrics-card-radius); background: var(--ui-card, #ffffff); }
 
 .metrics-panel-header {
     display: flex;

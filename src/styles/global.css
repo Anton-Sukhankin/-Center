@@ -895,7 +895,7 @@ body {
 }
 .event-heading-copy .drawer-header-title { margin: 0; overflow-wrap: anywhere; }
 .event-params-register .event-status-high { color: #bd283f; }
-.event-status-value { display: flex; align-items: center; gap: 5px; }
+.event-status-value { display: flex; flex: none; align-items: center; gap: 5px; white-space: nowrap; }
 .event-status-value svg { flex: none; }
 .event-status-field { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
 .event-priority-link {
@@ -922,14 +922,6 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-}
-
-.event-detail-meta-dot {
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    background: #4B5563;
-    flex: 0 0 auto;
 }
 
 .drawer-section-flush {

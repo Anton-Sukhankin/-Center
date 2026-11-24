@@ -3,6 +3,23 @@ const factEnd = 7;
 const interpolate = (start, end, progress) => start + (end - start) * progress;
 const decimal = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
 const integer = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+export const plotBox = { top: 22, width: 1000, height: 376 };
+
+export function getPlotProbe(markers, fraction, snapToMonth) {
+    const last = markers.length - 1;
+    const column = Math.max(0, Math.min(1, fraction)) * markers.length;
+    const index = Math.min(last, Math.floor(column));
+    const position = snapToMonth ? index : Math.max(0, Math.min(last, column - 0.5));
+    const startIndex = Math.floor(position);
+    const start = markers[startIndex];
+    const end = markers[Math.min(last, startIndex + 1)];
+    const progress = position - startIndex;
+    return {
+        index,
+        x: interpolate(start.x, end.x, progress) / plotBox.width,
+        y: (interpolate(start.actualY, end.actualY, progress) - plotBox.top) / plotBox.height
+    };
+}
 
 export function formatMetricValue(value) {
     return (Math.abs(value) < 10 ? decimal : integer).format(value);
@@ -42,7 +59,7 @@ export function makeChart(points, scalePoints = points) {
     const padding = (max - min) * 0.16;
     min -= padding;
     max += padding;
-    const width = 1000 / points.length;
+    const width = plotBox.width / points.length;
     const x = index => width * (index + 0.5);
     const y = value => 34 + (max - value) / (max - min) * 352;
     const path = (items, accessor, start = 0) => items.map((item, index) =>

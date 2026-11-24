@@ -24,7 +24,7 @@ function box(element, visible = false) {
         borderRadius: style.borderRadius };
 }
 
-export function useAnimatedDialog({ onClose, onEscape, source, focusSource = source, surfaceSelector, companionSelector, active = true, overlayContainsSurface = false, relatedControl }) {
+export function useAnimatedDialog({ onClose, onEscape, source, focusSource = source, surfaceSelector, companionSelector, siblingCompanionSelector, active = true, overlayContainsSurface = false, relatedControl }) {
     const layer = useRef(null);
     const backdropRef = useRef(null);
     const dialogRef = useDialog({
@@ -57,6 +57,7 @@ export function useAnimatedDialog({ onClose, onEscape, source, focusSource = sou
         let ghost;
         let finish;
         let exitTimeout;
+        let restoreSibling;
         const motion = { closing: false, close };
         layer.current = motion;
         exits.set(surface, dismiss);
@@ -124,6 +125,13 @@ export function useAnimatedDialog({ onClose, onEscape, source, focusSource = sou
                 : [{ opacity }, { opacity: 0 }], duration);
             const companion = companionSelector && owner.querySelector(companionSelector);
             if (companion) animate(companion, [{ opacity: getComputedStyle(companion).opacity }, { opacity: 0 }], duration);
+            const sibling = siblingCompanionSelector && owner.parentElement?.querySelector(siblingCompanionSelector);
+            if (sibling) {
+                const wasInert = sibling.inert;
+                sibling.inert = true;
+                restoreSibling = () => { sibling.inert = wasInert; };
+                animate(sibling, [{ opacity: getComputedStyle(sibling).opacity }, { opacity: 0 }], duration);
+            }
             if (backdropNow) animate(backdrop, [backdropNow, clearScrim], duration);
             finish = () => {
                 if (!finish) return;
@@ -170,10 +178,11 @@ export function useAnimatedDialog({ onClose, onEscape, source, focusSource = sou
             exits.delete(surface);
             owner.removeEventListener('click', block, true);
             owner.removeEventListener('submit', block, true);
+            restoreSibling?.();
             stop();
             layer.current = null;
         };
-    }, [dialogRef, source, surfaceSelector, companionSelector, overlayContainsSurface]);
+    }, [dialogRef, source, surfaceSelector, companionSelector, siblingCompanionSelector, overlayContainsSurface]);
 
     return { dialogRef, backdropRef, dismiss };
 }

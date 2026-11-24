@@ -21,15 +21,21 @@ function canRestoreFocus(element) {
 function onDocumentKeyDown(event) {
     const layer = activeDialogs.at(-1);
     if (!layer || event.defaultPrevented) return;
+    if (layer.dialog.closest('[inert]')) {
+        if (event.key === 'Escape' || event.key === 'Tab') event.preventDefault();
+        return;
+    }
 
     if (event.key === 'Escape') {
         event.preventDefault();
         layer.close();
     } else if (event.key === 'Tab') {
         const controls = visibleControls(layer.dialog);
-        const related = layer.relatedControl && document.querySelector(layer.relatedControl);
-        if (canRestoreFocus(related)) {
-            controls.push(related);
+        const related = layer.relatedControl
+            ? [...document.querySelectorAll(layer.relatedControl)].filter(canRestoreFocus)
+            : [];
+        if (related.length) {
+            controls.push(...related);
             const index = controls.indexOf(document.activeElement);
             const next = index < 0 ? (event.shiftKey ? controls.length - 1 : 0)
                 : (index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
@@ -58,7 +64,7 @@ export function useDialog({ onClose, active = true, restoreFocus = true, trigger
         if (!active || !dialog) return;
 
         const trigger = providedTrigger || document.activeElement;
-        const layer = { dialog, relatedControl, close: () => callbacks.current.onClose() };
+        const layer = { dialog, relatedControl, trigger, parent: activeDialogs.at(-1), close: () => callbacks.current.onClose() };
         if (activeDialogs.length === 0) document.addEventListener('keydown', onDocumentKeyDown);
         activeDialogs.push(layer);
         const initialTarget = dialog.querySelector('[data-initial-focus]') || visibleControls(dialog)[0] || dialog;
@@ -70,11 +76,15 @@ export function useDialog({ onClose, active = true, restoreFocus = true, trigger
             if (activeDialogs.length === 0) document.removeEventListener('keydown', onDocumentKeyDown);
             if (wasTop && callbacks.current.restoreFocus) {
                 queueMicrotask(() => {
-                    if (canRestoreFocus(trigger) &&
-                        (!activeDialogs.length || activeDialogs.at(-1).dialog.contains(trigger))) {
-                        trigger.focus({ preventScroll: true });
-                    } else if (fallbackFocus) {
-                        const parent = activeDialogs.at(-1)?.dialog;
+                    const parent = activeDialogs.at(-1)?.dialog;
+                    for (let ancestor = layer; ancestor; ancestor = ancestor.parent) {
+                        const target = ancestor.trigger;
+                        if (canRestoreFocus(target) && (!parent || parent.contains(target))) {
+                            target.focus({ preventScroll: true });
+                            return;
+                        }
+                    }
+                    if (fallbackFocus) {
                         if (parent?.contains(document.activeElement) && canRestoreFocus(document.activeElement)) return;
                         const fallback = parent ? visibleControls(parent)[0] || parent
                             : ['#event-toolbar-root button.active', '#event-toolbar-root button', '#root .top-navbar button']

@@ -53,11 +53,11 @@ body.metric-bi-open {
 .metric-bi-controls .toolbar-segmented { flex-wrap: nowrap; }
 .metric-bi-header { display:flex; flex:none; justify-content:space-between; align-items:center; gap:12px; padding:24px 24px 12px; border-bottom:1px solid #e3e7ec; }
 .metric-bi-header h2 { margin:0; font-size:20px; line-height:29px; font-weight:500; }
-.metric-bi-header .metric-bi-task-action { display:none; }
+.metric-bi-linked-actions { display:none; }
 @media (width < 1580px) {
-    #event-create-task[data-linked-chart] { visibility:hidden; }
-    .metric-bi-header:has(.metric-bi-task-action) { display:grid; grid-template-columns:minmax(0,1fr) auto; }
-    .metric-bi-header .metric-bi-task-action { display:inline-flex; grid-column:1/-1; justify-self:start; }
+    :is(#event-create-task, #close-event-drawer-btn)[data-linked-chart] { visibility:hidden; }
+    .metric-bi-header:has(.metric-bi-linked-actions) { display:grid; grid-template-columns:minmax(0,1fr) auto; }
+    .metric-bi-linked-actions { display:flex; flex-wrap:wrap; gap:8px; grid-column:1/-1; }
 }
 .metric-bi-body { display:flex; flex:1; flex-direction:column; gap:12px; padding:12px 24px 24px; min-width:0; min-height:0; overflow:auto; }
 .metric-bi-body > :not(.bi-summary) { flex:none; }
@@ -93,7 +93,7 @@ body.metric-bi-open {
 
 .metric-bi-chart {
     position: relative;
-    height: 350px;
+    height: 374px;
     cursor: crosshair;
 }
 
@@ -121,19 +121,37 @@ body.metric-bi-open {
 .metric-bi-highlight {
     position: absolute;
     inset-block: 0;
+    inset-inline-start: 0;
     z-index: 1;
     border-inline:1px solid #628ab2;
     background:#316da410;
-    transition:opacity 150ms ease;
+    transition:opacity 150ms ease, transform 110ms ease-out;
     pointer-events: none;
 }
 
+.metric-bi-hover-marker,
 .metric-bi-tooltip {
     position: absolute;
-    top: 12px;
+    inset: 0 auto auto 0;
+    pointer-events: none;
+}
+
+.metric-bi-hover-marker {
     z-index: 4;
+    box-sizing: border-box;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--ui-accent, #0b6bff);
+    border-radius: 50%;
+    background: var(--ui-raised, #fff);
+    transform: var(--bi-marker-position) translate(-50%, -50%);
+}
+
+.metric-bi-tooltip {
+    z-index: 5;
     display: flex;
-    width: 164px;
+    box-sizing: border-box;
+    width: min(164px, calc(100% - 16px));
     flex-direction: column;
     gap: 4px;
     padding: 10px 12px;
@@ -143,8 +161,13 @@ body.metric-bi-open {
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
     color: var(--metric-bi-muted);
     font-size: 12px;
-    pointer-events: none;
+    line-height: 16px;
+    visibility: hidden;
+    transform: var(--bi-tooltip-position);
 }
+.metric-bi-tooltip[data-active] { visibility: visible; }
+.metric-bi-tooltip > * { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.metric-bi-chart[data-view=range] :is(.metric-bi-hover-marker, .metric-bi-tooltip) { transition:transform 110ms ease-out; }
 
 .metric-bi-highlight[hidden],
 .metric-bi-tooltip[hidden] {
@@ -247,5 +270,6 @@ body.metric-bi-open {
     .metric-bi-svg { animation:none; }
     .metric-bi-highlight,
     .metric-bi-overlay,
-    .metric-bi-dialog { transition: none; }
+    .metric-bi-dialog,
+    .metric-bi-chart[data-view=range] :is(.metric-bi-hover-marker, .metric-bi-tooltip) { transition: none; }
 }

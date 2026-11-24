@@ -2,29 +2,35 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { SegmentedButton, SegmentedControl } from '../ui/SegmentedControl.jsx';
 import { CloseButton } from '../ui/LightlineButton.jsx';
 import Icon from '../ui/Icon.jsx';
-import { useAnimatedDialog } from '../ui/useAnimatedDialog.js';
-import { createMetricSeries, makeChart, formatMetricValue } from './chartModel.js';
+import { closeAnimatedSurface, useAnimatedDialog } from '../ui/useAnimatedDialog.js';
+import { createMetricSeries, makeChart, formatMetricValue, getPlotProbe, plotBox } from './chartModel.js';
 
 const legend = [['plan', 'План'], ['fact', 'Факт'], ['forecast', 'Прогноз'], ['ahead', 'Выше плана'], ['delay', 'Ниже плана']];
 const hoverDelay = 120;
+const tooltipGap = 12;
+const tooltipInset = 8;
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-export default function MetricChart({ metric, onClose, onCreateTask, source: trigger, paired = false, sideBySide = false }) {
+export default function MetricChart({ metric, onClose, onCloseEvent, onCreateTask, source: trigger, paired = false, sideBySide = false }) {
     const [forecast, setForecast] = useState(false);
     const [view, setView] = useState('range');
     const [hoverIndex, setHoverIndex] = useState(null);
     const [source, setSource] = useState(null);
     const timer = useRef(null);
+    const pointer = useRef({ frame: null, x: 0 });
+    const tooltipRef = useRef(null);
+    const scrollRef = useRef(null);
     const bodyRef = useRef(null);
     const { dialogRef: dialog, backdropRef, dismiss } = useAnimatedDialog({
         onClose, active: !paired, source: trigger, overlayContainsSurface: true,
-        relatedControl: onCreateTask ? '#event-create-task[data-linked-chart]' : undefined
+        relatedControl: sideBySide ? '#close-event-drawer-btn[data-linked-chart], #event-create-task[data-linked-chart]' : undefined
     });
     const series = useMemo(() => createMetricSeries(metric), [metric]);
     const points = useMemo(() => forecast ? series : series.filter(point => !point.isForecast), [series, forecast]);
     const forecastStart = points.findIndex(point => point.isForecast);
     const chart = useMemo(() => makeChart(points, series), [points, series]);
     const hovered = source === 'plot' ? points[hoverIndex] : null;
-    const center = hovered ? (hoverIndex + 0.5) * 100 / points.length : 0;
+    const tooltipPoint = hovered ?? points[0];
     const grid = { gridTemplateColumns: `var(--bi-gutter) repeat(${points.length}, minmax(0, 1fr))` };
     const fact = series.findLast(point => !point.isForecast);
     const last = points.at(-1);
@@ -59,7 +65,10 @@ export default function MetricChart({ metric, onClose, onCreateTask, source: tri
     useEffect(() => {
         setHoverIndex(null);
         setSource(null);
-        return () => { window.clearTimeout(timer.current); timer.current = null; };
+        return () => {
+            cancelClear();
+            cancelPointerMove();
+        };
     }, [metric.id]);
 
     function cancelClear() {
@@ -75,33 +84,70 @@ export default function MetricChart({ metric, onClose, onCreateTask, source: tri
         }, hoverDelay);
     }
 
+    function cancelPointerMove() {
+        if (pointer.current.frame !== null) cancelAnimationFrame(pointer.current.frame);
+        pointer.current.frame = null;
+    }
+
+    function resetHover() {
+        cancelClear();
+        cancelPointerMove();
+        setSource(null);
+        setHoverIndex(null);
+    }
+
     function onPointerMove(event) {
         if (event.pointerType === 'touch') return;
-        const rect = event.currentTarget.getBoundingClientRect();
-        if (!rect.width) return;
         cancelClear();
-        setSource('plot');
-        const index = Math.floor((event.clientX - rect.left) * points.length / rect.width);
-        setHoverIndex(Math.max(0, Math.min(index, points.length - 1)));
+        const plot = event.currentTarget;
+        pointer.current.x = event.clientX;
+        if (pointer.current.frame !== null) return;
+        pointer.current.frame = requestAnimationFrame(() => {
+            pointer.current.frame = null;
+            const tip = tooltipRef.current;
+            const viewport = scrollRef.current;
+            if (!plot.isConnected || !tip || !viewport) return;
+            const rect = plot.getBoundingClientRect();
+            if (!rect.width) return;
+            const clipLeft = viewport.getBoundingClientRect().left - rect.left;
+            const left = Math.max(0, clipLeft) + tooltipInset;
+            const right = Math.min(rect.width, clipLeft + viewport.clientWidth) - tooltipInset;
+            const probe = getPlotProbe(chart.markers, (pointer.current.x - rect.left) / rect.width, view === 'range');
+            const x = probe.x * rect.width;
+            const y = probe.y * rect.height;
+            const { offsetWidth, offsetHeight } = tip;
+            const tipX = clamp(x - offsetWidth / 2, left, right - offsetWidth);
+            const above = y - tooltipGap - offsetHeight;
+            const tipY = clamp(above >= tooltipInset ? above : y + tooltipGap, 4, rect.height - offsetHeight - 4);
+            // Только координаты обновляются каждый кадр; данные остаются помесячными.
+            plot.style.setProperty('--bi-marker-position', `translate3d(${x}px, ${y}px, 0)`);
+            plot.style.setProperty('--bi-tooltip-position', `translate3d(${tipX}px, ${tipY}px, 0)`);
+            setHoverIndex(probe.index);
+            setSource('plot');
+        });
     }
 
     function selectPeriod(withForecast) {
-        cancelClear();
-        setSource(null);
-        setHoverIndex(null);
+        resetHover();
         setForecast(withForecast);
     }
 
     return <div id="bi-modal-overlay" className={`metric-bi-overlay is-active${paired ? ' is-paired' : sideBySide ? ' is-side-by-side' : ''}`}
         ref={backdropRef} data-dialog-motion onClick={event => { if (event.target === event.currentTarget) dismiss(); }}>
         <section ref={dialog} className="metric-bi-dialog" role={paired ? 'region' : 'dialog'} aria-modal={paired ? undefined : true} data-dialog-motion
-            aria-labelledby="metric-bi-title" aria-owns={onCreateTask ? 'event-create-task' : undefined} tabIndex={-1} onPointerLeave={scheduleClear}>
+            aria-labelledby="metric-bi-title" aria-owns={sideBySide ? 'close-event-drawer-btn event-create-task' : undefined} tabIndex={-1} onPointerLeave={scheduleClear}>
             <header className="metric-bi-header">
                 <h2 data-dialog-title id="metric-bi-title">{metric.name || 'Метрика'}</h2>
                 <CloseButton data-initial-focus={!paired || undefined} aria-label="Закрыть график" onClick={() => dismiss()} />
-                {onCreateTask ? <button type="button" className="footer-btn footer-btn-primary metric-bi-task-action" onClick={onCreateTask}>
-                    <Icon name="clipboard-plus" size={16} />Создать задачу
-                </button> : null}
+                {onCreateTask || onCloseEvent ? <div className="metric-bi-linked-actions">
+                    {onCreateTask ? <button type="button" className="footer-btn footer-btn-primary" onClick={onCreateTask}>
+                        <Icon name="clipboard-plus" size={16} />Создать задачу
+                    </button> : null}
+                    {onCloseEvent ? <button type="button" className="footer-btn"
+                        onClick={() => closeAnimatedSurface(document.getElementById('event-drawer'), onCloseEvent)}>
+                        Закрыть оба окна
+                    </button> : null}
+                </div> : null}
             </header>
             <div className="metric-bi-body" ref={bodyRef}>
                 <div className="bi-summary" aria-live="polite">
@@ -118,7 +164,7 @@ export default function MetricChart({ metric, onClose, onCreateTask, source: tri
                     <SegmentedControl aria-label="Вид графика">
                         {[['range', 'Диапазоны'], ['line', 'Траектория']].map(([id, name]) =>
                             <SegmentedButton key={id} active={view === id} onClick={() => {
-                                cancelClear(); setSource(null); setHoverIndex(null); setView(id);
+                                resetHover(); setView(id);
                             }}>{name}</SegmentedButton>)}
                     </SegmentedControl>
                     <SegmentedControl aria-label="Период графика">
@@ -132,24 +178,24 @@ export default function MetricChart({ metric, onClose, onCreateTask, source: tri
                         </span>)}
                     </div>
                 </div>
-            <div className="bi-data-scroll" onScroll={() => { cancelClear(); setSource(null); }}>
+            <div className="bi-data-scroll" ref={scrollRef} onScroll={resetHover}>
             <div className="bi-data-sheet" style={paired ? undefined : { minWidth: `calc(var(--bi-gutter) + ${points.length * 62}px)` }}>
             <div className="bi-plot-row">
             <div className="bi-axis" aria-hidden="true">{chart.grid.map(t => <span key={t.y}>{formatMetricValue(t.value)}</span>)}</div>
             <div className="metric-bi-chart" id="metric-bi-chart"
+                data-view={view}
                 onPointerMove={onPointerMove} onPointerLeave={scheduleClear} onPointerCancel={scheduleClear}>
                 {forecastStart >= 0 && <div className="bi-forecast-period" style={{left: `${forecastStart * 100 / points.length}%`}}>
                     <span className="bi-forecast-bracket"><span>Прогноз</span></span>
                 </div>}
-                {hovered ? <>
-                    <div className="metric-bi-tooltip" style={{ left: `clamp(8px, calc(${center}% - 82px), max(8px, calc(100% - 172px)))` }}>
-                        <strong>{hovered.month}</strong>
-                        <span>План: {formatMetricValue(hovered.plan)}</span>
-                        <span>{hovered.isForecast ? 'Прогноз' : 'Факт'}: {formatMetricValue(hovered.actual)}</span>
-                    </div>
-                </> : null}
-                <svg key={view + forecast} className="metric-bi-svg" viewBox="0 22 1000 376" preserveAspectRatio="none" role="img" aria-label="График динамики метрики">
-                    {chart.grid.map(t => <line key={t.y} x1="0" y1={t.y} x2="1000" y2={t.y}
+                <span className="metric-bi-hover-marker" hidden={!hovered} aria-hidden="true" />
+                <div ref={tooltipRef} className="metric-bi-tooltip" data-active={hovered ? '' : undefined} aria-hidden={!hovered}>
+                    <strong>{tooltipPoint.month}</strong>
+                    <span>План: {formatMetricValue(tooltipPoint.plan)}</span>
+                    <span>{tooltipPoint.isForecast ? 'Прогноз' : 'Факт'}: {formatMetricValue(tooltipPoint.actual)}</span>
+                </div>
+                <svg key={view + forecast} className="metric-bi-svg" viewBox={`0 ${plotBox.top} ${plotBox.width} ${plotBox.height}`} preserveAspectRatio="none" role="img" aria-label="График динамики метрики">
+                    {chart.grid.map(t => <line key={t.y} x1="0" y1={t.y} x2={plotBox.width} y2={t.y}
                         stroke="var(--ui-data-divider, #e6ebf0)" vectorEffect="non-scaling-stroke" />)}
                     {view === 'range' ? chart.markers.map(({ x, planY, actualY }, i) => {
                         const p = points[i];
@@ -179,7 +225,7 @@ export default function MetricChart({ metric, onClose, onCreateTask, source: tri
                     if (event.pointerType === 'touch') return;
                     const cell = event.target.closest('[data-month]');
                     if (!cell) { scheduleClear(); return; }
-                    cancelClear(); setHoverIndex(Number(cell.dataset.month)); setSource('table');
+                    cancelClear(); cancelPointerMove(); setHoverIndex(Number(cell.dataset.month)); setSource('table');
                 }}>
                 <div className="metric-bi-table-row metric-bi-month-row" role="row" style={grid}>
                     <div className="metric-bi-cell" role="cell">Месяц</div>
@@ -201,7 +247,7 @@ export default function MetricChart({ metric, onClose, onCreateTask, source: tri
             </div>
             <div className="bi-selection-track" aria-hidden="true">
                 <div className="metric-bi-highlight" style={{opacity: source && hoverIndex !== null ? 1 : 0,
-                    left: `${(hoverIndex ?? 0) * 100 / points.length}%`, width: `${100 / points.length}%`}} />
+                    transform: `translateX(${(hoverIndex ?? 0) * 100}%)`, width: `${100 / points.length}%`}} />
             </div></div></div></div>
         </section>
     </div>;

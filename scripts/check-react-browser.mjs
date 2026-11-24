@@ -216,7 +216,43 @@ try {
         await page.getByRole('button', { name: /^Все события/ }).click();
     });
 
-    await printCheck('Детали события · компактный хедер и описание по высоте окна', async () => {
+    await printCheck('Детали события и BI · закрытие пары и возврат к событию', async () => {
+        const card = page.locator('.event-card.has-metric-link').first();
+        const details = page.locator('#event-drawer');
+        const chart = page.locator('#bi-modal-overlay');
+        const closeEvent = details.locator('#close-event-drawer-btn');
+        const openPair = async () => {
+            await card.click();
+            await details.locator('.metric-impact-trigger').click();
+            await shown(chart);
+        };
+        const checkClosed = async () => {
+            await details.waitFor({ state: 'detached' });
+            await chart.waitFor({ state: 'detached' });
+            assert.equal(await card.evaluate(node => node === document.activeElement), true);
+        };
+        try {
+            await openPair();
+            await closeEvent.click();
+            await checkClosed();
+
+            await openPair();
+            await page.keyboard.press('Shift+Tab'); // «Создать задачу» в карточке.
+            await page.keyboard.press('Shift+Tab'); // Крестик карточки.
+            assert.equal(await closeEvent.evaluate(node => node === document.activeElement), true);
+            await page.keyboard.press('Enter');
+            await checkClosed();
+
+            await page.setViewportSize({ width: 390, height: 800 });
+            await openPair();
+            await chart.getByRole('button', { name: 'Закрыть оба окна', exact: true }).click();
+            await checkClosed();
+        } finally {
+            await page.setViewportSize({ width: 1680, height: 960 });
+        }
+    });
+
+    await printCheck('Детали события · хедер, реестр параметров и описание по высоте окна', async () => {
         const card = page.locator('.event-card').first();
         const dialog = page.getByRole('dialog', { name: 'Детальная карточка события' });
         const close = dialog.getByRole('button', { name: 'Закрыть', exact: true });
@@ -224,30 +260,37 @@ try {
         const collapse = dialog.getByRole('button', { name: 'Свернуть', exact: true });
         const readLayout = () => dialog.evaluate(node => {
             const box = selector => node.querySelector(selector).getBoundingClientRect();
-            const title = box('.event-detail-heading-row h2');
-            const heading = getComputedStyle(node.querySelector('.event-detail-heading-row h2'));
-            const register = [...node.querySelectorAll('.event-params-register dd')];
+            const title = box('.event-heading-copy h2');
+            const heading = getComputedStyle(node.querySelector('.event-heading-copy h2'));
+            const source = node.querySelector('.event-detail-source-line');
+            const register = [...node.querySelectorAll('.event-params-register > div')];
+            const labels = register.map(row => row.querySelector('dt').textContent);
+            const project = register.find(row => row.querySelector('dt').textContent === 'Проект');
             if (heading.fontSize !== '20px' || heading.fontWeight !== '500' ||
-                box('.event-detail-source-line').top - box('.event-detail-heading-row').bottom !== 12 ||
-                register.length !== 4 || register.some(n => getComputedStyle(n).fontWeight !== '400')) {
-                throw new Error('Не соблюдены типографика заголовка, отступ или четыре строки реестра');
+                Math.abs(source.getBoundingClientRect().top - title.bottom - 8) > 0.5 ||
+                source.querySelectorAll('.event-detail-meta-item').length !== 1 || !source.textContent.startsWith('Источник:') ||
+                labels.join('|') !== 'Статус|Время|Проект|Очередь|Тип объекта|Объект' ||
+                register.some(row => getComputedStyle(row.querySelector('dd')).fontWeight !== '400') ||
+                !project?.querySelector('dt .lucide-folder-open') || project.querySelector('dd').textContent !== 'Nova') {
+                throw new Error('Не соблюдены отступ и типографика заголовка, состав подзаголовка или порядок параметров события');
             }
-            const tag = box('.event-detail-priority-tag');
             const closeBox = box('#close-event-drawer-btn');
             const cross = box('#close-event-drawer-btn svg');
             const content = box('.event-description-content');
             const text = box('.event-description-text');
             const footer = box('#event-drawer-footer');
             const descriptionCard = box('.event-description-card');
+            const body = node.querySelector('#event-drawer-body');
             return {
                 imageCount: node.querySelectorAll('.drawer-header img').length,
                 closeWidth: closeBox.width, closeHeight: closeBox.height,
                 closeRadius: getComputedStyle(node.querySelector('#close-event-drawer-btn')).borderTopLeftRadius,
                 crossCentered: closeBox.left + closeBox.right === cross.left + cross.right
                     && closeBox.top + closeBox.bottom === cross.top + cross.bottom,
-                headerOrder: title.right <= tag.left && tag.right <= closeBox.left,
-                headerAlignment: Math.abs(title.top - closeBox.top) < 2 && tag.top === closeBox.top,
-                gutter: footer.top - descriptionCard.bottom,
+                headerOrder: title.right <= closeBox.left,
+                headerAlignment: Math.abs(title.top - closeBox.top) < 2,
+                gutter: footer.top - descriptionCard.bottom + body.scrollHeight - body.clientHeight - body.scrollTop,
+                roomyHeight: Math.ceil(text.height + descriptionCard.top - node.getBoundingClientRect().top + footer.height + 160),
                 preview: content.height + 1 < text.height,
                 footerVisible: footer.bottom <= innerHeight + 1
                     && [...node.querySelectorAll('#event-drawer-footer button')].every(button => {
@@ -263,7 +306,7 @@ try {
             await shown(expand);
             const compact = await readLayout();
             assert.equal(compact.imageCount, 0);
-        assert.deepEqual([compact.closeWidth, compact.closeHeight, compact.closeRadius], [40, 40, '50%']);
+            assert.deepEqual([compact.closeWidth, compact.closeHeight, compact.closeRadius], [40, 40, '50%']);
             assert.ok(compact.crossCentered && compact.headerOrder && compact.headerAlignment);
             assert.ok(compact.preview && compact.footerVisible);
             assert.ok(Math.abs(compact.gutter - 16) < 1.5, `отступ ${compact.gutter} px`);
@@ -280,7 +323,7 @@ try {
             assert.equal(await expand.getAttribute('aria-expanded'), 'false');
             assert.ok((await readLayout()).preview);
 
-            await page.setViewportSize({ width: 1360, height: 1400 });
+            await page.setViewportSize({ width: 1360, height: Math.max(1400, compact.roomyHeight) });
             await gone(expand);
             const roomy = await readLayout();
             assert.equal(roomy.preview, false);

@@ -61,9 +61,6 @@ function EventHeading({ event, inactive }) {
     return <div className="event-heading-copy" aria-hidden={inactive || undefined}>
         <h2 data-dialog-title className="drawer-header-title">{event.listTitle || event.title}</h2>
         <div className="drawer-header-subtitle event-detail-source-line">
-            <span className="event-detail-meta-item"><span className="drawer-header-project-label">Проект:</span>
-                <span className="drawer-header-project-value">{event.projectName || 'Nova'}</span></span>
-            <span className="event-detail-meta-dot" />
             <span className="event-detail-meta-item"><span className="drawer-header-project-label">Источник:</span>
                 <span className="drawer-header-project-value">{event.sourceName || 'AIShtab'}</span></span>
         </div>
@@ -74,8 +71,11 @@ function EventParams({ event, onPriority }) {
     const high = isHighPriority(event);
     const statusIcon = high ? 'arrow-up' : event.priority === 'low' ? 'minus' : null;
     const rows = [
-        ['Время', event.dateText, 'calendar'], ['Очередь', event.queue, 'list-checks'],
-        ['Тип объекта', event.objectType, 'building'], ['Объект', event.objectName, 'construction']
+        ['Время', event.dateText, 'calendar'],
+        ['Проект', event.projectName, 'folder-open'],
+        ['Очередь', event.queue, 'list-checks'],
+        ['Тип объекта', event.objectType, 'building'],
+        ['Объект', event.objectName, 'construction']
     ];
     return <dl className="event-params-register" aria-label="Параметры события">
         <div className="event-status-row">
@@ -121,7 +121,9 @@ export default function EventDetails({
     event, metric, onClose, onOpenMetric, onPin, onPriority, onHide, hasChildDialog, chartOpen,
     tasks, taskEditor, taskData, onCreateTask, onEditTask, onDeleteTask, onSaveTask, onCancelTask, source
 }) {
-    const { dialogRef: ref, backdropRef, dismiss } = useAnimatedDialog({ onClose, source, onEscape: close });
+    const { dialogRef: ref, backdropRef, dismiss } = useAnimatedDialog({
+        onClose, source, onEscape: close, siblingCompanionSelector: '#bi-modal-overlay.is-side-by-side'
+    });
     function close() {
         if (taskEditor) onCancelTask();
         else dismiss();
@@ -137,13 +139,14 @@ export default function EventDetails({
     }, [mode, ref, task?.id]);
     const name = taskEditor ? task ? 'Карточка задачи' : 'Создание задачи' : 'Детальная карточка события';
     const closeButton = <CloseButton className="drawer-close-btn" id="close-event-drawer-btn" data-initial-focus
-        aria-description={taskEditor ? 'Отменить редактирование задачи' : undefined} onClick={close} />;
+        data-linked-chart={chartOpen || undefined}
+        aria-description={taskEditor ? 'Отменить редактирование задачи' : chartOpen ? 'Закрыть событие и график' : undefined} onClick={close} />;
     return <>
         <div className="drawer-overlay active" id="event-drawer-overlay" ref={backdropRef} data-dialog-motion onClick={close} aria-hidden="true" />
         <section ref={ref} className="drawer right-drawer open" id="event-drawer" role="dialog" aria-modal={!hasChildDialog && !chartOpen} data-dialog-motion
             aria-label={name} tabIndex={-1} data-task-mode={mode} inert={hasChildDialog}>
-            <div className="drawer-header" id="event-drawer-title-container" inert={chartOpen}>
-                <div className="drawer-header-info" id="event-drawer-title">
+            <div className="drawer-header" id="event-drawer-title-container">
+                <div className="drawer-header-info" id="event-drawer-title" inert={chartOpen}>
                     <EventHeading event={event} inactive={Boolean(taskEditor)} />
                     <TaskHeader event={event} task={task} inactive={!taskEditor} />
                 </div>

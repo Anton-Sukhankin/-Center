@@ -258,6 +258,7 @@ export default function App({ view = 'dashboard' }) {
         </MetricTree>
         {metric && (eventOpen || feedMetricOpen) ? <MetricChart key={`${context.id}:${metric.id}`} metric={metric}
             source={metricSource.current} sideBySide={eventOpen} onCreateTask={eventOpen ? createTaskFromEvent : undefined}
+            onCloseEvent={eventOpen ? closePanel : undefined}
             onClose={feedMetricOpen ? closePanel : () => setMetricId(null)} /> : null}
         {eventOpen && confirmHide ? <ConfirmHideEvent focusSource={confirmSource.current} onCancel={() => setConfirmHide(false)}
             onConfirm={() => { patchEvent(eventId, () => ({ hidden: true })); closePanel(); }} /> : null}

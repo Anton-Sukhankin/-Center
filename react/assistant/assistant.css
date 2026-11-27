@@ -13,8 +13,13 @@
 [data-theme="dark"] .ac-panel,.ac-panel[data-theme="dark"] {
     --ac-base:#26272d;--ac-ink:#f1f2f5;--ac-muted:#b9bdc8;--ac-title:#f1f2f5;
     --ac-rule:rgba(255,255,255,.07);--ac-edge:rgba(255,255,255,.12);--ac-panel-edge:rgb(255 255 255 / 14.7%);
-    --ac-compose:rgba(54,55,59,.68);--ac-bubble:rgba(24,54,84,.74);--ac-hover:#303239;
+    --ac-compose:rgba(54,55,59,.68);--ac-bubble:#35363c;--ac-hover:#303239;
     --ac-selected:#183654;--ac-blue:#006bd6;--ac-focus:#83beff;color-scheme:dark;
+}
+@supports (background-color: color-mix(in srgb, black, white)) {
+    [data-theme="dark"] .ac-panel,.ac-panel[data-theme="dark"] {
+        --ac-bubble:color-mix(in srgb, var(--ac-base), white 7%);
+    }
 }
 /* Без поддержки размытия или смешивания цветов остаётся сплошная поверхность. */
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (background-color: color-mix(in srgb, black 60%, transparent)) {

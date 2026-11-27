@@ -87,6 +87,48 @@ try {
     await page.goto(appUrl, { waitUntil: 'domcontentloaded' });
     await shown(page.getByRole('heading', { level: 3 }).first());
     assert.equal(await page.title(), 'AIShtab');
+    await printCheck('Навигация по проектам · индикатор только при прокрутке колесом', async () => {
+        const sidebar = page.locator('#left-sidebar');
+        const tree = sidebar.locator('#project-tree-root');
+        const thumb = sidebar.locator('.project-tree-scroll-thumb');
+        const visibleThumb = sidebar.locator('.project-tree-scroll-thumb.is-visible');
+        const search = sidebar.getByRole('searchbox', { name: 'Поиск проекта' });
+        const position = () => tree.evaluate(node => node.scrollTop);
+        try {
+            await page.setViewportSize({ width: 1440, height: 540 });
+            assert.ok(await tree.evaluate(node => node.scrollHeight > node.clientHeight));
+            assert.equal(await thumb.getAttribute('aria-hidden'), 'true');
+            await tree.hover();
+            assert.equal(await visibleThumb.count(), 0);
+
+            await page.mouse.wheel(0, 140);
+            await shown(visibleThumb);
+            const down = await position();
+            assert.ok(down > 0);
+            await gone(visibleThumb);
+            await page.mouse.wheel(0, -70);
+            await shown(visibleThumb);
+            assert.ok(await position() < down);
+            await gone(visibleThumb);
+
+            await tree.evaluate(node => { node.scrollTop = 0; });
+            await sidebar.getByRole('button', { name: 'БИЗНЕС-ЮНИТ «САМОЛЕТ ОБРАЗОВАНИЕ»', exact: true }).focus();
+            await page.keyboard.press('PageDown');
+            await page.waitForFunction(() => document.getElementById('project-tree-root').scrollTop > 0);
+            assert.equal(await visibleThumb.count(), 0);
+
+            await search.fill('Алхимово');
+            await shown(sidebar.getByRole('button', { name: 'Алхимово', exact: true }));
+            assert.ok(await tree.evaluate(node => node.scrollHeight <= node.clientHeight));
+            await tree.hover();
+            await page.mouse.wheel(0, 140);
+            assert.equal(await visibleThumb.count(), 0);
+        } finally {
+            await search.clear();
+            await tree.evaluate(node => { node.scrollTop = 0; });
+            await page.setViewportSize({ width: 1680, height: 960 });
+        }
+    });
     await printCheck('Хедер · логотип и ассистент в одну строку', async () => {
         try {
             for (const width of [1680, 741, 740, 390]) {
@@ -131,6 +173,42 @@ try {
         await page.keyboard.press('ArrowRight');
         assert.equal(await page.getByRole('tab', { name: /Низкий приоритет/ }).getAttribute('aria-selected'), 'true');
         await high.click();
+    });
+
+    await printCheck('Детали события · закрепление и открепление', async () => {
+        const today = page.getByRole('button', { name: /^Сегодня/ });
+        const pinned = page.getByRole('button', { name: /^Закреплённые/ });
+        const card = page.locator('#card-e1');
+        const badge = page.locator('#badge-pinned');
+        const dialog = page.getByRole('dialog', { name: 'Детальная карточка события' });
+        const pin = dialog.locator('.event-detail-pin');
+        const icon = pin.locator('.lucide-bookmark');
+        const fill = () => icon.evaluate(node => getComputedStyle(node).fill);
+
+        await card.getByRole('heading').click();
+        await shown(pin);
+        assert.equal(await pin.getAttribute('aria-pressed'), 'false');
+        assert.equal(await fill(), 'none');
+        await dialog.getByRole('button', { name: 'Закрепить событие', exact: true }).click();
+        assert.equal(await pin.getAttribute('aria-pressed'), 'true');
+        assert.equal(await fill(), await icon.evaluate(node => getComputedStyle(node).color));
+        assert.equal(await badge.textContent(), '1');
+        await page.keyboard.press('Escape');
+        await gone(dialog);
+        assert.equal(await card.getByRole('button', { name: 'Открепить событие' }).getAttribute('aria-pressed'), 'true');
+
+        await pinned.click();
+        await card.getByRole('heading').click();
+        await dialog.getByRole('button', { name: 'Открепить событие', exact: true }).press('Space');
+        assert.equal(await pin.getAttribute('aria-pressed'), 'false');
+        assert.equal(await fill(), 'none');
+        assert.equal(await badge.textContent(), '0');
+        await page.keyboard.press('Escape');
+        await gone(dialog);
+        await shown(page.getByText('Нет закреплённых событий', { exact: true }));
+        assert.equal(await pinned.evaluate(node => document.activeElement === node), true);
+        await today.click();
+        assert.equal(await card.getByRole('button', { name: 'Закрепить событие' }).getAttribute('aria-pressed'), 'false');
     });
 
     await printCheck('Сегменты · состояния переключателя ленты и счётчиков', async () => {

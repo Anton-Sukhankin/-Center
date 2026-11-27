@@ -138,6 +138,7 @@ export default function EventDetails({
         previousMode.current = mode;
     }, [mode, ref, task?.id]);
     const name = taskEditor ? task ? 'Карточка задачи' : 'Создание задачи' : 'Детальная карточка события';
+    const pinLabel = event.pinned ? 'Открепить событие' : 'Закрепить событие';
     const closeButton = <CloseButton className="drawer-close-btn" id="close-event-drawer-btn" data-initial-focus
         data-linked-chart={chartOpen || undefined}
         aria-description={taskEditor ? 'Отменить редактирование задачи' : chartOpen ? 'Закрыть событие и график' : undefined} onClick={close} />;
@@ -165,9 +166,9 @@ export default function EventDetails({
             </div>
             <div className={`drawer-footer ${taskEditor ? 'task-drawer-footer' : ''}`} id="event-drawer-footer">
                 {taskEditor ? <TaskFooter task={task} onCancel={onCancelTask} /> : <>
-                    <button type="button" className={`footer-btn footer-btn-icon ${event.pinned ? 'active' : ''}`}
-                        aria-label={event.pinned ? 'Открепить событие' : 'Закрепить событие'} aria-pressed={Boolean(event.pinned)}
-                        onClick={onPin} inert={chartOpen}><Icon name="pin" size={16} /></button>
+                    <button type="button" className={`footer-btn footer-btn-icon event-detail-pin${event.pinned ? ' active' : ''}`}
+                        aria-label={pinLabel} title={pinLabel} aria-pressed={Boolean(event.pinned)}
+                        onClick={onPin} inert={chartOpen}><Icon name="bookmark" size={16} /></button>
                     <span className="drawer-footer-spacer" aria-hidden="true" />
                     <button type="button" id="event-create-task" className="footer-btn"
                         data-linked-chart={chartOpen || undefined} onClick={onCreateTask}>

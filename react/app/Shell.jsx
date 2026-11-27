@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icon from '../ui/Icon.jsx';
 import ProjectImage from './ProjectImage.jsx';
 
@@ -47,6 +47,60 @@ export function Sidebar({ nodes, selection, onSelect }) {
     const [collapsed, setCollapsed] = useState(false);
     const [expanded, setExpanded] = useState({});
     const query = search.trim().toLocaleLowerCase('ru');
+    const tree = useRef(null);
+    const scrollThumb = useRef(null);
+
+    useEffect(() => {
+        if (collapsed) return;
+        const viewport = tree.current, thumb = scrollThumb.current;
+        let lastTop = viewport.scrollTop, wheelAt = -Infinity, direction, hideTimer;
+
+        function hide() {
+            clearTimeout(hideTimer);
+            thumb.classList.remove('is-visible');
+        }
+        function onWheel(event) {
+            if (event.ctrlKey || event.shiftKey || !event.deltaY) return;
+            wheelAt = performance.now();
+            direction = Math.sign(event.deltaY);
+        }
+        function onScroll() {
+            const { clientHeight, scrollHeight, scrollTop } = viewport;
+            const movement = scrollTop - lastTop;
+            lastTop = scrollTop;
+            if (!movement) return;
+            const range = scrollHeight - clientHeight;
+            // Заданное колесом направление должно привести к реальному смещению списка.
+            if (range <= 0 || Math.sign(movement) !== direction || performance.now() - wheelAt > 220) {
+                hide();
+                return;
+            }
+            const length = Math.min(clientHeight, Math.max(24, clientHeight ** 2 / scrollHeight));
+            const progress = Math.max(0, Math.min(1, scrollTop / range));
+            thumb.style.height = `${length}px`;
+            thumb.style.transform = `translateY(${progress * (clientHeight - length)}px)`;
+            thumb.classList.add('is-visible');
+            clearTimeout(hideTimer);
+            hideTimer = setTimeout(hide, 650);
+        }
+        function interrupt() {
+            wheelAt = -Infinity;
+            hide();
+        }
+
+        viewport.addEventListener('wheel', onWheel, { passive: true });
+        viewport.addEventListener('scroll', onScroll, { passive: true });
+        viewport.addEventListener('keydown', interrupt);
+        viewport.addEventListener('pointerdown', interrupt, { passive: true });
+        return () => {
+            hide();
+            viewport.removeEventListener('wheel', onWheel);
+            viewport.removeEventListener('scroll', onScroll);
+            viewport.removeEventListener('keydown', interrupt);
+            viewport.removeEventListener('pointerdown', interrupt);
+        };
+    }, [collapsed, expanded, query]);
+
     return <aside className={`left-panel${collapsed ? ' collapsed' : ''}`} id="left-sidebar" aria-label="Навигация по проектам">
         <div className="left-panel-header">
             <label className="left-search-box" id="project-search-root" hidden={collapsed}><Icon name="search" size={18} /><input type="search" placeholder="Поиск" aria-label="Поиск проекта"
@@ -56,9 +110,12 @@ export function Sidebar({ nodes, selection, onSelect }) {
                 <Icon name={collapsed ? 'chevrons-right' : 'chevrons-left'} size={16} />
             </button>
         </div>
-        <div className="project-tree-container" id="project-tree-root" hidden={collapsed}>
-            {nodes.map(node => <ContextBranch key={node.id} node={node} depth={0} query={query} expanded={expanded}
-                selection={selection} onSelect={onSelect} onToggle={(id, isExpanded) => setExpanded(map => ({ ...map, [id]: !isExpanded }))} />)}
+        <div className="project-tree-viewport" hidden={collapsed}>
+            <div className="project-tree-container" id="project-tree-root" ref={tree}>
+                {nodes.map(node => <ContextBranch key={node.id} node={node} depth={0} query={query} expanded={expanded}
+                    selection={selection} onSelect={onSelect} onToggle={(id, isExpanded) => setExpanded(map => ({ ...map, [id]: !isExpanded }))} />)}
+            </div>
+            <span className="project-tree-scroll-thumb" ref={scrollThumb} aria-hidden="true" />
         </div>
     </aside>;
 }

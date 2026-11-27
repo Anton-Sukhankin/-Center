@@ -131,6 +131,7 @@ export default function Assistant({open,portalHost,context,entity,events=[],allE
     const [draft,setDraft]=useState(''),[turns,setTurns]=useState([]),[mode,setMode]=useState('assistant');
     const [menu,setMenu]=useState(false),[present,setPresent]=useState(open);
     const panel=useRef(null), field=useRef(null), list=useRef(null), pending=useRef(null), lastQuestion=useRef(null);
+    const threadThumb=useRef(null);
     const geometry=usePanelGeometry(open);
     const project=context?.parentProject?.name || entity?.name || context?.name || 'AIShtab';
     const waiting=turns.at(-1)?.pending;
@@ -166,6 +167,42 @@ export default function Assistant({open,portalHost,context,entity,events=[],allE
         if(open && list.current && lastQuestion.current)
             list.current.scrollTop+=lastQuestion.current.getBoundingClientRect().top-list.current.getBoundingClientRect().top-12;
     },[open,present,turns]);
+    useEffect(()=>{
+        if(!open || !present)return;
+        const viewport=list.current, thumb=threadThumb.current;
+        let hideTimer;
+
+        function hide(){
+            clearTimeout(hideTimer);
+            thumb.classList.remove('is-visible');
+        }
+        function update(){
+            const {clientHeight, scrollHeight, scrollTop}=viewport;
+            const range=scrollHeight-clientHeight;
+            if(range<=0){hide();return false;}
+            const length=Math.min(clientHeight, Math.max(24, clientHeight ** 2 / scrollHeight));
+            const progress=Math.max(0, Math.min(1, scrollTop/range));
+            thumb.style.height=`${length}px`;
+            thumb.style.transform=`translateY(${progress*(clientHeight-length)}px)`;
+            return true;
+        }
+        function onScroll(){
+            if(!update())return;
+            thumb.classList.add('is-visible');
+            clearTimeout(hideTimer);
+            hideTimer=setTimeout(hide,650);
+        }
+        const observer=new ResizeObserver(()=>{
+            if(thumb.classList.contains('is-visible'))update();
+        });
+        observer.observe(viewport);
+        viewport.addEventListener('scroll',onScroll,{passive:true});
+        return ()=>{
+            hide();
+            observer.disconnect();
+            viewport.removeEventListener('scroll',onScroll);
+        };
+    },[open,present]);
     useEffect(()=>{
         if(!open)return;
         const keyboard=e=>{
@@ -206,13 +243,16 @@ export default function Assistant({open,portalHost,context,entity,events=[],allE
                 <i aria-hidden="true"/><button type="button" aria-label="Закрыть" title="Закрыть" onClick={close}><Icon name="x"/></button>
             </div>
         </header>
-        <div ref={list} className="ac-thread" role="log" aria-label="Переписка" aria-live="polite">
-            {!turns.length?<div className="ac-empty"><span><MessagesSquare size={29}/></span><strong>Начните чат</strong><p>Задайте вопрос о работе в {project}</p></div>:
-            turns.map((t,i)=><div className="ac-turn" key={t.id} ref={i===turns.length-1?lastQuestion:undefined}>
-                <div className="ac-question">{t.question}</div>
-                <div className="ac-answer"><b>AI-ассистент</b>{t.pending?<div className="ac-pending" role="status">Готовлю ответ<span aria-hidden="true"><i/><i/><i/></span></div>:
-                <><div role={t.failed?'alert':undefined}><ReplyText text={t.answer}/></div>{!t.failed && provider===requestDemoReply && <small>Демо-ответ</small>}</>}</div>
-            </div>)}
+        <div className="ac-thread-frame">
+            <div ref={list} className="ac-thread" role="log" aria-label="Переписка" aria-live="polite" tabIndex={0}>
+                {!turns.length?<div className="ac-empty"><span><MessagesSquare size={29}/></span><strong>Начните чат</strong><p>Задайте вопрос о работе в {project}</p></div>:
+                turns.map((t,i)=><div className="ac-turn" key={t.id} ref={i===turns.length-1?lastQuestion:undefined}>
+                    <div className="ac-question">{t.question}</div>
+                    <div className="ac-answer"><b>AI-ассистент</b>{t.pending?<div className="ac-pending" role="status">Готовлю ответ<span aria-hidden="true"><i/><i/><i/></span></div>:
+                    <><div role={t.failed?'alert':undefined}><ReplyText text={t.answer}/></div>{!t.failed && provider===requestDemoReply && <small>Демо-ответ</small>}</>}</div>
+                </div>)}
+            </div>
+            <span ref={threadThumb} className="ac-thread-thumb" aria-hidden="true" />
         </div>
         <form className="ac-composer" onSubmit={send}>
             <textarea id="ai-chat-input" ref={field} rows={2} placeholder="Напишите вопрос" aria-label="Напишите вопрос" value={draft} onChange={e=>setDraft(e.target.value)}

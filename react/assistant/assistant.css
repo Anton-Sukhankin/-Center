@@ -4,6 +4,7 @@
     --ac-rule:rgba(55,70,94,.13); --ac-edge:rgba(55,70,94,.20);
     --ac-compose:rgba(233,237,243,.72); --ac-bubble:rgba(231,239,251,.74);
     --ac-hover:#eef1f6; --ac-selected:#e7f1fd; --ac-blue:#007bfc; --ac-focus:#006bd6;
+    --ac-column-width:650px; --ac-column-inset:max(16px,calc((100% - var(--ac-column-width)) / 2));
     position:fixed;z-index:2403;display:flex;flex-direction:column;isolation:isolate;box-sizing:border-box;
     font:400 14px/21px var(--font-interface);color:var(--ac-ink);background:var(--ac-base);
     border:1px solid var(--ac-panel-edge,var(--ac-edge));border-radius:var(--dialog-radius,16px);
@@ -51,8 +52,12 @@
 .ac-tools svg{width:18px;height:18px;stroke-width:1.6}
 .ac-tools i{height:20px;border-left:1px solid var(--ac-rule)}
 .ac-tools button:hover:not(:disabled),.ac-mode:hover,.ac-mode[aria-expanded=true],.ac-menu button:hover{background:var(--ac-hover)}
-.ac-thread,.ac-composer{width:min(650px,calc(100% - 32px));align-self:center;min-width:0}
-.ac-thread{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-block:16px}
+.ac-thread-frame{position:relative;flex:1;min-height:0}
+.ac-thread{height:100%;min-height:0;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;padding:16px var(--ac-column-inset)}
+.ac-thread::-webkit-scrollbar{display:none}
+.ac-thread-thumb{position:absolute;inset-block-start:0;inset-inline-end:calc(var(--ac-column-inset) - 10px);width:4px;border-radius:4px;background:var(--ac-muted);opacity:0;pointer-events:none}
+.ac-thread-thumb.is-visible{opacity:.48}
+@media(forced-colors:active){.ac-thread-thumb.is-visible{background:CanvasText;opacity:1;forced-color-adjust:none}}
 .ac-empty{min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow-wrap:anywhere}
 .ac-empty>span{border-radius:18px;width:58px;height:58px;flex:none}
 .ac-empty strong{margin-top:12px;font:500 20px/26px var(--font-interface)}
@@ -64,7 +69,7 @@
 .ac-answer h5{font:500 15px/21px var(--font-interface);margin:0}
 .ac-answer ul{margin:4px 0;padding-left:20px}
 .ac-answer small{display:block;margin-top:6px}
-.ac-composer{position:relative;flex:none;display:grid;gap:8px;padding:16px 16px 8px;margin:4px 0 8px;border-radius:8px;background:var(--ac-compose)}
+.ac-composer{position:relative;flex:none;display:grid;gap:8px;width:min(var(--ac-column-width),calc(100% - 32px));align-self:center;min-width:0;padding:16px 16px 8px;margin:4px 0 8px;border-radius:8px;background:var(--ac-compose)}
 .ac-composer textarea{width:100%;height:40px;max-height:78px;resize:none;background:none;border:0;padding:0;outline:none;line-height:20px}
 .ac-composer textarea::placeholder{color:var(--ac-muted)}
 #root #ai-chat-input:focus-visible{outline:none!important}

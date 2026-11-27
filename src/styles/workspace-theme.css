@@ -19,8 +19,8 @@ html[data-theme=dark] {
  --ui-budget:#788da9; --ui-overrun:#e58787;
 }
 html[data-theme=dark] {
- & body,& .main-content,& .app-shell,& .main-wrapper,& #priority-events-panel {background:var(--ui-page);color:var(--ui-ink)}
- & .dashboard-workspace {--dashboard-muted-text:var(--ui-muted)}
+ & body,& .main-content,& .app-shell,& .main-wrapper,& #priority-events-panel {background:var(--dashboard-surface);color:var(--ui-ink)}
+ & .dashboard-workspace {--dashboard-surface:var(--ui-card);--dashboard-muted-text:var(--ui-muted)}
  & .top-navbar {background:var(--ui-summary-card-surface);border-bottom:1px solid var(--ui-edge)}
  & .left-panel {--tree-highlight:var(--ui-selected)}
  & :is(.left-search-box,.left-panel-collapse-btn,.toolbar-segmented,.lightline-button,.footer-btn,.drawer-card) {background:var(--ui-card)!important;color:var(--ui-ink)!important;border-color:var(--ui-edge)!important}
@@ -39,9 +39,15 @@ html[data-theme=dark] {
  & .event-card-source-date>.event-source-aggregator{background:var(--ui-raised)}
  & .event-description-card.is-preview .event-description-content::after{background:linear-gradient(transparent,var(--ui-raised) 86%)}
  & .event-description-text strong,& .event-description-content b{color:var(--ui-ink)}
- & .event-card {--ec-blue:var(--ui-accent);background:var(--ui-summary-card-surface)!important;color:var(--ui-ink)!important}
+ & .event-card {
+  --ec-blue:var(--ui-accent);
+  --ec-hover-surface:color-mix(in srgb,var(--ui-summary-card-surface),white 5%);
+  background-color:var(--ui-summary-card-surface)!important;
+  background-color:color-mix(in srgb,var(--ec-hover-surface),black 15%)!important;
+  color:var(--ui-ink)!important;
+ }
  @media (hover:hover) {
-  & #event-feed-sections .event-card:hover {border-color:var(--ui-accent);box-shadow:0 3px 12px #0005}
+  & #event-feed-sections .event-card:hover {background-color:var(--ec-hover-surface)!important}
   & #event-feed-sections .event-card:hover .event-card-title {color:var(--ui-accent)!important}
   & .metric-impact-trigger:hover {border-color:var(--ui-accent)!important;box-shadow:none}
  }

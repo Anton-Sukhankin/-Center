@@ -743,7 +743,7 @@ try {
                 return ['.left-panel', '.project-summary-header', '.event-toolbar', '#event-feed-sections']
                     .map(selector => getComputedStyle(node.querySelector(selector)).backgroundColor);
             });
-            assert.deepEqual(surface, Array(4).fill('rgb(240, 241, 243)'));
+            assert.deepEqual(surface, Array(4).fill('rgb(32, 33, 37)'));
             assert.equal(await collapse.evaluate(node => getComputedStyle(node).position), 'static');
             const collapseBox = await collapse.boundingBox();
             const searchBox = await page.locator('.left-search-box').boundingBox();
@@ -1330,7 +1330,7 @@ try {
                 await today.click();
                 await search.fill('Nova');
                 const before = await readShell();
-                assert.deepEqual(before.backgrounds, Array(4).fill('rgb(240, 241, 243)'));
+                assert.deepEqual(before.backgrounds, Array(4).fill('rgb(32, 33, 37)'));
                 assert.deepEqual(before.button.slice(2), [38, 38]);
                 assert.equal(before.button[0] - (before.search[0] + before.search[2]), 8);
                 for (const mode of [metrics, segments.getByRole('button', { name: /^Все события/ }),
